@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-17",
+  "source": {
+    "cgi": "Code Général des Impôts du Cameroun — Édition 2025 (DGI)",
+    "syscohada": "SYSCOHADA Révisé — Acte Uniforme OHADA portant droit comptable et information financière"
+  },
+  "categories": [
+    {
+      "code": "A",
+      "name": "Intégrité comptable SYSCOHADA",
+      "description": "Vérifications fondamentales sur la tenue de la comptabilité conformément à l'Acte Uniforme OHADA.",
+      "controls": [
+        { "code": "A1",   "title": "Équilibre individuel des écritures (partie double)", "legal_ref": "SYSCOHADA art. 17.2", "severity": "BLOCKING", "data": ["JOURNAL"], "automated": true },
+        { "code": "A2",   "title": "Pièce justificative datée pour chaque ligne", "legal_ref": "SYSCOHADA art. 17.3", "severity": "HIGH", "data": ["JOURNAL"], "automated": true },
+        { "code": "A3",   "title": "Chronologie sans insertion intercalaire", "legal_ref": "SYSCOHADA art. 16 al. 3-5 + art. 22", "severity": "HIGH", "data": ["JOURNAL"], "automated": true },
+        { "code": "A4",   "title": "Identification ligne par ligne (origine, imputation, contenu, PJ)", "legal_ref": "SYSCOHADA art. 17.5", "severity": "MEDIUM", "data": ["JOURNAL"], "automated": true },
+        { "code": "A5",   "title": "Plan de comptes conforme OHADA (classes 1-9)", "legal_ref": "SYSCOHADA art. 18 + Titre VII", "severity": "HIGH", "data": ["TRIAL_BALANCE"], "automated": true },
+        { "code": "A6",   "title": "Présence des 4 livres obligatoires (journal, GL, balance, inventaire)", "legal_ref": "SYSCOHADA art. 17.8 + 19", "severity": "BLOCKING", "data": ["JOURNAL","TRIAL_BALANCE"], "automated": false },
+        { "code": "A7",   "title": "Livres journal et inventaire cotés et paraphés", "legal_ref": "SYSCOHADA art. 66", "severity": "HIGH", "data": [], "automated": false },
+        { "code": "A8",   "title": "Bilan d'ouverture N = Bilan de clôture N-1", "legal_ref": "SYSCOHADA art. 34", "severity": "BLOCKING", "data": ["TRIAL_BALANCE"], "automated": true },
+        { "code": "A9",   "title": "Non-compensation actif/passif", "legal_ref": "SYSCOHADA art. 34", "severity": "MEDIUM", "data": ["TRIAL_BALANCE"], "automated": true },
+        { "code": "A10",  "title": "Délai d'arrêté ≤ 4 mois post-clôture", "legal_ref": "SYSCOHADA art. 23", "severity": "MEDIUM", "data": [], "automated": false },
+        { "code": "A11",  "title": "Permanence des méthodes inter-exercices", "legal_ref": "SYSCOHADA art. 40-41", "severity": "MEDIUM", "data": [], "automated": false },
+        { "code": "A12",  "title": "Corrections d'erreurs significatives → report à nouveau (121/129)", "legal_ref": "SYSCOHADA art. 20", "severity": "HIGH", "data": ["JOURNAL"], "automated": true },
+        { "code": "A13",  "title": "Équilibre global Σ Débits = Σ Crédits (ouverture/période/clôture)", "legal_ref": "SYSCOHADA art. 17.2 + 34", "severity": "BLOCKING", "data": ["TRIAL_BALANCE"], "automated": true },
+        { "code": "A13b", "title": "Rollforward : ouverture + mouvements = clôture par compte", "legal_ref": "SYSCOHADA art. 19", "severity": "HIGH", "data": ["TRIAL_BALANCE"], "automated": true },
+        { "code": "A13c", "title": "Balance ↔ Grand-livre par compte", "legal_ref": "SYSCOHADA art. 19", "severity": "HIGH", "data": ["TRIAL_BALANCE","GENERAL_LEDGER"], "automated": true },
+        { "code": "A14",  "title": "Système attendu (Normal vs SMT) cohérent avec CA HT N-1", "legal_ref": "SYSCOHADA art. 13", "severity": "LOW", "data": [], "automated": true }
+      ]
+    },
+    {
+      "code": "B",
+      "name": "Évaluation et règles comptables SYSCOHADA",
+      "controls": [
+        { "code": "B1",  "title": "Stocks valorisés en PEPS ou CMP uniquement", "legal_ref": "SYSCOHADA art. 44 + Chap. 14", "severity": "HIGH", "automated": false },
+        { "code": "B2",  "title": "Inventaire clôture = min(coût, VNR)", "legal_ref": "SYSCOHADA art. 44", "severity": "MEDIUM", "automated": false },
+        { "code": "B3",  "title": "Cohérence variation stocks SI + Achats − SF = Coût des ventes", "legal_ref": "Bonne pratique", "severity": "MEDIUM", "automated": true },
+        { "code": "B4",  "title": "Dotations amortissements obligatoires même sans bénéfice", "legal_ref": "SYSCOHADA art. 45 + 49", "severity": "HIGH", "automated": true },
+        { "code": "B5",  "title": "Modes d'amortissement interdits (revenus, financier)", "legal_ref": "SYSCOHADA art. 45", "severity": "HIGH", "automated": false },
+        { "code": "B6",  "title": "Approche par composants : catégories autorisées uniquement", "legal_ref": "SYSCOHADA art. 38 + Chap. 4", "severity": "MEDIUM", "automated": false },
+        { "code": "B7",  "title": "Provisions : 3 conditions cumulatives (obligation, sortie probable, estimation fiable)", "legal_ref": "SYSCOHADA art. 48 + Chap. 18", "severity": "HIGH", "automated": false },
+        { "code": "B8",  "title": "Subvention investissement (14x) → reprise au 799 prorata amortissement", "legal_ref": "SYSCOHADA Chap. 17", "severity": "MEDIUM", "automated": true },
+        { "code": "B9",  "title": "Comptes devises 478/479 : provision pertes de change obligatoire", "legal_ref": "SYSCOHADA art. 54-58", "severity": "HIGH", "automated": true },
+        { "code": "B10", "title": "Réévaluation : 100% immo corporelles + financières, jamais partielle", "legal_ref": "SYSCOHADA art. 62-65", "severity": "HIGH", "automated": false },
+        { "code": "B11", "title": "Escompte de règlement = produit financier (765/77), jamais déduit prix d'achat", "legal_ref": "SYSCOHADA art. 35-38", "severity": "MEDIUM", "automated": true },
+        { "code": "B12", "title": "Cohérence SIG (XA→XI) selon formules normalisées", "legal_ref": "SYSCOHADA Titre IX Chap. 4", "severity": "MEDIUM", "automated": true },
+        { "code": "B13", "title": "Résultat net (XI) = solde compte 13", "legal_ref": "SYSCOHADA Titre IX", "severity": "HIGH", "automated": true },
+        { "code": "B14", "title": "TFT : Trésorerie clôture = BT − DT du bilan", "legal_ref": "SYSCOHADA Titre IX Chap. 5", "severity": "MEDIUM", "automated": true }
+      ]
+    },
+    {
+      "code": "C",
+      "name": "Impôt sur les Sociétés",
+      "controls": [
+        { "code": "C1",  "title": "Taux IS : 25% si CA ≤ 3 Mrd FCFA, sinon 30%", "legal_ref": "CGI art. 17 + 17 bis", "severity": "HIGH", "automated": true },
+        { "code": "C2",  "title": "Acomptes mensuels IS = 2% CA (réel) / 5% (simplifié) le 15", "legal_ref": "CGI art. 21", "severity": "HIGH", "automated": true },
+        { "code": "C3",  "title": "Minimum de perception : IS ≥ 2% CA précédent (5% simplifié)", "legal_ref": "CGI art. 22-23", "severity": "HIGH", "automated": true },
+        { "code": "C4",  "title": "Charge ≥ 100 000 FCFA payée en espèces = non déductible", "legal_ref": "CGI art. 8 bis (1)", "severity": "HIGH", "automated": true },
+        { "code": "C5",  "title": "Charges sur facture sans mentions obligatoires = non déductible", "legal_ref": "CGI art. 8 bis (2) + 150 (5)", "severity": "HIGH", "automated": true },
+        { "code": "C6",  "title": "Charges hors système facturation DGI = non déductible", "legal_ref": "CGI art. 8 bis (2) + LPF L 8 bis", "severity": "BLOCKING", "automated": true },
+        { "code": "C7",  "title": "Charges vers contribuable absent du FCA = non déductible", "legal_ref": "CGI art. 8 bis (2)", "severity": "HIGH", "automated": true },
+        { "code": "C8",  "title": "Charges vers paradis fiscal = non déductible", "legal_ref": "CGI art. 8 ter", "severity": "HIGH", "automated": false },
+        { "code": "C9",  "title": "Plafond dons : 0,5% CA / clubs sportifs : 5% CA", "legal_ref": "CGI art. 7-A-5", "severity": "MEDIUM", "automated": true },
+        { "code": "C10", "title": "Plafond cadeaux/missions/réceptions", "legal_ref": "CGI art. 7-A-1", "severity": "MEDIUM", "automated": true },
+        { "code": "C11", "title": "Frais siège & assistance technique étrangers ≤ 2,5% BI", "legal_ref": "CGI art. 7-A-1-d", "severity": "MEDIUM", "automated": true },
+        { "code": "C12", "title": "Commissions étrangères ≤ 1% des achats", "legal_ref": "CGI art. 7-A-1-d", "severity": "MEDIUM", "automated": true },
+        { "code": "C13", "title": "Cotisations retraite expatrié ≤ 15% salaire base", "legal_ref": "CGI art. 7-A-1-a", "severity": "LOW", "automated": true },
+        { "code": "C14", "title": "Intérêts CC associés : plafonds capital × 1,5 + 25% résultat", "legal_ref": "CGI art. 7-B", "severity": "HIGH", "automated": true },
+        { "code": "C15", "title": "Petit matériel > 500 000 FCFA à immobiliser", "legal_ref": "CGI art. 7-D", "severity": "MEDIUM", "automated": true },
+        { "code": "C16", "title": "Amortissements différés imputables dès 1er bénéfice, max 10 ans", "legal_ref": "CGI art. 7-D", "severity": "MEDIUM", "automated": true },
+        { "code": "C17", "title": "Report déficitaire ≤ 4 ans (6 banques)", "legal_ref": "CGI art. 12", "severity": "HIGH", "automated": true },
+        { "code": "C18", "title": "Loyer à associé ≥ 10% (hors immeubles) = non déductible", "legal_ref": "CGI art. 7-A-2", "severity": "HIGH", "automated": true },
+        { "code": "C19", "title": "IS/IRPP/amendes/pénalités = non déductibles", "legal_ref": "CGI art. 7-A-3", "severity": "MEDIUM", "automated": true },
+        { "code": "C20", "title": "Acomptes IS trimestriels = 1/4 × IS N-1 — 4 paiements", "legal_ref": "CGI art. 21", "severity": "HIGH", "data": ["MONTHLY_RETURN","PAYMENT_PROOF"], "automated": true },
+        { "code": "C21", "title": "Imputation crédits d'impôts (TSR subis, retenues à la source) sur IS dû", "legal_ref": "CGI art. 21 ter", "severity": "MEDIUM", "data": ["ANNUAL_RETURN"], "automated": true },
+        { "code": "C22", "title": "Cohérence DSF annuel ↔ reconstitution TB + GL", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["ANNUAL_RETURN","TRIAL_BALANCE"], "automated": true }
+      ]
+    },
+    {
+      "code": "D",
+      "name": "Taxe sur la Valeur Ajoutée",
+      "controls": [
+        { "code": "D1",  "title": "Taux TVA général = 17,5% (CAC inclus)", "legal_ref": "CGI art. 142", "severity": "HIGH", "automated": true },
+        { "code": "D2",  "title": "Assujetti uniquement si régime réel (CA ≥ 50M)", "legal_ref": "CGI art. 132", "severity": "HIGH", "automated": true },
+        { "code": "D3",  "title": "Toute TVA facturée doit être reversée", "legal_ref": "CGI art. 134-2", "severity": "HIGH", "automated": true },
+        { "code": "D4",  "title": "Déductibilité : NIU+FCA+régime+système DGI+non-espèces+délai 2 ex.", "legal_ref": "CGI art. 143", "severity": "BLOCKING", "automated": true },
+        { "code": "D5",  "title": "Retenue à la source : attestation système DGI obligatoire", "legal_ref": "CGI art. 143 + 149 (2)", "severity": "HIGH", "automated": true },
+        { "code": "D6",  "title": "Exclusions : logement, hébergement, restauration, réception, spectacles, location véhicule tourisme", "legal_ref": "CGI art. 144 (1)", "severity": "HIGH", "automated": true },
+        { "code": "D7",  "title": "Biens importés non utilisés et réexportés = TVA non déductible", "legal_ref": "CGI art. 144 (2)", "severity": "MEDIUM", "automated": true },
+        { "code": "D8",  "title": "Biens/services pour tiers/dirigeants/personnel = TVA non déductible", "legal_ref": "CGI art. 144 (3)", "severity": "MEDIUM", "automated": false },
+        { "code": "D9",  "title": "Régularisation cession immo < 4 ans non TVA : reverser TVA × (1−1/5×n)", "legal_ref": "CGI art. 145", "severity": "MEDIUM", "automated": true },
+        { "code": "D10", "title": "Prorata < 10% → aucune déduction admise", "legal_ref": "CGI art. 147", "severity": "BLOCKING", "automated": true },
+        { "code": "D11", "title": "Crédit TVA reportable > 3 mois commerce général sans validation = irrégulier", "legal_ref": "CGI art. 149", "severity": "MEDIUM", "automated": true },
+        { "code": "D12", "title": "Remboursement basé sur factures espèces = irrecevable", "legal_ref": "CGI art. 149-4", "severity": "HIGH", "automated": true },
+        { "code": "D13", "title": "Prestations immatérielles : TVA due au lieu du preneur", "legal_ref": "CGI art. 130 bis", "severity": "MEDIUM", "automated": false },
+        { "code": "D14", "title": "Déclaration mensuelle obligatoire (NÉANT si pas d'op.)", "legal_ref": "CGI art. 149-150", "severity": "HIGH", "automated": true },
+        { "code": "D15", "title": "Recoupement TVA collectée mensuelle GL (4431) ↔ déclaration", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "D16", "title": "Recoupement CA TVA ≈ CA comptable cl. 70 ≈ CA DSF", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "D17", "title": "Existence — 12 déclarations TVA mensuelles déposées", "legal_ref": "CGI art. 149", "severity": "BLOCKING", "data": ["MONTHLY_RETURN"], "automated": true },
+        { "code": "D18", "title": "Délai dépôt ≤ 15 du mois suivant", "legal_ref": "CGI art. 149-150", "severity": "HIGH", "data": ["MONTHLY_RETURN"], "automated": true },
+        { "code": "D19", "title": "Existence quittance de paiement pour chaque déclaration", "legal_ref": "LPF art. M 2", "severity": "BLOCKING", "data": ["PAYMENT_PROOF"], "automated": true },
+        { "code": "D20", "title": "Délai paiement ≤ 15 du mois suivant", "legal_ref": "CGI art. 149-150", "severity": "HIGH", "data": ["PAYMENT_PROOF"], "automated": true },
+        { "code": "D21", "title": "Montant déclaré TVA nette = montant payé (par mois)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","PAYMENT_PROOF"], "automated": true },
+        { "code": "D22", "title": "TVA collectée déclarée = mouvements crédit GL 4431 (mensuel)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "D23", "title": "TVA déductible BS déclarée = mouvements débit GL 4452 (mensuel)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "D24", "title": "TVA déductible immo déclarée = mouvements débit GL 4456 (mensuel)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "D25", "title": "Autoliquidation TVA sur services importés (reverse charge)", "legal_ref": "CGI art. 130 bis + 149", "severity": "HIGH", "data": ["GENERAL_LEDGER","MONTHLY_RETURN"], "automated": true },
+        { "code": "D26", "title": "Crédit TVA reporté — solde 4431 fin N-1 = report ouvert N", "legal_ref": "CGI art. 149", "severity": "HIGH", "data": ["TRIAL_BALANCE","MONTHLY_RETURN"], "automated": true },
+        { "code": "D27", "title": "Synthèse — écart TVA non déclarée / sous-déclarée (consolidé)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER","TRIAL_BALANCE"], "automated": true }
+      ]
+    },
+    {
+      "code": "E",
+      "name": "IRPP, retenues à la source, TSR",
+      "controls": [
+        { "code": "E1",  "title": "Barème IRPP salaire : 10/15/25/35% + abattement 500k + frais pro 30% (plaf. 4,8M)", "legal_ref": "CGI art. 29, 34, 69, 71", "severity": "HIGH", "automated": true },
+        { "code": "E2",  "title": "Dispense IRPP si salaire brut < 62 000 F/mois", "legal_ref": "CGI art. 81", "severity": "LOW", "automated": true },
+        { "code": "E3",  "title": "Avantages en nature barème normalisé", "legal_ref": "CGI art. 33", "severity": "MEDIUM", "automated": true },
+        { "code": "E4",  "title": "Versement IRPP retenu : 15 du mois suivant", "legal_ref": "CGI art. 82", "severity": "HIGH", "automated": true },
+        { "code": "E5",  "title": "Retenue 5,5% sur factures pros payées par État/CTD/EPA < 5M", "legal_ref": "CGI art. 92", "severity": "HIGH", "automated": true },
+        { "code": "E6",  "title": "Retenue 5% sur honoraires libéraux", "legal_ref": "CGI art. 92 bis", "severity": "HIGH", "automated": true },
+        { "code": "E7",  "title": "Retenue 10% libératoire mandataires & vente directe", "legal_ref": "CGI art. 93 bis", "severity": "MEDIUM", "automated": true },
+        { "code": "E8",  "title": "TSR : 15% / 10% / 3% selon nature, base brute TSR incluse", "legal_ref": "CGI art. 225-228", "severity": "HIGH", "automated": true },
+        { "code": "E9",  "title": "TSR bien+prestation indivisible : prestation = 25% valeur bien", "legal_ref": "CGI art. 225", "severity": "MEDIUM", "automated": false },
+        { "code": "E10", "title": "Recoupement charges personnel (66x) ≈ DIPE + CNPS", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "E11", "title": "Existence — 12 déclarations IRPP retenue salaires", "legal_ref": "CGI art. 82", "severity": "BLOCKING", "data": ["MONTHLY_RETURN"], "automated": true },
+        { "code": "E12", "title": "Réconciliation IRPP déclaré = mouvements crédit GL 4471 (mensuel)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "E13", "title": "Existence — 12 déclarations CNPS + paiement", "legal_ref": "Code prévoyance sociale", "severity": "BLOCKING", "data": ["MONTHLY_RETURN","PAYMENT_PROOF"], "automated": true },
+        { "code": "E14", "title": "Réconciliation CNPS déclaré = GL 4311 (4.2% AF + 4.9% PVID)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "E15", "title": "Réconciliation TSR déclaré = GL 4475 (services à non-résidents)", "legal_ref": "Cross-control", "severity": "HIGH", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "E16", "title": "Précompte loyers 5% / 10% — exhaustivité vs GL 622/6232", "legal_ref": "CGI art. 92-93", "severity": "MEDIUM", "data": ["MONTHLY_RETURN","GENERAL_LEDGER"], "automated": true },
+        { "code": "E17", "title": "CFC 1% des salaires bruts — déclaration + paiement", "legal_ref": "Loi 77/10", "severity": "HIGH", "data": ["MONTHLY_RETURN","PAYROLL"], "automated": true },
+        { "code": "E18", "title": "FNE 1% des salaires bruts — déclaration + paiement", "legal_ref": "Loi 90/048", "severity": "HIGH", "data": ["MONTHLY_RETURN","PAYROLL"], "automated": true }
+      ]
+    },
+    {
+      "code": "F",
+      "name": "Factures fournisseurs — fond et forme",
+      "controls": [
+        { "code": "F1",  "title": "NIU fournisseur ET NIU client présents", "legal_ref": "CGI art. 150 (5)", "severity": "BLOCKING", "automated": true },
+        { "code": "F2",  "title": "Date, raison sociale, adresse complète, n° RCCM fournisseur", "legal_ref": "CGI art. 150 (5)", "severity": "HIGH", "automated": true },
+        { "code": "F3",  "title": "Identité complète du client", "legal_ref": "CGI art. 150 (5)", "severity": "HIGH", "automated": true },
+        { "code": "F4",  "title": "Nature, objet et détail de la transaction", "legal_ref": "CGI art. 150 (5)", "severity": "MEDIUM", "automated": true },
+        { "code": "F5",  "title": "Prix HT, taux et montant TVA, total TTC distincts", "legal_ref": "CGI art. 150 (5)", "severity": "HIGH", "automated": true },
+        { "code": "F6",  "title": "Mention « Exonéré » ou « Prise en charge État » si applicable", "legal_ref": "CGI art. 150 (5)", "severity": "MEDIUM", "automated": true },
+        { "code": "F7",  "title": "Émise via système électronique DGI", "legal_ref": "LPF art. L 8 bis", "severity": "BLOCKING", "automated": true },
+        { "code": "F8",  "title": "Fournisseur actif au FCA à la date de la facture, en régime réel", "legal_ref": "CGI art. 143", "severity": "BLOCKING", "automated": true },
+        { "code": "F9",  "title": "≥ 100 000 FCFA payée non-espèces", "legal_ref": "CGI art. 143 (1)(d) + 8 bis (1)", "severity": "HIGH", "automated": true },
+        { "code": "F10", "title": "Délai d'usage TVA ≤ 2 exercices fiscaux", "legal_ref": "CGI art. 143 (2)", "severity": "HIGH", "automated": true },
+        { "code": "F11", "title": "Cohérence imputation comptable vs nature de la charge", "legal_ref": "SYSCOHADA art. 17.5", "severity": "MEDIUM", "data": ["INVOICE","GENERAL_LEDGER"], "automated": true },
+        { "code": "F12", "title": "Existence d'une pièce justificative pour chaque écriture", "legal_ref": "SYSCOHADA art. 17.3", "severity": "HIGH", "data": ["INVOICE","GENERAL_LEDGER"], "automated": true },
+        { "code": "F13", "title": "Plafond paiement espèces ≤ 100 000 FCFA", "legal_ref": "CGI art. 7-A-3", "severity": "HIGH", "data": ["INVOICE","GENERAL_LEDGER"], "automated": true },
+        { "code": "F14", "title": "Mentions importation (DAU, transitaire, valeur en douane)", "legal_ref": "Code douanes", "severity": "MEDIUM", "data": ["INVOICE"], "automated": true },
+        { "code": "F15", "title": "Factures > 1 M FCFA — documentation contractuelle exigée", "legal_ref": "Bonne pratique", "severity": "LOW", "data": ["INVOICE","CONTRACT"], "automated": false }
+      ]
+    },
+    {
+      "code": "G",
+      "name": "Cross-controls et cohérence",
+      "controls": [
+        { "code": "G1", "title": "CA TVA mensuel ≈ CA classe 70 ≈ CA DSF", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "G2", "title": "Achats TVA ≈ Achats classe 60 ≈ Achats DSF", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "G3", "title": "Marge brute vs benchmarks sectoriels", "legal_ref": "Analyse", "severity": "MEDIUM", "automated": true },
+        { "code": "G4", "title": "Évolution N/N-1 ratios principaux — alerte > 20%", "legal_ref": "Analyse", "severity": "MEDIUM", "automated": true },
+        { "code": "G5", "title": "Cohérence stocks : SI + Achats − SF = Coût des ventes", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "G6", "title": "Cohérence trésorerie : Δ trésorerie ≈ flux comptabilisés", "legal_ref": "Cross-control", "severity": "MEDIUM", "automated": true },
+        { "code": "G7", "title": "Charges personnel (66x) ≈ DIPE + CNPS", "legal_ref": "Cross-control", "severity": "HIGH", "automated": true },
+        { "code": "G8", "title": "TVA collectée / CA = taux effectif cohérent avec activités", "legal_ref": "Analyse", "severity": "MEDIUM", "automated": true },
+        { "code": "G9", "title": "Détection cycles d'écritures suspectes (clients↔fournisseur lié)", "legal_ref": "Anti-fraude", "severity": "HIGH", "automated": true },
+        { "code": "G10", "title": "Taux d'effort fiscal = total impôts / CA — alerte si écart sectoriel", "legal_ref": "Analyse", "severity": "LOW", "data": ["MONTHLY_RETURN","TRIAL_BALANCE"], "automated": true },
+        { "code": "G11", "title": "Acomptes IS payés ≡ acomptes calculés (1/4 × IS N-1)", "legal_ref": "CGI art. 21", "severity": "HIGH", "data": ["MONTHLY_RETURN","PAYMENT_PROOF"], "automated": true },
+        { "code": "G12", "title": "Dividendes payés (cl. 6587) → IRCM retenu et déclaré", "legal_ref": "CGI art. 70", "severity": "HIGH", "data": ["GENERAL_LEDGER","MONTHLY_RETURN"], "automated": true },
+        { "code": "G13", "title": "Loyers payés (cl. 6232/622) → précompte appliqué", "legal_ref": "CGI art. 92-93", "severity": "MEDIUM", "data": ["GENERAL_LEDGER","MONTHLY_RETURN"], "automated": true },
+        { "code": "G14", "title": "Services étrangers (cl. 622/6231) → TSR appliqué", "legal_ref": "CGI art. 225", "severity": "HIGH", "data": ["GENERAL_LEDGER","MONTHLY_RETURN"], "automated": true }
+      ]
+    },
+    {
+      "code": "H",
+      "name": "Procédure (Livre des Procédures Fiscales)",
+      "controls": [
+        { "code": "H1", "title": "Prescription 4 ans (imprescriptible retenues source/collecté)", "legal_ref": "LPF art. L 34, L 35", "severity": "HIGH", "automated": true },
+        { "code": "H2", "title": "Avis de vérification 15 jours avant intervention", "legal_ref": "LPF art. L 13", "severity": "BLOCKING", "automated": true },
+        { "code": "H3", "title": "Vérification sur place ≤ 3 mois (+9 mois si prix transfert)", "legal_ref": "LPF art. L 40", "severity": "HIGH", "automated": true },
+        { "code": "H4", "title": "Délai réponse contribuable : 30 jours (60 si motivé)", "legal_ref": "LPF art. L 24", "severity": "HIGH", "automated": true },
+        { "code": "H5", "title": "Délai réponse administration : 60 jours sous peine de nullité", "legal_ref": "LPF art. L 26", "severity": "BLOCKING", "automated": true },
+        { "code": "H6", "title": "Notification redressement 60 j après PV fin contrôle", "legal_ref": "LPF art. L 24", "severity": "BLOCKING", "automated": true },
+        { "code": "H7", "title": "Intérêt de retard 1,5%/mois plafonné 50%", "legal_ref": "LPF art. L 95", "severity": "HIGH", "automated": true },
+        { "code": "H8", "title": "Majoration 30% bonne foi / 100% mauvaise foi / 150% manœuvres", "legal_ref": "LPF art. L 96", "severity": "HIGH", "automated": true },
+        { "code": "H9", "title": "Conservation 10 ans des livres et pièces", "legal_ref": "LPF art. L 4 + SYSCOHADA art. 24", "severity": "MEDIUM", "automated": true }
+      ]
+    },
+    {
+      "code": "I",
+      "name": "Autres impôts annuels & cotisations",
+      "description": "Patente, taxe foncière, contributions paritaires (RAV, CFC, FNE), droits divers — recoupements à partir des avis et déclarations spécifiques.",
+      "controls": [
+        { "code": "I1", "title": "Patente — existence avis + paiement", "legal_ref": "CGI art. C 1-21", "severity": "BLOCKING", "data": ["PATENTE_AVIS","PAYMENT_PROOF"], "automated": true },
+        { "code": "I2", "title": "Patente — recalcul = CA × taux selon classe d'activité", "legal_ref": "CGI annexe Patente", "severity": "HIGH", "data": ["PATENTE_AVIS","TRIAL_BALANCE"], "automated": true },
+        { "code": "I3", "title": "Taxe foncière — existence pour terrains/bâtiments (cl. 21, 23)", "legal_ref": "CGI art. 577-585", "severity": "HIGH", "data": ["FONCIER_AVIS","TRIAL_BALANCE"], "automated": true },
+        { "code": "I4", "title": "Taxe foncière — recalcul 0,1% valeur administrative", "legal_ref": "CGI art. 581", "severity": "MEDIUM", "data": ["FONCIER_AVIS"], "automated": true },
+        { "code": "I5", "title": "RAV (Redevance audiovisuelle) — sur salaires mensuels", "legal_ref": "Loi de finances", "severity": "MEDIUM", "data": ["MONTHLY_RETURN","PAYROLL"], "automated": true },
+        { "code": "I6", "title": "Acomptes IS trimestriels — 4 paiements effectués", "legal_ref": "CGI art. 21", "severity": "HIGH", "data": ["MONTHLY_RETURN","PAYMENT_PROOF"], "automated": true },
+        { "code": "I7", "title": "Crédit foncier 1% salariés (CFC employé) — déclaration", "legal_ref": "Loi 77/10", "severity": "MEDIUM", "data": ["MONTHLY_RETURN","PAYROLL"], "automated": true },
+        { "code": "I8", "title": "Droit de timbre sur formalités — exhaustivité GL cl. 6478/4477", "legal_ref": "CGI art. 358-557", "severity": "LOW", "data": ["GENERAL_LEDGER"], "automated": true }
+      ]
+    }
+  ]
+}

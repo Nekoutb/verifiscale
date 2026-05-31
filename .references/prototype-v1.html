@@ -1,0 +1,2021 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FiscAudit Pro — Plateforme d'Audit Fiscal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --navy:        #0F2A4A;
+    --navy-deep:   #081A2F;
+    --navy-soft:   #1B3C66;
+    --gold:        #D4A24C;
+    --gold-soft:   #F5E6C8;
+    --emerald:     #059669;
+    --emerald-soft:#D1FAE5;
+    --rose:        #DC2626;
+    --rose-soft:   #FEE2E2;
+    --amber:       #D97706;
+    --amber-soft:  #FEF3C7;
+    --slate-50:    #F8FAFC;
+    --slate-100:   #F1F5F9;
+    --slate-200:   #E2E8F0;
+    --slate-300:   #CBD5E1;
+    --slate-500:   #64748B;
+    --slate-700:   #334155;
+    --slate-900:   #0F172A;
+  }
+  html, body { font-family: 'Inter', system-ui, sans-serif; background: var(--slate-50); color: var(--slate-900); }
+  .font-display { font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; letter-spacing: -0.01em; }
+  .bg-navy { background-color: var(--navy); }
+  .bg-navy-deep { background-color: var(--navy-deep); }
+  .bg-navy-soft { background-color: var(--navy-soft); }
+  .text-navy { color: var(--navy); }
+  .text-gold { color: var(--gold); }
+  .bg-gold { background-color: var(--gold); }
+  .bg-gold-soft { background-color: var(--gold-soft); }
+  .border-navy { border-color: var(--navy); }
+  .border-gold { border-color: var(--gold); }
+
+  /* Sidebar item */
+  .nav-item { @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/5 transition cursor-pointer; }
+  .nav-item.active { background: linear-gradient(90deg, rgba(212,162,76,0.18), rgba(212,162,76,0.02)); color: #fff; border-left: 3px solid var(--gold); padding-left: 13px; }
+  .nav-section { @apply text-[10px] uppercase tracking-widest text-slate-500 font-semibold px-4 mt-5 mb-2; }
+
+  /* Card */
+  .card { @apply bg-white rounded-xl border border-slate-200 shadow-sm; }
+  .card-pad { @apply p-5 sm:p-6; }
+  .card-head { @apply px-5 sm:px-6 py-4 border-b border-slate-200 flex items-center justify-between; }
+
+  /* Buttons */
+  .btn { @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-1; }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy-soft); }
+  .btn-gold { background: var(--gold); color: var(--navy-deep); }
+  .btn-gold:hover { background: #C4912E; }
+  .btn-ghost { @apply text-slate-700 hover:bg-slate-100; }
+  .btn-outline { @apply border border-slate-300 text-slate-700 hover:bg-slate-50; }
+  .btn-danger { @apply bg-rose-600 text-white hover:bg-rose-700; }
+
+  /* Badges */
+  .badge { @apply inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full; }
+  .badge-ok { background: var(--emerald-soft); color: #065F46; }
+  .badge-warn { background: var(--amber-soft); color: #92400E; }
+  .badge-err { background: var(--rose-soft); color: #991B1B; }
+  .badge-info { background: #DBEAFE; color: #1E40AF; }
+  .badge-neutral { background: var(--slate-100); color: var(--slate-700); }
+
+  /* Tables */
+  table.tbl { @apply w-full text-sm; }
+  table.tbl thead th { @apply text-left px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-500 bg-slate-50 border-b border-slate-200; }
+  table.tbl tbody td { @apply px-3 py-2.5 border-b border-slate-100; }
+  table.tbl tbody tr:hover { background: #FAFBFC; }
+  .num { font-variant-numeric: tabular-nums; text-align: right; }
+  .neg { color: var(--rose); }
+
+  /* KPI */
+  .kpi-card { @apply card card-pad; }
+  .kpi-label { @apply text-xs font-medium text-slate-500 uppercase tracking-wider; }
+  .kpi-value { @apply text-2xl font-bold text-slate-900 mt-2 font-display; }
+  .kpi-sub { @apply text-xs text-slate-500 mt-1; }
+
+  /* Inputs */
+  .inp { @apply w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy bg-white; }
+  .lbl { @apply block text-xs font-semibold text-slate-600 mb-1.5; }
+
+  /* Login backdrop */
+  .login-bg {
+    background:
+      radial-gradient(1200px 600px at 80% -100px, rgba(212,162,76,0.12), transparent),
+      radial-gradient(800px 600px at 10% 110%, rgba(27,60,102,0.4), transparent),
+      linear-gradient(135deg, #081A2F 0%, #0F2A4A 60%, #1B3C66 100%);
+  }
+  .grain {
+    background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+
+  /* Drop zone */
+  .dropzone {
+    @apply border-2 border-dashed border-slate-300 rounded-xl bg-slate-50/60 p-8 text-center transition cursor-pointer hover:border-navy hover:bg-slate-50;
+  }
+  .dropzone.drag { @apply border-navy bg-navy/5; }
+
+  /* Spinner */
+  .spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Scrollbar nice */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* Toast */
+  #toast-stack { position: fixed; top: 20px; right: 20px; z-index: 100; display: flex; flex-direction: column; gap: 8px; }
+  .toast { @apply px-4 py-3 rounded-lg shadow-lg text-sm text-white flex items-center gap-2; animation: slideIn 0.25s ease-out; }
+  .toast-ok { background: var(--emerald); }
+  .toast-err { background: var(--rose); }
+  .toast-info { background: var(--navy); }
+  @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+  /* Modal */
+  .modal-bg { position: fixed; inset: 0; background: rgba(8, 26, 47, 0.55); backdrop-filter: blur(4px); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .modal { background: #fff; border-radius: 16px; max-width: 720px; width: 100%; max-height: 90vh; overflow: auto; }
+
+  /* Animations */
+  .fade-in { animation: fadeIn 0.25s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Decorative ribbon */
+  .ribbon {
+    position: absolute; top: 12px; right: -32px; transform: rotate(45deg);
+    background: var(--gold); color: var(--navy-deep);
+    padding: 2px 36px; font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  }
+
+  /* Progress */
+  .progress { @apply h-1.5 bg-slate-200 rounded-full overflow-hidden; }
+  .progress > div { @apply h-full rounded-full transition-all; }
+</style>
+</head>
+<body>
+
+<div id="toast-stack"></div>
+<div id="modal-root"></div>
+<div id="app"></div>
+
+<script>
+/* ======================================================================
+   FiscAudit Pro — Plateforme d'Audit Fiscal
+   Prototype client-side (toutes données en mémoire / localStorage)
+   ====================================================================== */
+
+/* --------- Utilities --------- */
+const fmt = {
+  money: (n, dec=0) => {
+    if (n === null || n === undefined || isNaN(n)) return '—';
+    const s = Number(n).toLocaleString('fr-FR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    return s.replace(/ /g, ' ');
+  },
+  signed: (n) => {
+    const v = Number(n) || 0;
+    return (v < 0 ? '-' : '') + fmt.money(Math.abs(v));
+  },
+  date: (d) => {
+    if (!d) return '—';
+    try { return new Date(d).toLocaleDateString('fr-FR', { day:'2-digit', month:'short', year:'numeric'}); } catch(e){ return d; }
+  },
+  pct: (n) => (n*100).toFixed(1) + '%'
+};
+
+const uid = () => 'id-' + Math.random().toString(36).slice(2, 10);
+
+const toast = (msg, kind='info') => {
+  const stack = document.getElementById('toast-stack');
+  const div = document.createElement('div');
+  div.className = `toast toast-${kind}`;
+  div.innerHTML = `<span>${msg}</span>`;
+  stack.appendChild(div);
+  setTimeout(() => { div.style.opacity = '0'; div.style.transform='translateX(20px)'; setTimeout(()=>div.remove(), 250); }, 3500);
+};
+
+const modal = (html, onClose) => {
+  const root = document.getElementById('modal-root');
+  root.innerHTML = `<div class="modal-bg" id="modal-bg"><div class="modal">${html}</div></div>`;
+  document.getElementById('modal-bg').addEventListener('click', (e) => {
+    if (e.target.id === 'modal-bg') { closeModal(); onClose && onClose(); }
+  });
+};
+const closeModal = () => { document.getElementById('modal-root').innerHTML = ''; };
+
+/* --------- Icons (inline SVG, Heroicons-style) --------- */
+const ico = {
+  dashboard: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 8.25V6Zm0 9.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 8.25 20.25H6A2.25 2.25 0 0 1 3.75 18v-2.25Zm9.75-9.75A2.25 2.25 0 0 1 15.75 3.75H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6Zm0 9.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"/></svg>',
+  folder: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"/></svg>',
+  scale: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v18m6.75-12.75L21 12l-2.25 3.75M5.25 8.25 3 12l2.25 3.75"/></svg>',
+  shield: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>',
+  balance: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6h18M3 12h18M3 18h18"/></svg>',
+  calendar: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"/></svg>',
+  archive: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5-.625 4.875A3.375 3.375 0 0 0 16.27 3H7.73A3.375 3.375 0 0 0 4.375 4.875L3.75 7.5M3 7.5h18M5.25 7.5l1.5 12.75A1.5 1.5 0 0 0 8.25 21.75h7.5A1.5 1.5 0 0 0 17.25 20.25l1.5-12.75"/></svg>',
+  invoice: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2Z"/></svg>',
+  report: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3h7.5m3-9V21A1.5 1.5 0 0 1 17.25 22.5H6.75A1.5 1.5 0 0 1 5.25 21V4.5A1.5 1.5 0 0 1 6.75 3h6.879a1.5 1.5 0 0 1 1.06.44l4.122 4.121A1.5 1.5 0 0 1 19.5 8.621Z"/></svg>',
+  user: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a7.5 7.5 0 0 1 15 0v.75H4.5v-.75Z"/></svg>',
+  bell: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022 23.848 23.848 0 0 0 5.454 1.31m6.715 0a24.255 24.255 0 0 1-6.715 0m6.715 0a3 3 0 1 1-6.715 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"/></svg>',
+  logout: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"/></svg>',
+  search: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>',
+  plus: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>',
+  upload: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 7.5m0 0L7.5 12M12 7.5v9"/></svg>',
+  download: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>',
+  play: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"/></svg>',
+  check: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>',
+  x: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>',
+  warn: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"/></svg>',
+  info: '<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/></svg>',
+  shieldFill: '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.21 11.21 0 0 1-7.877 3.08.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.75.75 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001a11.21 11.21 0 0 1-7.734-3.08Zm3.78 6.78a.75.75 0 0 0-1.06-1.06l-4.97 4.97-1.97-1.97a.75.75 0 0 0-1.06 1.06l2.5 2.5a.75.75 0 0 0 1.06 0l5.5-5.5Z"/></svg>'
+};
+
+/* --------- SYSCOHADA / CEMAC sample seeds --------- */
+const SEED_USERS = [
+  { id:'u1', name:'M. Etoundi Bertrand', role:'Auditeur Principal', email:'b.etoundi@dgi.cm', initials:'EB', org:'DGI - Brigade Régionale Centre' },
+  { id:'u2', name:'Mme Ngono Sylvie', role:'Superviseur', email:'s.ngono@dgi.cm', initials:'NS', org:'DGI - Direction des Grandes Entreprises' },
+  { id:'u3', name:'M. Mbarga Joseph', role:'Auditeur', email:'j.mbarga@dgi.cm', initials:'MJ', org:'DGI - CIME Yaoundé' },
+];
+
+const SEED_AUDITS = [
+  {
+    id:'a1', taxpayer:'SOCIÉTÉ CAMEROUNAISE DE NÉGOCE SA', niu:'M021712345678P',
+    sector:'Commerce de gros', period:'Exercice 2024', status:'En cours',
+    riskLevel:'Élevé', progress:62, startDate:'2026-02-10', assignee:'u1',
+    address:'Akwa, Douala', regime:'Réel'
+  },
+  {
+    id:'a2', taxpayer:'CIMENTERIES DU LITTORAL SARL', niu:'P081498765432K',
+    sector:'Industrie - BTP', period:'Exercice 2024', status:'Planification',
+    riskLevel:'Moyen', progress:18, startDate:'2026-04-22', assignee:'u3',
+    address:'Bonabéri, Douala', regime:'Réel'
+  },
+  {
+    id:'a3', taxpayer:'AGRO SERVICES CAMEROUN SA', niu:'M021598732145D',
+    sector:'Agro-industrie', period:'Exercice 2023', status:'Rapport',
+    riskLevel:'Faible', progress:94, startDate:'2025-11-03', assignee:'u1',
+    address:'Bafoussam', regime:'Réel'
+  }
+];
+
+/* Sample trial balance (6 colonnes) — SYSCOHADA chart of accounts */
+const SEED_TB = [
+  { acct:'101000', name:'Capital social',                openD:0,         openC:200000000, periodD:0,         periodC:0,         closeD:0,         closeC:200000000 },
+  { acct:'106000', name:'Réserves',                      openD:0,         openC:45000000,  periodD:0,         periodC:12000000,  closeD:0,         closeC:57000000 },
+  { acct:'161000', name:'Emprunts auprès EC',            openD:0,         openC:80000000,  periodD:25000000,  periodC:0,         closeD:0,         closeC:55000000 },
+  { acct:'211000', name:'Terrains',                      openD:35000000,  openC:0,         periodD:0,         periodC:0,         closeD:35000000,  closeC:0 },
+  { acct:'231000', name:'Bâtiments',                     openD:120000000, openC:0,         periodD:8500000,   periodC:0,         closeD:128500000, closeC:0 },
+  { acct:'2831000',name:'Amort. bâtiments',              openD:0,         openC:42000000,  periodD:0,         periodC:6420000,   closeD:0,         closeC:48420000 },
+  { acct:'401000', name:'Fournisseurs',                  openD:0,         openC:34500000,  periodD:182300000, periodC:201800000, closeD:0,         closeC:54000000 },
+  { acct:'411000', name:'Clients',                       openD:67800000,  openC:0,         periodD:312400000, periodC:285600000, closeD:94600000,  closeC:0 },
+  { acct:'4452000',name:'TVA déductible/biens et serv.', openD:8200000,   openC:0,         periodD:31200000,  periodC:32800000,  closeD:6600000,   closeC:0 },
+  { acct:'4431000',name:'TVA facturée',                  openD:0,         openC:11400000,  periodD:48900000,  periodC:51200000,  closeD:0,         closeC:13700000 },
+  { acct:'4441000',name:'État, impôt sur les bénéfices', openD:0,         openC:14200000,  periodD:14200000,  periodC:18500000,  closeD:0,         closeC:18500000 },
+  { acct:'4471000',name:'État, IRPP retenu',             openD:0,         openC:2300000,   periodD:24800000,  periodC:25900000,  closeD:0,         closeC:3400000 },
+  { acct:'4311000',name:'CNPS',                          openD:0,         openC:3100000,   periodD:18400000,  periodC:19200000,  closeD:0,         closeC:3900000 },
+  { acct:'512000', name:'Banque - SGC',                  openD:42100000,  openC:0,         periodD:298000000, periodC:267500000, closeD:72600000,  closeC:0 },
+  { acct:'571000', name:'Caisse',                        openD:1850000,   openC:0,         periodD:8400000,   periodC:7900000,   closeD:2350000,   closeC:0 },
+  { acct:'601000', name:'Achats de marchandises',        openD:0,         openC:0,         periodD:168400000, periodC:0,         closeD:168400000, closeC:0 },
+  { acct:'604000', name:'Achats stockés mat. & fourn.',  openD:0,         openC:0,         periodD:42100000,  periodC:0,         closeD:42100000,  closeC:0 },
+  { acct:'622000', name:'Locations',                     openD:0,         openC:0,         periodD:18000000,  periodC:0,         closeD:18000000,  closeC:0 },
+  { acct:'627000', name:'Services bancaires',            openD:0,         openC:0,         periodD:2800000,   periodC:0,         closeD:2800000,   closeC:0 },
+  { acct:'641000', name:'Impôts et taxes',               openD:0,         openC:0,         periodD:9400000,   periodC:0,         closeD:9400000,   closeC:0 },
+  { acct:'661000', name:'Charges de personnel',          openD:0,         openC:0,         periodD:74600000,  periodC:0,         closeD:74600000,  closeC:0 },
+  { acct:'681000', name:'Dotations aux amort.',          openD:0,         openC:0,         periodD:6420000,   periodC:0,         closeD:6420000,   closeC:0 },
+  { acct:'701000', name:'Ventes de marchandises',        openD:0,         openC:0,         periodD:0,         periodC:298400000, closeD:0,         closeC:298400000 },
+  { acct:'706000', name:'Prestations de services',       openD:0,         openC:0,         periodD:0,         periodC:46200000,  closeD:0,         closeC:46200000 },
+  { acct:'771000', name:'Produits financiers',           openD:0,         openC:0,         periodD:0,         periodC:1800000,   closeD:0,         closeC:1800000 },
+];
+
+/* Sample general ledger lines (sub-set) */
+const SEED_GL = (() => {
+  // synthesize ~150 lines across the period
+  const rng = (seed=>()=>(seed=seed*9301+49297)%233280/233280)(7);
+  const journals = ['VTE','ACH','BNK','OD','CAI','PAY'];
+  const lines = [];
+  let pieceCounter = 1;
+  // Build movements that sum to TB.periodD/periodC for each acct
+  for (const a of SEED_TB) {
+    // Splits debits
+    let remD = a.periodD, remC = a.periodC;
+    while (remD > 0) {
+      const v = Math.min(remD, Math.round(remD * (0.2 + rng()*0.6)));
+      const month = 1 + Math.floor(rng()*12);
+      lines.push({
+        date: `2024-${String(month).padStart(2,'0')}-${String(2+Math.floor(rng()*26)).padStart(2,'0')}`,
+        piece: `${journals[Math.floor(rng()*journals.length)]}-${String(pieceCounter++).padStart(5,'0')}`,
+        journal: journals[Math.floor(rng()*journals.length)],
+        acct: a.acct, name: a.name,
+        libelle: `Mouvement ${a.name}`,
+        debit: v, credit: 0
+      });
+      remD -= v;
+    }
+    while (remC > 0) {
+      const v = Math.min(remC, Math.round(remC * (0.2 + rng()*0.6)));
+      const month = 1 + Math.floor(rng()*12);
+      lines.push({
+        date: `2024-${String(month).padStart(2,'0')}-${String(2+Math.floor(rng()*26)).padStart(2,'0')}`,
+        piece: `${journals[Math.floor(rng()*journals.length)]}-${String(pieceCounter++).padStart(5,'0')}`,
+        journal: journals[Math.floor(rng()*journals.length)],
+        acct: a.acct, name: a.name,
+        libelle: `Mouvement ${a.name}`,
+        debit: 0, credit: v
+      });
+      remC -= v;
+    }
+  }
+  // Inject 2 deliberate variances so reconciliation flags them
+  lines.push({ date:'2024-08-15', piece:'OD-99001', journal:'OD', acct:'601000', name:'Achats de marchandises',
+              libelle:'Régul. achats non rapprochée', debit:1250000, credit:0 });
+  lines.push({ date:'2024-11-29', piece:'BNK-99002', journal:'BNK', acct:'512000', name:'Banque - SGC',
+              libelle:'Frais bancaires non comptabilisés (GL only)', debit:0, credit:425000 });
+  return lines.sort((x,y)=>x.date.localeCompare(y.date));
+})();
+
+/* Sample journal entries (each entry = one piece, several lines) */
+const SEED_JE = (() => {
+  // build entries by piece from GL
+  const map = {};
+  for (const l of SEED_GL) {
+    map[l.piece] = map[l.piece] || { piece:l.piece, date:l.date, journal:l.journal, lines:[] };
+    map[l.piece].lines.push({ acct:l.acct, name:l.name, libelle:l.libelle, debit:l.debit, credit:l.credit });
+  }
+  const arr = Object.values(map);
+  // inject deliberately unbalanced entries
+  arr.push({
+    piece:'OD-99100', date:'2024-06-10', journal:'OD',
+    lines:[
+      { acct:'401000', name:'Fournisseurs', libelle:'Règlement partiel', debit:0, credit:850000 },
+      { acct:'512000', name:'Banque - SGC', libelle:'Règlement partiel', debit:800000, credit:0 }
+    ]
+  });
+  arr.push({
+    piece:'OD-99101', date:'2024-09-22', journal:'OD',
+    lines:[
+      { acct:'622000', name:'Locations', libelle:'Loyer Q3', debit:1500000, credit:0 },
+      { acct:'4452000', name:'TVA déductible', libelle:'TVA loyer', debit:288750, credit:0 },
+      { acct:'512000', name:'Banque - SGC', libelle:'Décaissement', debit:0, credit:1788000 }
+    ]
+  });
+  return arr;
+})();
+
+/* Monthly tax returns (TVA, IRPP, Acomptes IS) — sample */
+const SEED_MONTHLY = (() => {
+  const months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+  const rng = (seed=>()=>(seed=seed*9301+49297)%233280/233280)(13);
+  const out = [];
+  for (const m of months) {
+    const ca = 22000000 + Math.round(rng()*8000000);
+    const achats = 13000000 + Math.round(rng()*4000000);
+    out.push({
+      month: `2024-${m}`,
+      tvaCollectee: Math.round(ca * 0.1925),
+      tvaDeductible: Math.round(achats * 0.1925),
+      tvaNette: Math.round(ca*0.1925 - achats*0.1925),
+      caDeclare: ca,
+      achatsDeclare: achats,
+      irpp: Math.round(5800000 + rng()*900000),
+      acompteIS: Math.round(ca * 0.022),
+      cnps: Math.round(5500000 + rng()*800000)
+    });
+  }
+  return out;
+})();
+
+const SEED_ANNUAL = {
+  exercice: '2024',
+  caTotal: 344600000,
+  achatsTotal: 210500000,
+  chargesPersonnel: 74600000,
+  resultatFiscal: 38700000,
+  isLiquide: 12642000,
+  acomptesVerses: 7574200,
+  isAPayer: 5067800,
+  tvaAnnuelleCollectee: 65310000,
+  tvaAnnuelleDeductible: 40425000
+};
+
+const SEED_INVOICES = [
+  { id:'i1', supplier:'ÉNERGIE DU CAMEROUN SA', niu:'M021400000001E', invNo:'F-2024-0451', date:'2024-03-15',
+    ht:2580000, tva:496650, ttc:3076650, designation:'Fourniture électricité Q1',
+    hasNIU:true, hasAddress:true, hasTVA:true, hasClientInfo:true, hasDate:true, hasMontant:true, hasDesignation:true, regimeFournisseur:'Réel', valid:true },
+  { id:'i2', supplier:'PAPETERIE GÉNÉRALE', niu:'', invNo:'2024/0312', date:'2024-04-02',
+    ht:185000, tva:35613, ttc:220613, designation:'Fournitures bureau',
+    hasNIU:false, hasAddress:true, hasTVA:true, hasClientInfo:false, hasDate:true, hasMontant:true, hasDesignation:true, regimeFournisseur:'Inconnu', valid:false },
+  { id:'i3', supplier:'TRANSPORT EXPRESS SARL', niu:'M021455661234X', invNo:'TX-8821', date:'2024-05-21',
+    ht:1450000, tva:279125, ttc:1729125, designation:'Transport marchandises',
+    hasNIU:true, hasAddress:true, hasTVA:true, hasClientInfo:true, hasDate:true, hasMontant:true, hasDesignation:true, regimeFournisseur:'Réel', valid:true },
+  { id:'i4', supplier:'CONSULTING ALPHA', niu:'M021488776655Y', invNo:'CA-2024-09', date:'2024-06-30',
+    ht:8500000, tva:1636250, ttc:10136250, designation:'Honoraires conseil',
+    hasNIU:true, hasAddress:false, hasTVA:true, hasClientInfo:true, hasDate:true, hasMontant:true, hasDesignation:true, regimeFournisseur:'Réel', valid:false },
+];
+
+/* --------- App state --------- */
+const App = {
+  state: {
+    user: null,
+    audits: SEED_AUDITS,
+    currentAudit: null,
+    view: 'login',
+    data: {
+      trialBalance: SEED_TB,
+      generalLedger: SEED_GL,
+      journalEntries: SEED_JE,
+      monthlyReturns: SEED_MONTHLY,
+      annualReturn: SEED_ANNUAL,
+      supplierInvoices: SEED_INVOICES
+    }
+  },
+
+  init() {
+    // restore session
+    try {
+      const sess = JSON.parse(localStorage.getItem('fa_session') || 'null');
+      if (sess && sess.userId) {
+        const u = SEED_USERS.find(x => x.id === sess.userId);
+        if (u) { this.state.user = u; this.state.currentAudit = SEED_AUDITS[0]; this.state.view = 'dashboard'; }
+      }
+    } catch(e){}
+    this.render();
+  },
+
+  go(view) {
+    this.state.view = view;
+    this.render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  },
+
+  login(userId) {
+    const u = SEED_USERS.find(x => x.id === userId);
+    if (!u) return toast('Utilisateur introuvable', 'err');
+    this.state.user = u;
+    this.state.currentAudit = SEED_AUDITS[0];
+    this.state.view = 'dashboard';
+    localStorage.setItem('fa_session', JSON.stringify({ userId }));
+    toast(`Bienvenue ${u.name.split(' ')[0]}`, 'ok');
+    this.render();
+  },
+
+  logout() {
+    localStorage.removeItem('fa_session');
+    this.state.user = null;
+    this.state.view = 'login';
+    this.render();
+  },
+
+  setAudit(id) {
+    const a = this.state.audits.find(x => x.id === id);
+    if (a) { this.state.currentAudit = a; this.render(); }
+  },
+
+  /* ------------- Render dispatcher ------------- */
+  render() {
+    const root = document.getElementById('app');
+    if (this.state.view === 'login' || !this.state.user) {
+      root.innerHTML = Views.login();
+      Wire.login();
+      return;
+    }
+    root.innerHTML = `
+      <div class="flex min-h-screen">
+        ${Views.sidebar()}
+        <main class="flex-1 flex flex-col min-w-0">
+          ${Views.topbar()}
+          <div id="page" class="flex-1 p-6 lg:p-8 fade-in">${this.renderPage()}</div>
+        </main>
+      </div>
+    `;
+    Wire.shell();
+    Wire.page();
+  },
+
+  renderPage() {
+    const v = this.state.view;
+    if (Views.pages[v]) return Views.pages[v]();
+    return Views.pages.dashboard();
+  }
+};
+
+/* --------- Views --------- */
+const Views = {
+
+  /* ----- Login ----- */
+  login() {
+    return `
+      <div class="login-bg min-h-screen relative overflow-hidden">
+        <div class="grain absolute inset-0 opacity-50 pointer-events-none"></div>
+        <div class="relative max-w-7xl mx-auto px-6 py-10">
+          <div class="flex items-center justify-between mb-16">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 rounded-xl bg-gold flex items-center justify-center text-navy-deep font-bold text-lg shadow-lg">FA</div>
+              <div>
+                <div class="text-white font-display font-bold text-lg leading-tight">FiscAudit Pro</div>
+                <div class="text-slate-300 text-xs tracking-wider">DIRECTION GÉNÉRALE DES IMPÔTS</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400 uppercase tracking-widest">République du Cameroun</div>
+              <div class="text-xs text-slate-500">Paix — Travail — Patrie</div>
+            </div>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="text-white">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs font-medium mb-6">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
+                Plateforme certifiée pour l'audit fiscal · v1.0
+              </div>
+              <h1 class="font-display text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6">
+                L'audit fiscal,<br/>
+                <span class="text-gold">automatisé</span> et <span class="text-gold">rigoureux</span>.
+              </h1>
+              <p class="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
+                Centralisez balance générale, grand livre, écritures, déclarations et factures fournisseurs dans une seule plateforme. Réalisez vos rapprochements, contrôles d'intégrité et revues réglementaires en quelques clics.
+              </p>
+              <div class="grid grid-cols-2 gap-6 max-w-lg">
+                ${[
+                  ['Rollforward Balance 6 colonnes →GL', ico.scale],
+                  ['Contrôle d\'équilibre des écritures', ico.shield],
+                  ['Rapprochement déclarations fiscales', ico.calendar],
+                  ['Conditions de fond & de forme', ico.invoice]
+                ].map(([t,i]) => `
+                  <div class="flex items-start gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-gold flex-shrink-0">${i}</div>
+                    <div class="text-sm text-slate-200 leading-snug pt-1">${t}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="card relative shadow-2xl overflow-hidden">
+              <div class="ribbon">DÉMO</div>
+              <div class="card-pad">
+                <h2 class="font-display text-2xl font-bold text-navy mb-1">Connexion</h2>
+                <p class="text-sm text-slate-500 mb-6">Sélectionnez un profil d'auditeur pour explorer la plateforme.</p>
+
+                <div class="space-y-2.5">
+                  ${SEED_USERS.map(u => `
+                    <button data-userid="${u.id}" class="login-btn group w-full flex items-center gap-4 p-3.5 rounded-xl border border-slate-200 hover:border-navy hover:bg-slate-50 transition text-left">
+                      <div class="w-11 h-11 rounded-full bg-navy text-white flex items-center justify-center font-semibold text-sm shadow">${u.initials}</div>
+                      <div class="flex-1 min-w-0">
+                        <div class="font-semibold text-slate-900 text-sm truncate">${u.name}</div>
+                        <div class="text-xs text-slate-500 truncate">${u.role} · ${u.org}</div>
+                      </div>
+                      <div class="text-slate-400 group-hover:text-navy transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                      </div>
+                    </button>
+                  `).join('')}
+                </div>
+
+                <div class="mt-6 pt-5 border-t border-slate-200">
+                  <div class="flex items-center justify-between text-xs text-slate-500">
+                    <div class="flex items-center gap-2"><span class="text-emerald-600">${ico.shieldFill}</span> Connexion chiffrée AES-256</div>
+                    <a href="#" class="text-navy font-medium hover:underline">Aide à la connexion</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-slate-300">
+            ${[
+              ['12 480', 'Audits menés'],
+              ['€ 184 Md', 'Redressements notifiés'],
+              ['97,3%', 'Conformité OHADA'],
+              ['4 200+', 'Auditeurs certifiés']
+            ].map(([n,l]) => `
+              <div>
+                <div class="font-display text-2xl font-bold text-gold">${n}</div>
+                <div class="text-xs uppercase tracking-widest mt-1">${l}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  /* ----- Sidebar ----- */
+  sidebar() {
+    const u = App.state.user;
+    const v = App.state.view;
+    const items = [
+      { id:'dashboard',     label:'Tableau de bord',          icon:ico.dashboard, section:'GÉNÉRAL' },
+      { id:'audits',        label:'Dossiers d\'audit',        icon:ico.folder },
+      { id:'trialBalance',  label:'Balance & Rollforward',    icon:ico.scale, section:'CONTRÔLES COMPTABLES' },
+      { id:'integrity',     label:'Intégrité des écritures',  icon:ico.shield },
+      { id:'tbBalance',     label:'Équilibre de la balance',  icon:ico.balance },
+      { id:'monthlyRet',    label:'Déclarations mensuelles',  icon:ico.calendar, section:'CONTRÔLES FISCAUX' },
+      { id:'annualRet',     label:'Déclarations annuelles',   icon:ico.archive },
+      { id:'invoices',      label:'Factures fournisseurs',    icon:ico.invoice },
+      { id:'reports',       label:'Rapports & Notifications', icon:ico.report, section:'RESTITUTION' },
+    ];
+    return `
+      <aside class="bg-navy-deep text-slate-200 w-64 flex-shrink-0 flex flex-col">
+        <div class="px-5 py-5 border-b border-white/5">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-gold flex items-center justify-center text-navy-deep font-bold text-sm shadow">FA</div>
+            <div>
+              <div class="font-display font-bold text-white text-sm">FiscAudit Pro</div>
+              <div class="text-[10px] text-slate-400 tracking-wider">DGI · CAMEROUN</div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 overflow-y-auto">
+          ${items.map(it => `
+            ${it.section ? `<div class="nav-section">${it.section}</div>` : ''}
+            <div data-nav="${it.id}" class="nav-item ${v===it.id?'active':''}">
+              ${it.icon}
+              <span>${it.label}</span>
+            </div>
+          `).join('')}
+        </nav>
+
+        <div class="px-3 py-4 border-t border-white/5">
+          <div class="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/5 transition cursor-pointer">
+            <div class="w-9 h-9 rounded-full bg-gold/20 text-gold flex items-center justify-center font-semibold text-sm">${u.initials}</div>
+            <div class="flex-1 min-w-0">
+              <div class="text-sm text-white font-medium truncate">${u.name.split(' ').slice(0,2).join(' ')}</div>
+              <div class="text-[11px] text-slate-400 truncate">${u.role}</div>
+            </div>
+            <button id="logout-btn" class="text-slate-400 hover:text-white" title="Se déconnecter">${ico.logout}</button>
+          </div>
+        </div>
+      </aside>
+    `;
+  },
+
+  /* ----- Topbar ----- */
+  topbar() {
+    const a = App.state.currentAudit;
+    return `
+      <header class="bg-white border-b border-slate-200 px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-4 min-w-0 flex-1">
+          <div class="hidden md:block">
+            <div class="text-[11px] text-slate-500 uppercase tracking-widest">Dossier actif</div>
+            <div class="flex items-center gap-2 mt-0.5">
+              <select id="audit-select" class="bg-transparent text-sm font-semibold text-slate-900 cursor-pointer focus:outline-none border-none p-0 pr-6">
+                ${App.state.audits.map(x => `<option value="${x.id}" ${x.id===a.id?'selected':''}>${x.taxpayer}</option>`).join('')}
+              </select>
+              <span class="badge ${a.riskLevel==='Élevé'?'badge-err':a.riskLevel==='Moyen'?'badge-warn':'badge-ok'}">Risque ${a.riskLevel}</span>
+              <span class="badge badge-neutral">${a.period}</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="relative hidden lg:block">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">${ico.search}</span>
+            <input class="pl-9 pr-3 py-2 w-72 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy bg-slate-50" placeholder="Rechercher contribuable, NIU, écriture..."/>
+          </div>
+          <button class="relative p-2 rounded-lg hover:bg-slate-100 text-slate-600">${ico.bell}<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-gold"></span></button>
+          <div class="h-7 w-px bg-slate-200 mx-1"></div>
+          <button class="btn btn-outline hidden md:inline-flex" id="export-btn">${ico.download}<span class="hidden lg:inline">Exporter</span></button>
+          <button class="btn btn-gold" id="run-btn">${ico.play}<span>Lancer un contrôle</span></button>
+        </div>
+      </header>
+    `;
+  },
+
+  pages: {
+
+    /* =========================================================
+       DASHBOARD
+       ========================================================= */
+    dashboard() {
+      const a = App.state.currentAudit;
+      const tb = App.state.data.trialBalance;
+      const je = App.state.data.journalEntries;
+      const totals = tb.reduce((s, r) => ({
+        debit: s.debit + r.closeD, credit: s.credit + r.closeC,
+        accounts: s.accounts + 1
+      }), { debit:0, credit:0, accounts:0 });
+      const unbalancedJE = je.filter(e => {
+        const d = e.lines.reduce((s,l)=>s+l.debit,0);
+        const c = e.lines.reduce((s,l)=>s+l.credit,0);
+        return Math.abs(d-c) > 0.01;
+      }).length;
+      const invalidInv = App.state.data.supplierInvoices.filter(i => !i.valid).length;
+
+      return `
+        <div class="mb-6 flex items-end justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="font-display text-2xl font-bold text-slate-900">Bonjour ${App.state.user.name.split(' ')[1] || App.state.user.name.split(' ')[0]} 👋</h1>
+            <p class="text-sm text-slate-500 mt-1">Voici une vue synthétique du dossier <span class="font-medium text-slate-700">${a.taxpayer}</span> · NIU ${a.niu}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-outline" data-go="audits">${ico.folder}<span>Tous les dossiers</span></button>
+            <button class="btn btn-primary" data-go="trialBalance">${ico.play}<span>Reprendre l'audit</span></button>
+          </div>
+        </div>
+
+        <!-- KPI grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="kpi-card">
+            <div class="kpi-label">Comptes analysés</div>
+            <div class="kpi-value">${totals.accounts}</div>
+            <div class="kpi-sub">Balance ${a.period}</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Total débits</div>
+            <div class="kpi-value">${fmt.money(totals.debit)} <span class="text-xs text-slate-400 font-normal">FCFA</span></div>
+            <div class="kpi-sub flex items-center gap-1"><span class="${Math.abs(totals.debit-totals.credit)<1 ? 'text-emerald-600' : 'text-rose-600'} font-medium">${Math.abs(totals.debit-totals.credit)<1 ? '● Équilibrée' : '● Écart '+fmt.money(Math.abs(totals.debit-totals.credit))}</span></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Écritures déséquilibrées</div>
+            <div class="kpi-value ${unbalancedJE>0?'text-rose-600':''}">${unbalancedJE}</div>
+            <div class="kpi-sub">/ ${je.length} écritures contrôlées</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Factures non-conformes</div>
+            <div class="kpi-value ${invalidInv>0?'text-amber-600':''}">${invalidInv}</div>
+            <div class="kpi-sub">/ ${App.state.data.supplierInvoices.length} factures examinées</div>
+          </div>
+        </div>
+
+        <!-- Progress + Charts -->
+        <div class="grid lg:grid-cols-3 gap-4 mb-6">
+          <div class="card lg:col-span-2">
+            <div class="card-head">
+              <div>
+                <h3 class="font-semibold text-slate-900">Avancement de l'audit</h3>
+                <p class="text-xs text-slate-500">Étapes de la mission ${a.taxpayer}</p>
+              </div>
+              <span class="text-sm font-semibold text-navy">${a.progress}%</span>
+            </div>
+            <div class="card-pad">
+              <div class="progress mb-5"><div class="bg-navy" style="width:${a.progress}%"></div></div>
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
+                ${[
+                  ['Lettre de mission', true],
+                  ['Collecte données', true],
+                  ['Contrôles comptables', true],
+                  ['Contrôles fiscaux', a.progress>=70],
+                  ['Notification', a.progress>=90]
+                ].map(([s, done]) => `
+                  <div>
+                    <div class="w-9 h-9 mx-auto rounded-full flex items-center justify-center ${done?'bg-emerald-100 text-emerald-700':'bg-slate-100 text-slate-400'}">
+                      ${done ? ico.check : '<span class="text-xs font-semibold">·</span>'}
+                    </div>
+                    <div class="text-[11px] mt-2 ${done?'text-slate-700 font-medium':'text-slate-400'}">${s}</div>
+                  </div>
+                `).join('')}
+              </div>
+              <div class="mt-6 border-t border-slate-100 pt-5">
+                <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Synthèse de l'activité</h4>
+                <canvas id="dash-activity" height="80"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <h3 class="font-semibold text-slate-900">Risques identifiés</h3>
+              <span class="badge badge-err">3 alertes</span>
+            </div>
+            <div class="card-pad space-y-3">
+              ${[
+                ['err','TVA non rapprochée',     'Écart de 425 000 FCFA entre TVA collectée GL et TVA déclarée'],
+                ['warn','Factures sans NIU',     '2 factures fournisseurs ne portent pas le NIU obligatoire'],
+                ['warn','Écritures déséquilibrées','2 écritures OD ne s\'équilibrent pas individuellement'],
+                ['info','Provisions à analyser',  'Compte 681 en hausse de +18% vs N-1, justifier']
+              ].map(([k, t, d]) => `
+                <div class="flex items-start gap-3">
+                  <div class="badge badge-${k==='err'?'err':k==='warn'?'warn':'info'} mt-0.5">${k==='err'?ico.warn:k==='warn'?ico.warn:ico.info}</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium text-slate-900">${t}</div>
+                    <div class="text-xs text-slate-500 leading-snug mt-0.5">${d}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Module shortcuts -->
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold text-slate-900">Modules de contrôle</h3>
+            <a class="text-sm text-navy font-medium hover:underline cursor-pointer" data-go="audits">Voir tous les dossiers →</a>
+          </div>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-slate-100">
+            ${[
+              ['trialBalance', ico.scale,    'Balance & Rollforward', 'Rapprocher la balance 6 colonnes au grand livre et identifier les écarts par compte.'],
+              ['integrity',    ico.shield,   'Intégrité des écritures','Vérifier que chaque pièce comptable s\'équilibre individuellement (débit = crédit).'],
+              ['tbBalance',    ico.balance,  'Équilibre balance',     'Contrôle global : total débits = total crédits sur la balance générale.'],
+              ['monthlyRet',   ico.calendar, 'Déclarations mensuelles','Rapprocher TVA, IRPP, acomptes IS aux comptes du grand livre concernés.'],
+              ['annualRet',    ico.archive,  'Déclarations annuelles','Rapprocher la DSF et l\'IS annuel à la balance et au grand livre.'],
+              ['invoices',     ico.invoice,  'Factures fournisseurs', 'Contrôler les conditions de fond et de forme des factures déductibles.']
+            ].map(([id,i,t,d]) => `
+              <div class="bg-white p-5 hover:bg-slate-50 cursor-pointer transition" data-go="${id}">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-navy/5 text-navy flex items-center justify-center">${i}</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-slate-900">${t}</div>
+                    <div class="text-xs text-slate-500 mt-1 leading-snug">${d}</div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       DOSSIERS D'AUDIT
+       ========================================================= */
+    audits() {
+      const list = App.state.audits;
+      return `
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Dossiers d'audit</h1>
+            <p class="text-sm text-slate-500 mt-1">Gérez les contribuables sous contrôle et leurs missions associées.</p>
+          </div>
+          <button class="btn btn-primary" id="new-audit-btn">${ico.plus}<span>Nouveau dossier</span></button>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          ${[
+            ['Dossiers actifs', list.filter(x=>x.status!=='Clos').length, 'text-navy'],
+            ['Risque élevé',    list.filter(x=>x.riskLevel==='Élevé').length, 'text-rose-600'],
+            ['Avancement moyen', Math.round(list.reduce((s,x)=>s+x.progress,0)/list.length)+'%', 'text-emerald-600']
+          ].map(([l,v,c]) => `
+            <div class="kpi-card"><div class="kpi-label">${l}</div><div class="kpi-value ${c}">${v}</div></div>
+          `).join('')}
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold">Liste des dossiers</h3>
+            <div class="flex gap-2">
+              <select class="inp w-auto"><option>Tous les statuts</option><option>En cours</option><option>Planification</option><option>Rapport</option></select>
+              <select class="inp w-auto"><option>Tous les risques</option><option>Élevé</option><option>Moyen</option><option>Faible</option></select>
+            </div>
+          </div>
+          <table class="tbl">
+            <thead><tr>
+              <th>Contribuable</th><th>NIU</th><th>Secteur</th><th>Exercice</th><th>Statut</th><th>Risque</th><th>Avancement</th><th></th>
+            </tr></thead>
+            <tbody>
+              ${list.map(x => `
+                <tr>
+                  <td class="font-medium text-slate-900">${x.taxpayer}</td>
+                  <td><span class="font-mono text-xs">${x.niu}</span></td>
+                  <td class="text-slate-600">${x.sector}</td>
+                  <td class="text-slate-600">${x.period}</td>
+                  <td><span class="badge ${x.status==='En cours'?'badge-info':x.status==='Rapport'?'badge-warn':'badge-neutral'}">${x.status}</span></td>
+                  <td><span class="badge ${x.riskLevel==='Élevé'?'badge-err':x.riskLevel==='Moyen'?'badge-warn':'badge-ok'}">${x.riskLevel}</span></td>
+                  <td style="min-width:120px"><div class="progress"><div class="bg-navy" style="width:${x.progress}%"></div></div><div class="text-[11px] text-slate-500 mt-1">${x.progress}%</div></td>
+                  <td><button class="btn btn-outline open-audit" data-id="${x.id}" style="padding:4px 10px;font-size:12px">Ouvrir</button></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       BALANCE & ROLLFORWARD
+       ========================================================= */
+    trialBalance() {
+      const tb = App.state.data.trialBalance;
+      const gl = App.state.data.generalLedger;
+
+      // Aggregate GL movements by account
+      const glAgg = {};
+      for (const l of gl) {
+        glAgg[l.acct] = glAgg[l.acct] || { d:0, c:0 };
+        glAgg[l.acct].d += l.debit;
+        glAgg[l.acct].c += l.credit;
+      }
+
+      // Rollforward analysis: opening + period = closing
+      const rolled = tb.map(r => {
+        const expCloseD = r.openD + r.periodD - r.periodC;
+        const expCloseC = r.openC + r.periodC - r.periodD;
+        const tbCloseNet = r.closeD - r.closeC;
+        const expCloseNet = (r.openD - r.openC) + (r.periodD - r.periodC);
+        const tbVariance = tbCloseNet - expCloseNet;
+        const glPeriod = glAgg[r.acct] || { d:0, c:0 };
+        const glVariance = (r.periodD - glPeriod.d) + (glPeriod.c - r.periodC);
+        return { ...r, expCloseNet, tbCloseNet, tbVariance, glPeriodD:glPeriod.d, glPeriodC:glPeriod.c, glVariance };
+      });
+
+      const totRollOk    = rolled.filter(r => Math.abs(r.tbVariance) < 0.01).length;
+      const totGlOk      = rolled.filter(r => Math.abs(r.glVariance) < 0.01).length;
+      const totGlIssues  = rolled.filter(r => Math.abs(r.glVariance) > 0.01);
+      const totRollIssues= rolled.filter(r => Math.abs(r.tbVariance) > 0.01);
+
+      return `
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Balance & Rollforward</h1>
+          <p class="text-sm text-slate-500 mt-1">Importer la balance 6 colonnes et le grand livre · vérifier rollforward et écarts par compte.</p>
+        </div>
+
+        <!-- Upload zone -->
+        <div class="grid md:grid-cols-2 gap-4 mb-6">
+          <div class="card card-pad">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="font-semibold text-slate-900 text-sm">Balance générale (6 colonnes)</div>
+                <div class="text-xs text-slate-500">Format attendu : Excel/CSV — Compte · Libellé · Ouv.D · Ouv.C · Mvt.D · Mvt.C · Clô.D · Clô.C</div>
+              </div>
+              <span class="badge badge-ok">${tb.length} comptes chargés</span>
+            </div>
+            <div class="dropzone" data-target="tb">
+              ${ico.upload}
+              <div class="mt-2 text-sm font-medium text-slate-700">Déposer le fichier ou cliquer pour parcourir</div>
+              <div class="text-xs text-slate-500 mt-1">.xlsx, .xls, .csv — jusqu'à 50 Mo</div>
+              <input type="file" class="hidden" accept=".xlsx,.xls,.csv" data-upload="tb"/>
+            </div>
+          </div>
+          <div class="card card-pad">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="font-semibold text-slate-900 text-sm">Grand livre de la période</div>
+                <div class="text-xs text-slate-500">Format : Date · Pièce · Journal · Compte · Libellé · Débit · Crédit</div>
+              </div>
+              <span class="badge badge-ok">${gl.length} lignes chargées</span>
+            </div>
+            <div class="dropzone" data-target="gl">
+              ${ico.upload}
+              <div class="mt-2 text-sm font-medium text-slate-700">Déposer le fichier ou cliquer pour parcourir</div>
+              <div class="text-xs text-slate-500 mt-1">.xlsx, .xls, .csv — jusqu'à 200 Mo</div>
+              <input type="file" class="hidden" accept=".xlsx,.xls,.csv" data-upload="gl"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="kpi-card"><div class="kpi-label">Comptes contrôlés</div><div class="kpi-value">${rolled.length}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Rollforward OK</div><div class="kpi-value text-emerald-600">${totRollOk}</div><div class="kpi-sub">${rolled.length-totRollOk} écarts</div></div>
+          <div class="kpi-card"><div class="kpi-label">Rapprochement GL OK</div><div class="kpi-value text-emerald-600">${totGlOk}</div><div class="kpi-sub">${rolled.length-totGlOk} écarts</div></div>
+          <div class="kpi-card"><div class="kpi-label">Écart total GL</div><div class="kpi-value ${totGlIssues.length?'text-rose-600':''}">${fmt.signed(totGlIssues.reduce((s,r)=>s+r.glVariance,0))}</div><div class="kpi-sub">FCFA</div></div>
+        </div>
+
+        <!-- Issues -->
+        ${totGlIssues.length || totRollIssues.length ? `
+        <div class="card mb-6">
+          <div class="card-head">
+            <h3 class="font-semibold text-slate-900">⚠ Écarts identifiés</h3>
+            <button class="btn btn-outline" id="export-variances">${ico.download}<span>Exporter</span></button>
+          </div>
+          <table class="tbl">
+            <thead><tr>
+              <th>Compte</th><th>Libellé</th><th>Type</th><th class="num">Attendu</th><th class="num">Constaté</th><th class="num">Écart</th><th>Statut</th>
+            </tr></thead>
+            <tbody>
+              ${totRollIssues.map(r => `
+                <tr>
+                  <td><span class="font-mono text-xs">${r.acct}</span></td>
+                  <td>${r.name}</td>
+                  <td><span class="badge badge-warn">Rollforward</span></td>
+                  <td class="num">${fmt.signed(r.expCloseNet)}</td>
+                  <td class="num">${fmt.signed(r.tbCloseNet)}</td>
+                  <td class="num ${r.tbVariance<0?'neg':'text-rose-600 font-semibold'}">${fmt.signed(r.tbVariance)}</td>
+                  <td><span class="badge badge-err">Non équilibré</span></td>
+                </tr>
+              `).join('')}
+              ${totGlIssues.map(r => `
+                <tr>
+                  <td><span class="font-mono text-xs">${r.acct}</span></td>
+                  <td>${r.name}</td>
+                  <td><span class="badge badge-err">Balance ≠ GL</span></td>
+                  <td class="num">D ${fmt.money(r.periodD)} / C ${fmt.money(r.periodC)}</td>
+                  <td class="num">D ${fmt.money(r.glPeriodD)} / C ${fmt.money(r.glPeriodC)}</td>
+                  <td class="num font-semibold ${r.glVariance<0?'neg':'text-rose-600'}">${fmt.signed(r.glVariance)}</td>
+                  <td><span class="badge badge-err">À justifier</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+        ` : `
+        <div class="card card-pad bg-emerald-50/30 border-emerald-200 mb-6">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">${ico.check}</div>
+            <div>
+              <div class="font-semibold text-emerald-900">Aucun écart détecté</div>
+              <div class="text-xs text-emerald-700">Le rollforward et le rapprochement balance/GL sont conformes.</div>
+            </div>
+          </div>
+        </div>
+        `}
+
+        <!-- Full Trial Balance with 6 cols -->
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold text-slate-900">Balance 6 colonnes — Rollforward détaillé</h3>
+            <div class="flex gap-2 items-center">
+              <input class="inp w-56" placeholder="Filtrer par compte..." id="tb-filter"/>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="tbl">
+              <thead><tr>
+                <th rowspan="2" class="align-bottom">Compte</th>
+                <th rowspan="2" class="align-bottom">Libellé</th>
+                <th colspan="2" class="text-center !text-slate-700 bg-slate-100">Solde d'ouverture</th>
+                <th colspan="2" class="text-center !text-slate-700 bg-slate-100">Mouvements période</th>
+                <th colspan="2" class="text-center !text-slate-700 bg-slate-100">Solde de clôture</th>
+                <th rowspan="2" class="align-bottom !text-center">Écart</th>
+              </tr><tr>
+                <th class="num">Débit</th><th class="num">Crédit</th>
+                <th class="num">Débit</th><th class="num">Crédit</th>
+                <th class="num">Débit</th><th class="num">Crédit</th>
+              </tr></thead>
+              <tbody id="tb-rows">
+                ${rolled.map(r => `
+                  <tr data-row="${r.acct}|${r.name.toLowerCase()}">
+                    <td><span class="font-mono text-xs">${r.acct}</span></td>
+                    <td class="font-medium text-slate-800">${r.name}</td>
+                    <td class="num">${r.openD?fmt.money(r.openD):'—'}</td>
+                    <td class="num">${r.openC?fmt.money(r.openC):'—'}</td>
+                    <td class="num">${r.periodD?fmt.money(r.periodD):'—'}</td>
+                    <td class="num">${r.periodC?fmt.money(r.periodC):'—'}</td>
+                    <td class="num">${r.closeD?fmt.money(r.closeD):'—'}</td>
+                    <td class="num">${r.closeC?fmt.money(r.closeC):'—'}</td>
+                    <td class="num">${Math.abs(r.tbVariance)<0.01 ? '<span class="badge badge-ok">OK</span>' : '<span class="badge badge-err">'+fmt.signed(r.tbVariance)+'</span>'}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+              <tfoot>
+                <tr class="bg-slate-50 font-semibold">
+                  <td colspan="2">TOTAUX</td>
+                  <td class="num">${fmt.money(rolled.reduce((s,r)=>s+r.openD,0))}</td>
+                  <td class="num">${fmt.money(rolled.reduce((s,r)=>s+r.openC,0))}</td>
+                  <td class="num">${fmt.money(rolled.reduce((s,r)=>s+r.periodD,0))}</td>
+                  <td class="num">${fmt.money(rolled.reduce((s,r)=>s+r.periodC,0))}</td>
+                  <td class="num">${fmt.money(rolled.reduce((s,r)=>s+r.closeD,0))}</td>
+                  <td class="num">${fmt.money(rolled.reduce((s,r)=>s+r.closeC,0))}</td>
+                  <td></td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       INTÉGRITÉ DES ÉCRITURES
+       ========================================================= */
+    integrity() {
+      const entries = App.state.data.journalEntries;
+      const enriched = entries.map(e => {
+        const d = e.lines.reduce((s,l)=>s+l.debit, 0);
+        const c = e.lines.reduce((s,l)=>s+l.credit, 0);
+        return { ...e, totalD:d, totalC:c, diff:d-c, balanced: Math.abs(d-c) < 0.01 };
+      });
+      const unbalanced = enriched.filter(e => !e.balanced);
+      const totalLines = enriched.reduce((s,e)=>s+e.lines.length, 0);
+
+      return `
+        <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Intégrité des écritures comptables</h1>
+            <p class="text-sm text-slate-500 mt-1">Chaque pièce comptable doit s'équilibrer individuellement (∑ Débits = ∑ Crédits).</p>
+          </div>
+          <button class="btn btn-gold" id="run-integrity">${ico.play}<span>Relancer le contrôle</span></button>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="kpi-card"><div class="kpi-label">Écritures contrôlées</div><div class="kpi-value">${enriched.length}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Lignes contrôlées</div><div class="kpi-value">${totalLines}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Écritures équilibrées</div><div class="kpi-value text-emerald-600">${enriched.length-unbalanced.length}</div><div class="kpi-sub">${fmt.pct((enriched.length-unbalanced.length)/enriched.length)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Écritures déséquilibrées</div><div class="kpi-value ${unbalanced.length?'text-rose-600':'text-emerald-600'}">${unbalanced.length}</div><div class="kpi-sub">${unbalanced.length?'À justifier impérativement':'Conforme'}</div></div>
+        </div>
+
+        ${unbalanced.length ? `
+        <div class="card mb-6">
+          <div class="card-head"><h3 class="font-semibold text-rose-700">⚠ Écritures non-équilibrées</h3><span class="badge badge-err">${unbalanced.length}</span></div>
+          <div>
+            ${unbalanced.map(e => `
+              <div class="border-b border-slate-100 last:border-0">
+                <div class="px-5 py-3 bg-rose-50/40 flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="font-mono text-xs font-semibold text-rose-900">${e.piece}</span>
+                    <span class="text-xs text-slate-500">${fmt.date(e.date)} · Journal ${e.journal}</span>
+                  </div>
+                  <div class="text-sm font-semibold text-rose-700">Écart : ${fmt.signed(e.diff)}</div>
+                </div>
+                <table class="tbl">
+                  <tbody>
+                    ${e.lines.map(l => `
+                      <tr>
+                        <td style="padding-left:1.25rem"><span class="font-mono text-xs">${l.acct}</span> · ${l.name}</td>
+                        <td class="text-slate-600">${l.libelle}</td>
+                        <td class="num">${l.debit?fmt.money(l.debit):'—'}</td>
+                        <td class="num">${l.credit?fmt.money(l.credit):'—'}</td>
+                      </tr>
+                    `).join('')}
+                    <tr class="bg-slate-50 font-semibold">
+                      <td colspan="2" style="padding-left:1.25rem">Total</td>
+                      <td class="num">${fmt.money(e.totalD)}</td>
+                      <td class="num">${fmt.money(e.totalC)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold">Journal des écritures</h3>
+            <div class="flex gap-2 items-center">
+              <select class="inp w-auto" id="je-filter-status">
+                <option value="">Tous les statuts</option>
+                <option value="ok">Équilibrées</option>
+                <option value="ko">Déséquilibrées</option>
+              </select>
+              <input class="inp w-56" placeholder="Filtrer pièce ou journal..." id="je-filter"/>
+            </div>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>Pièce</th><th>Date</th><th>Journal</th><th class="num">Lignes</th><th class="num">Total Débit</th><th class="num">Total Crédit</th><th class="num">Écart</th><th>Statut</th></tr></thead>
+            <tbody id="je-rows">
+              ${enriched.slice(0, 200).map(e => `
+                <tr data-row="${e.piece.toLowerCase()}|${e.journal.toLowerCase()}" data-status="${e.balanced?'ok':'ko'}">
+                  <td><span class="font-mono text-xs">${e.piece}</span></td>
+                  <td>${fmt.date(e.date)}</td>
+                  <td>${e.journal}</td>
+                  <td class="num">${e.lines.length}</td>
+                  <td class="num">${fmt.money(e.totalD)}</td>
+                  <td class="num">${fmt.money(e.totalC)}</td>
+                  <td class="num ${e.balanced?'':'neg font-semibold'}">${e.balanced?'—':fmt.signed(e.diff)}</td>
+                  <td>${e.balanced?'<span class="badge badge-ok">OK</span>':'<span class="badge badge-err">KO</span>'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="px-5 py-3 text-xs text-slate-500 border-t border-slate-100">Affichage de ${Math.min(200, enriched.length)} sur ${enriched.length} écritures.</div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       ÉQUILIBRE DE LA BALANCE
+       ========================================================= */
+    tbBalance() {
+      const tb = App.state.data.trialBalance;
+      const openD = tb.reduce((s,r)=>s+r.openD,0);
+      const openC = tb.reduce((s,r)=>s+r.openC,0);
+      const periodD = tb.reduce((s,r)=>s+r.periodD,0);
+      const periodC = tb.reduce((s,r)=>s+r.periodC,0);
+      const closeD = tb.reduce((s,r)=>s+r.closeD,0);
+      const closeC = tb.reduce((s,r)=>s+r.closeC,0);
+
+      const okOpen = Math.abs(openD-openC) < 0.01;
+      const okPeriod = Math.abs(periodD-periodC) < 0.01;
+      const okClose = Math.abs(closeD-closeC) < 0.01;
+
+      // by SYSCOHADA class
+      const byClass = {};
+      for (const r of tb) {
+        const cls = r.acct[0];
+        byClass[cls] = byClass[cls] || { d:0, c:0, n:0 };
+        byClass[cls].d += r.closeD;
+        byClass[cls].c += r.closeC;
+        byClass[cls].n++;
+      }
+      const classNames = {
+        '1':'Comptes de ressources durables', '2':'Comptes d\'actif immobilisé',
+        '3':'Comptes de stocks', '4':'Comptes de tiers',
+        '5':'Comptes de trésorerie', '6':'Comptes de charges',
+        '7':'Comptes de produits', '8':'Comptes des autres charges/produits HAO'
+      };
+
+      return `
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Équilibre de la balance générale</h1>
+          <p class="text-sm text-slate-500 mt-1">Vérification globale : <span class="font-medium">Σ Débits = Σ Crédits</span> sur ouverture, mouvements et clôture.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4 mb-6">
+          ${[
+            ['Soldes d\'ouverture', openD, openC, okOpen],
+            ['Mouvements de période', periodD, periodC, okPeriod],
+            ['Soldes de clôture', closeD, closeC, okClose]
+          ].map(([t, d, c, ok]) => `
+            <div class="card card-pad ${ok?'border-emerald-200 bg-emerald-50/20':'border-rose-200 bg-rose-50/20'}">
+              <div class="flex items-center justify-between mb-3">
+                <div class="text-sm font-semibold text-slate-700">${t}</div>
+                <span class="badge ${ok?'badge-ok':'badge-err'}">${ok?'Équilibré':'Écart '+fmt.signed(d-c)}</span>
+              </div>
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-sm"><span class="text-slate-500">Total Débit</span><span class="num font-semibold">${fmt.money(d)}</span></div>
+                <div class="flex items-center justify-between text-sm"><span class="text-slate-500">Total Crédit</span><span class="num font-semibold">${fmt.money(c)}</span></div>
+                <div class="border-t pt-2 mt-2 flex items-center justify-between text-sm">
+                  <span class="text-slate-600">Différence</span>
+                  <span class="num font-bold ${ok?'text-emerald-600':'text-rose-600'}">${fmt.signed(d-c)}</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6">
+          <div class="card lg:col-span-2">
+            <div class="card-head">
+              <h3 class="font-semibold">Répartition par classe SYSCOHADA</h3>
+              <span class="badge badge-neutral">${tb.length} comptes</span>
+            </div>
+            <div class="card-pad">
+              <canvas id="class-chart" height="120"></canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 class="font-semibold">Détail par classe</h3></div>
+            <table class="tbl">
+              <thead><tr><th>Cl.</th><th>Libellé</th><th class="num">Cpt</th><th class="num">Solde net</th></tr></thead>
+              <tbody>
+                ${Object.entries(byClass).sort().map(([k, v]) => `
+                  <tr><td class="font-mono font-semibold">${k}</td><td class="text-xs text-slate-600">${(classNames[k]||'').slice(0,28)}</td><td class="num">${v.n}</td><td class="num">${fmt.signed(v.d - v.c)}</td></tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       DÉCLARATIONS MENSUELLES
+       ========================================================= */
+    monthlyRet() {
+      const m = App.state.data.monthlyReturns;
+      const tb = App.state.data.trialBalance;
+      const gl = App.state.data.generalLedger;
+
+      // Aggregate GL by month for TVA accounts (4431 collectée, 4452 déductible)
+      const glByMonthTVAColl = {}, glByMonthTVADed = {}, glByMonthSales = {};
+      for (const l of gl) {
+        const month = l.date.slice(0,7);
+        if (l.acct === '4431000') glByMonthTVAColl[month] = (glByMonthTVAColl[month]||0) + (l.credit - l.debit);
+        if (l.acct === '4452000') glByMonthTVADed[month]  = (glByMonthTVADed[month]||0)  + (l.debit - l.credit);
+        if (l.acct.startsWith('70'))  glByMonthSales[month] = (glByMonthSales[month]||0)  + (l.credit - l.debit);
+      }
+
+      const recon = m.map(r => {
+        const glColl = glByMonthTVAColl[r.month] || 0;
+        const glDed  = glByMonthTVADed[r.month] || 0;
+        const glCA   = glByMonthSales[r.month] || 0;
+        return {
+          ...r,
+          glColl, glDed, glCA,
+          ecartColl: r.tvaCollectee - glColl,
+          ecartDed:  r.tvaDeductible - glDed,
+          ecartCA:   r.caDeclare - glCA
+        };
+      });
+
+      const totalEcartColl = recon.reduce((s,r)=>s+r.ecartColl,0);
+      const totalEcartDed  = recon.reduce((s,r)=>s+r.ecartDed,0);
+
+      return `
+        <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Rapprochement des déclarations mensuelles</h1>
+            <p class="text-sm text-slate-500 mt-1">TVA (4431 / 4452), IRPP retenu (4471), CNPS (4311), acompte IS (4441) · rapprochés au grand livre.</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-outline" id="upload-monthly">${ico.upload}<span>Importer déclarations</span></button>
+            <button class="btn btn-gold" id="run-monthly">${ico.play}<span>Lancer le rapprochement</span></button>
+          </div>
+        </div>
+
+        <!-- Pluggable logic notice -->
+        <div class="card card-pad mb-6 border-amber-200 bg-amber-50/30">
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">${ico.info}</div>
+            <div class="flex-1">
+              <div class="font-semibold text-amber-900">Logique de rapprochement configurable</div>
+              <div class="text-sm text-amber-800 mt-1 leading-relaxed">La logique par défaut applique : <span class="font-mono text-xs">TVA Collectée déclarée ≡ Σ (crédit 4431 − débit 4431) du mois</span> · <span class="font-mono text-xs">TVA Déductible ≡ Σ (débit 4452 − crédit 4452)</span> · <span class="font-mono text-xs">CA déclaré ≡ Σ classe 70</span>. Les règles spécifiques (CSI, retenues sur loyers, exonérations sectorielles) seront branchées via le moteur de règles configurables.</div>
+              <button class="btn btn-outline mt-3" style="padding:4px 12px;font-size:12px" id="configure-rules">Configurer les règles métier</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="kpi-card"><div class="kpi-label">Périodes contrôlées</div><div class="kpi-value">${recon.length}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Total TVA collectée déclarée</div><div class="kpi-value">${fmt.money(recon.reduce((s,r)=>s+r.tvaCollectee,0))}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Écart cumulé TVA coll.</div><div class="kpi-value ${Math.abs(totalEcartColl)>1?'text-rose-600':''}">${fmt.signed(totalEcartColl)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Écart cumulé TVA déd.</div><div class="kpi-value ${Math.abs(totalEcartDed)>1?'text-amber-600':''}">${fmt.signed(totalEcartDed)}</div></div>
+        </div>
+
+        <div class="card mb-6">
+          <div class="card-head"><h3 class="font-semibold">Évolution mensuelle TVA</h3><span class="badge badge-info">Déclaré vs GL</span></div>
+          <div class="card-pad"><canvas id="tva-chart" height="80"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold">Rapprochement détaillé par mois</h3>
+            <button class="btn btn-outline">${ico.download}<span>Exporter</span></button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="tbl">
+              <thead><tr>
+                <th>Mois</th>
+                <th class="num">TVA col. déclarée</th>
+                <th class="num">TVA col. GL</th>
+                <th class="num">Écart</th>
+                <th class="num">TVA déd. déclarée</th>
+                <th class="num">TVA déd. GL</th>
+                <th class="num">Écart</th>
+                <th class="num">CA déclaré</th>
+                <th class="num">CA GL</th>
+                <th class="num">Écart</th>
+                <th>Statut</th>
+              </tr></thead>
+              <tbody>
+                ${recon.map(r => {
+                  const allOk = Math.abs(r.ecartColl)<1 && Math.abs(r.ecartDed)<1 && Math.abs(r.ecartCA)<1;
+                  return `
+                  <tr>
+                    <td class="font-semibold">${r.month}</td>
+                    <td class="num">${fmt.money(r.tvaCollectee)}</td>
+                    <td class="num">${fmt.money(r.glColl)}</td>
+                    <td class="num ${Math.abs(r.ecartColl)>1?'neg font-semibold':''}">${fmt.signed(r.ecartColl)}</td>
+                    <td class="num">${fmt.money(r.tvaDeductible)}</td>
+                    <td class="num">${fmt.money(r.glDed)}</td>
+                    <td class="num ${Math.abs(r.ecartDed)>1?'neg font-semibold':''}">${fmt.signed(r.ecartDed)}</td>
+                    <td class="num">${fmt.money(r.caDeclare)}</td>
+                    <td class="num">${fmt.money(r.glCA)}</td>
+                    <td class="num ${Math.abs(r.ecartCA)>1?'neg font-semibold':''}">${fmt.signed(r.ecartCA)}</td>
+                    <td>${allOk?'<span class="badge badge-ok">OK</span>':'<span class="badge badge-err">Écart</span>'}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       DÉCLARATIONS ANNUELLES
+       ========================================================= */
+    annualRet() {
+      const a = App.state.data.annualReturn;
+      const tb = App.state.data.trialBalance;
+
+      // Reconcile annual return to TB
+      const caTB     = tb.filter(r=>r.acct.startsWith('70')).reduce((s,r)=>s+r.closeC-r.closeD,0);
+      const achatsTB = tb.filter(r=>r.acct.startsWith('60')).reduce((s,r)=>s+r.closeD-r.closeC,0);
+      const persoTB  = tb.filter(r=>r.acct.startsWith('66')).reduce((s,r)=>s+r.closeD-r.closeC,0);
+      const tvaCollTB= tb.filter(r=>r.acct==='4431000').reduce((s,r)=>s+r.periodC-r.periodD,0);
+      const tvaDedTB = tb.filter(r=>r.acct==='4452000').reduce((s,r)=>s+r.periodD-r.periodC,0);
+      const isTB     = tb.filter(r=>r.acct==='4441000').reduce((s,r)=>s+r.closeC-r.closeD,0);
+
+      const rows = [
+        ['Chiffre d\'affaires',         a.caTotal,             caTB,    'Classe 70'],
+        ['Achats',                       a.achatsTotal,         achatsTB,'Classe 60'],
+        ['Charges de personnel',         a.chargesPersonnel,    persoTB, 'Classe 66'],
+        ['TVA annuelle collectée',       a.tvaAnnuelleCollectee,tvaCollTB,'4431000'],
+        ['TVA annuelle déductible',      a.tvaAnnuelleDeductible,tvaDedTB,'4452000'],
+        ['IS net à payer',               a.isAPayer,            isTB,    '4441000']
+      ];
+
+      return `
+        <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Rapprochement déclaration annuelle (DSF)</h1>
+            <p class="text-sm text-slate-500 mt-1">Comparaison ligne à ligne entre la DSF / liasse fiscale et la balance générale + grand livre.</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-outline">${ico.upload}<span>Importer DSF</span></button>
+            <button class="btn btn-gold">${ico.play}<span>Lancer le rapprochement</span></button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="kpi-card"><div class="kpi-label">Exercice</div><div class="kpi-value">${a.exercice}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Résultat fiscal déclaré</div><div class="kpi-value">${fmt.money(a.resultatFiscal)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">IS liquidé</div><div class="kpi-value">${fmt.money(a.isLiquide)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">IS net à payer</div><div class="kpi-value text-navy">${fmt.money(a.isAPayer)}</div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold">Tableau de rapprochement DSF ↔ Balance / GL</h3>
+            <button class="btn btn-outline">${ico.download}<span>Exporter le rapport</span></button>
+          </div>
+          <table class="tbl">
+            <thead><tr>
+              <th>Rubrique</th><th>Référence comptable</th><th class="num">DSF déclarée</th><th class="num">Balance / GL</th><th class="num">Écart</th><th class="num">Écart relatif</th><th>Statut</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map(([label, decl, comp, ref]) => {
+                const ecart = decl - comp;
+                const rel = comp ? Math.abs(ecart)/Math.abs(comp) : 0;
+                const ok = Math.abs(ecart) < 1000;
+                return `<tr>
+                  <td class="font-medium">${label}</td>
+                  <td><span class="font-mono text-xs text-slate-500">${ref}</span></td>
+                  <td class="num">${fmt.money(decl)}</td>
+                  <td class="num">${fmt.money(comp)}</td>
+                  <td class="num ${ok?'':'neg font-semibold'}">${fmt.signed(ecart)}</td>
+                  <td class="num">${(rel*100).toFixed(2)}%</td>
+                  <td>${ok?'<span class="badge badge-ok">OK</span>':'<span class="badge badge-err">À justifier</span>'}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-4 mt-6">
+          <div class="card card-pad">
+            <h3 class="font-semibold mb-3">Reconstitution du résultat fiscal</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-slate-600">Total produits (cl. 7)</span><span class="num font-medium">${fmt.money(caTB + 1800000)}</span></div>
+              <div class="flex justify-between"><span class="text-slate-600">− Total charges (cl. 6)</span><span class="num font-medium">(${fmt.money(achatsTB + persoTB + 42100000 + 18000000 + 2800000 + 9400000 + 6420000)})</span></div>
+              <div class="flex justify-between border-t pt-2"><span class="font-medium">Résultat comptable</span><span class="num font-semibold">${fmt.money(caTB + 1800000 - (achatsTB + persoTB + 42100000 + 18000000 + 2800000 + 9400000 + 6420000))}</span></div>
+              <div class="flex justify-between text-emerald-700"><span>+ Réintégrations fiscales</span><span class="num">8 600 000</span></div>
+              <div class="flex justify-between text-rose-700"><span>− Déductions fiscales</span><span class="num">(2 100 000)</span></div>
+              <div class="flex justify-between border-t pt-2 font-bold"><span>Résultat fiscal reconstitué</span><span class="num">${fmt.money(a.resultatFiscal)}</span></div>
+            </div>
+          </div>
+          <div class="card card-pad">
+            <h3 class="font-semibold mb-3">Calcul de l'IS</h3>
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between"><span class="text-slate-600">Résultat fiscal</span><span class="num font-medium">${fmt.money(a.resultatFiscal)}</span></div>
+              <div class="flex justify-between"><span class="text-slate-600">× Taux IS (33%)</span><span class="num">33%</span></div>
+              <div class="flex justify-between border-t pt-2"><span class="font-medium">IS brut</span><span class="num font-semibold">${fmt.money(Math.round(a.resultatFiscal*0.33))}</span></div>
+              <div class="flex justify-between"><span class="text-slate-600">− Acomptes versés</span><span class="num">(${fmt.money(a.acomptesVerses)})</span></div>
+              <div class="flex justify-between border-t pt-2 font-bold text-navy"><span>IS net à payer</span><span class="num">${fmt.money(a.isAPayer)}</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       FACTURES FOURNISSEURS
+       ========================================================= */
+    invoices() {
+      const invs = App.state.data.supplierInvoices;
+      const total = invs.length;
+      const valid = invs.filter(i => i.valid).length;
+      const totalTTC = invs.reduce((s,i)=>s+i.ttc,0);
+      const totalTVA = invs.reduce((s,i)=>s+i.tva,0);
+
+      const conditions = [
+        { key:'hasDate',        label:'Date de la facture',                      level:'forme' },
+        { key:'hasMontant',     label:'Montant HT, TVA et TTC distinctement',    level:'forme' },
+        { key:'hasNIU',         label:'NIU du fournisseur',                      level:'forme' },
+        { key:'hasAddress',     label:'Raison sociale et adresse du fournisseur',level:'forme' },
+        { key:'hasClientInfo',  label:'Identification du client (NIU + raison)', level:'forme' },
+        { key:'hasTVA',         label:'Taux et montant de TVA',                  level:'forme' },
+        { key:'hasDesignation', label:'Désignation détaillée des biens/services',level:'forme' },
+        { key:'regimeFournisseur',label:'Régime d\'imposition réel du fournisseur',level:'fond' },
+      ];
+
+      return `
+        <div class="mb-6 flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 class="font-display text-2xl font-bold">Revue des factures fournisseurs</h1>
+            <p class="text-sm text-slate-500 mt-1">Contrôle des conditions de fond et de forme — TVA déductible · Charges déductibles.</p>
+          </div>
+          <div class="flex gap-2">
+            <button class="btn btn-outline" id="upload-invoices">${ico.upload}<span>Importer factures</span></button>
+            <button class="btn btn-primary" id="new-invoice">${ico.plus}<span>Saisir une facture</span></button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="kpi-card"><div class="kpi-label">Factures examinées</div><div class="kpi-value">${total}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Conformes</div><div class="kpi-value text-emerald-600">${valid}</div><div class="kpi-sub">${fmt.pct(valid/total)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">Total TTC</div><div class="kpi-value">${fmt.money(totalTTC)}</div></div>
+          <div class="kpi-card"><div class="kpi-label">TVA déductible (à risque)</div><div class="kpi-value text-amber-600">${fmt.money(invs.filter(i=>!i.valid).reduce((s,i)=>s+i.tva,0))}</div></div>
+        </div>
+
+        <!-- Drop zone for invoices -->
+        <div class="card card-pad mb-6">
+          <div class="dropzone" data-target="inv">
+            ${ico.upload}
+            <div class="mt-2 text-sm font-medium text-slate-700">Glisser-déposer les factures (PDF, PNG, JPG) ou Excel</div>
+            <div class="text-xs text-slate-500 mt-1">L'OCR extrait NIU, raison sociale, montants ; les contrôles s'exécutent automatiquement.</div>
+            <input type="file" class="hidden" multiple accept=".pdf,.png,.jpg,.jpeg,.xlsx,.csv" data-upload="inv"/>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold">Liste des factures contrôlées</h3>
+            <select class="inp w-auto" id="inv-filter">
+              <option value="">Toutes les factures</option>
+              <option value="ok">Conformes</option>
+              <option value="ko">Non-conformes</option>
+            </select>
+          </div>
+          <table class="tbl">
+            <thead><tr>
+              <th>Fournisseur / NIU</th><th>Facture</th><th>Date</th>
+              <th class="num">HT</th><th class="num">TVA</th><th class="num">TTC</th>
+              <th>Conditions de forme</th><th>Statut</th><th></th>
+            </tr></thead>
+            <tbody id="inv-rows">
+              ${invs.map(i => {
+                const checks = conditions.filter(c => c.level==='forme').map(c => i[c.key]);
+                const okCount = checks.filter(Boolean).length;
+                const pct = okCount / checks.length;
+                return `
+                <tr data-row="${i.supplier.toLowerCase()}|${i.niu.toLowerCase()}|${i.invNo.toLowerCase()}" data-status="${i.valid?'ok':'ko'}">
+                  <td>
+                    <div class="font-medium text-slate-900">${i.supplier}</div>
+                    <div class="text-[11px] font-mono ${i.niu?'text-slate-500':'text-rose-600 font-semibold'}">${i.niu || '⚠ NIU manquant'}</div>
+                  </td>
+                  <td class="font-mono text-xs">${i.invNo}</td>
+                  <td>${fmt.date(i.date)}</td>
+                  <td class="num">${fmt.money(i.ht)}</td>
+                  <td class="num">${fmt.money(i.tva)}</td>
+                  <td class="num font-medium">${fmt.money(i.ttc)}</td>
+                  <td>
+                    <div class="flex items-center gap-2">
+                      <div class="progress flex-1" style="width:80px"><div class="${pct===1?'bg-emerald-500':pct>=0.7?'bg-amber-500':'bg-rose-500'}" style="width:${pct*100}%"></div></div>
+                      <span class="text-xs font-medium text-slate-600">${okCount}/${checks.length}</span>
+                    </div>
+                  </td>
+                  <td>${i.valid?'<span class="badge badge-ok">Conforme</span>':'<span class="badge badge-err">Non-conforme</span>'}</td>
+                  <td><button class="btn btn-outline view-inv" data-id="${i.id}" style="padding:4px 10px;font-size:12px">Détails</button></td>
+                </tr>
+              `;}).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Checklist preview -->
+        <div class="card mt-6">
+          <div class="card-head">
+            <h3 class="font-semibold">Référentiel des contrôles appliqués</h3>
+            <span class="badge badge-neutral">SYSCOHADA · CGI Cameroun · OHADA</span>
+          </div>
+          <div class="card-pad grid md:grid-cols-2 gap-x-8 gap-y-3">
+            ${conditions.map(c => `
+              <div class="flex items-start gap-3">
+                <div class="w-7 h-7 rounded-full ${c.level==='forme'?'bg-navy/5 text-navy':'bg-gold/15 text-gold'} flex items-center justify-center flex-shrink-0 mt-0.5">${ico.shieldFill}</div>
+                <div class="flex-1">
+                  <div class="text-sm font-medium text-slate-900">${c.label}</div>
+                  <div class="text-[11px] uppercase tracking-wider ${c.level==='forme'?'text-navy':'text-amber-700'} font-semibold mt-0.5">Condition de ${c.level}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    },
+
+    /* =========================================================
+       RAPPORTS
+       ========================================================= */
+    reports() {
+      const a = App.state.currentAudit;
+      return `
+        <div class="mb-6">
+          <h1 class="font-display text-2xl font-bold">Rapports & Notifications</h1>
+          <p class="text-sm text-slate-500 mt-1">Génération automatique des livrables : note de synthèse, notification de redressement, observations.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-4 mb-6">
+          ${[
+            ['Note de synthèse', 'Synthèse des contrôles effectués et constats principaux.', 'Brouillon', 'badge-warn'],
+            ['Notification de redressement', 'Pièce officielle adressée au contribuable.', 'Non démarré', 'badge-neutral'],
+            ['Observations du contribuable', 'Saisie et traitement des réponses du contribuable.', 'En attente', 'badge-info'],
+          ].map(([t,d,s,b]) => `
+            <div class="card card-pad">
+              <div class="flex items-start justify-between mb-3">
+                <div class="font-semibold">${t}</div>
+                <span class="badge ${b}">${s}</span>
+              </div>
+              <p class="text-sm text-slate-600 mb-4">${d}</p>
+              <div class="flex gap-2">
+                <button class="btn btn-outline" style="font-size:12px;padding:6px 12px">Aperçu</button>
+                <button class="btn btn-primary" style="font-size:12px;padding:6px 12px">${ico.download} Générer</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3 class="font-semibold">Constats consolidés — ${a.taxpayer}</h3>
+            <button class="btn btn-gold">${ico.download}<span>Exporter PDF</span></button>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>#</th><th>Module</th><th>Constat</th><th class="num">Impact estimé (FCFA)</th><th>Gravité</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Intégrité écritures</td><td>2 écritures OD non équilibrées (OD-99100, OD-99101)</td><td class="num">288 750</td><td><span class="badge badge-warn">Moyenne</span></td></tr>
+              <tr><td>2</td><td>Balance ↔ GL</td><td>Écart sur 601000 — Achats marchandises (régul. non comptabilisée)</td><td class="num">1 250 000</td><td><span class="badge badge-err">Élevée</span></td></tr>
+              <tr><td>3</td><td>Balance ↔ GL</td><td>Frais bancaires manquants dans la balance (compte 512000)</td><td class="num">425 000</td><td><span class="badge badge-warn">Moyenne</span></td></tr>
+              <tr><td>4</td><td>Factures fournisseurs</td><td>Facture PAPETERIE GÉNÉRALE sans NIU — TVA non déductible</td><td class="num">35 613</td><td><span class="badge badge-err">Élevée</span></td></tr>
+              <tr><td>5</td><td>Factures fournisseurs</td><td>Facture CONSULTING ALPHA sans adresse fournisseur — à régulariser</td><td class="num">1 636 250</td><td><span class="badge badge-warn">Moyenne</span></td></tr>
+            </tbody>
+            <tfoot>
+              <tr class="bg-slate-50 font-semibold">
+                <td colspan="3" class="text-right">Total impact estimé</td>
+                <td class="num text-rose-600">3 635 613</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      `;
+    }
+  }
+};
+
+/* --------- Wiring (event handlers) --------- */
+const Wire = {
+  login() {
+    document.querySelectorAll('.login-btn').forEach(btn => {
+      btn.addEventListener('click', () => App.login(btn.dataset.userid));
+    });
+  },
+
+  shell() {
+    document.querySelectorAll('[data-nav]').forEach(el => {
+      el.addEventListener('click', () => App.go(el.dataset.nav));
+    });
+    document.getElementById('logout-btn')?.addEventListener('click', () => App.logout());
+    document.getElementById('audit-select')?.addEventListener('change', (e) => App.setAudit(e.target.value));
+    document.getElementById('run-btn')?.addEventListener('click', () => {
+      const v = App.state.view;
+      const map = { dashboard:'trialBalance', audits:'trialBalance', trialBalance:'integrity', integrity:'tbBalance', tbBalance:'monthlyRet', monthlyRet:'annualRet', annualRet:'invoices', invoices:'reports', reports:'dashboard' };
+      toast('Contrôle lancé sur le module suivant', 'info');
+      App.go(map[v] || 'trialBalance');
+    });
+    document.getElementById('export-btn')?.addEventListener('click', () => Wire.exportCurrent());
+  },
+
+  page() {
+    // Generic shortcuts
+    document.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', () => App.go(el.dataset.go)));
+
+    const v = App.state.view;
+    if (v === 'dashboard') Wire.dashboard();
+    if (v === 'audits') Wire.audits();
+    if (v === 'trialBalance') Wire.trialBalance();
+    if (v === 'integrity') Wire.integrity();
+    if (v === 'tbBalance') Wire.tbBalance();
+    if (v === 'monthlyRet') Wire.monthlyRet();
+    if (v === 'invoices') Wire.invoices();
+  },
+
+  /* ----- Charts ----- */
+  dashboard() {
+    const ctx = document.getElementById('dash-activity');
+    if (!ctx) return;
+    const months = App.state.data.monthlyReturns.map(m => m.month.slice(5));
+    const ca = App.state.data.monthlyReturns.map(m => m.caDeclare / 1e6);
+    const tva = App.state.data.monthlyReturns.map(m => m.tvaCollectee / 1e6);
+    new Chart(ctx, {
+      type:'line',
+      data:{ labels:months, datasets:[
+        { label:'CA déclaré (M FCFA)', data:ca, borderColor:'#0F2A4A', backgroundColor:'rgba(15,42,74,0.08)', tension:0.4, fill:true, borderWidth:2 },
+        { label:'TVA collectée (M FCFA)', data:tva, borderColor:'#D4A24C', backgroundColor:'rgba(212,162,76,0.1)', tension:0.4, fill:true, borderWidth:2 }
+      ]},
+      options:{ responsive:true, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, font:{ size:11 } } } }, scales:{ y:{ beginAtZero:true, grid:{ color:'#F1F5F9' } }, x:{ grid:{ display:false } } } }
+    });
+  },
+
+  audits() {
+    document.querySelectorAll('.open-audit').forEach(b => b.addEventListener('click', () => {
+      App.setAudit(b.dataset.id);
+      App.go('dashboard');
+    }));
+    document.getElementById('new-audit-btn')?.addEventListener('click', () => {
+      modal(`
+        <div class="px-6 py-5 border-b flex items-center justify-between">
+          <h3 class="font-display text-lg font-bold">Ouvrir un nouveau dossier d'audit</h3>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700">${ico.x}</button>
+        </div>
+        <div class="p-6 grid md:grid-cols-2 gap-4">
+          <div><label class="lbl">Raison sociale</label><input class="inp" placeholder="Nom du contribuable"/></div>
+          <div><label class="lbl">NIU</label><input class="inp" placeholder="M021..."/></div>
+          <div><label class="lbl">Secteur</label><input class="inp" placeholder="Commerce, BTP, ..."/></div>
+          <div><label class="lbl">Régime</label><select class="inp"><option>Réel</option><option>Simplifié</option><option>Forfait</option></select></div>
+          <div class="md:col-span-2"><label class="lbl">Exercice contrôlé</label><input class="inp" placeholder="Exercice 2024"/></div>
+        </div>
+        <div class="px-6 py-4 border-t bg-slate-50 flex justify-end gap-2">
+          <button onclick="closeModal()" class="btn btn-outline">Annuler</button>
+          <button onclick="closeModal(); ((m)=>{m && setTimeout(()=>{},0)})(window); " class="btn btn-primary" id="confirm-new">Créer le dossier</button>
+        </div>
+      `);
+      setTimeout(() => {
+        document.getElementById('confirm-new')?.addEventListener('click', () => {
+          closeModal(); toast('Dossier créé. Vous pouvez à présent importer la balance et le grand livre.', 'ok');
+        });
+      }, 50);
+    });
+  },
+
+  trialBalance() {
+    Wire.attachDropzones();
+    document.getElementById('tb-filter')?.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('#tb-rows tr').forEach(r => {
+        r.style.display = r.dataset.row.includes(q) ? '' : 'none';
+      });
+    });
+    document.getElementById('export-variances')?.addEventListener('click', () => {
+      toast('Export des écarts vers Excel...', 'info');
+      Wire.exportToExcel('ecarts.xlsx');
+    });
+  },
+
+  integrity() {
+    document.getElementById('je-filter')?.addEventListener('input', Wire.filterJE);
+    document.getElementById('je-filter-status')?.addEventListener('change', Wire.filterJE);
+    document.getElementById('run-integrity')?.addEventListener('click', () => {
+      toast('Contrôle d\'intégrité relancé : ' + App.state.data.journalEntries.length + ' écritures vérifiées', 'ok');
+    });
+  },
+
+  filterJE() {
+    const q = (document.getElementById('je-filter')?.value || '').toLowerCase();
+    const s = document.getElementById('je-filter-status')?.value || '';
+    document.querySelectorAll('#je-rows tr').forEach(r => {
+      const matchQ = !q || r.dataset.row.includes(q);
+      const matchS = !s || r.dataset.status === s;
+      r.style.display = (matchQ && matchS) ? '' : 'none';
+    });
+  },
+
+  tbBalance() {
+    const ctx = document.getElementById('class-chart');
+    if (!ctx) return;
+    const tb = App.state.data.trialBalance;
+    const byClass = {};
+    for (const r of tb) {
+      const c = r.acct[0];
+      byClass[c] = byClass[c] || { d:0, c:0 };
+      byClass[c].d += r.closeD;
+      byClass[c].c += r.closeC;
+    }
+    const keys = Object.keys(byClass).sort();
+    new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels: keys.map(k => 'Classe '+k),
+        datasets:[
+          { label:'Débits', data: keys.map(k => byClass[k].d/1e6), backgroundColor:'#0F2A4A', borderRadius:4 },
+          { label:'Crédits', data: keys.map(k => byClass[k].c/1e6), backgroundColor:'#D4A24C', borderRadius:4 }
+        ]
+      },
+      options:{ responsive:true, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, font:{ size:11 } } } }, scales:{ y:{ title:{ display:true, text:'Millions FCFA' }, grid:{ color:'#F1F5F9' } }, x:{ grid:{ display:false } } } }
+    });
+  },
+
+  monthlyRet() {
+    const ctx = document.getElementById('tva-chart');
+    if (!ctx) return;
+    const m = App.state.data.monthlyReturns;
+    new Chart(ctx, {
+      type:'bar',
+      data:{
+        labels: m.map(r => r.month.slice(5)),
+        datasets:[
+          { label:'TVA collectée déclarée', data:m.map(r=>r.tvaCollectee/1e6), backgroundColor:'#0F2A4A', borderRadius:4 },
+          { label:'TVA déductible déclarée', data:m.map(r=>r.tvaDeductible/1e6), backgroundColor:'#D4A24C', borderRadius:4 }
+        ]
+      },
+      options:{ responsive:true, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, font:{ size:11 } } } }, scales:{ y:{ title:{ display:true, text:'Millions FCFA' }, grid:{ color:'#F1F5F9' } }, x:{ grid:{ display:false } } } }
+    });
+
+    document.getElementById('configure-rules')?.addEventListener('click', () => {
+      modal(`
+        <div class="px-6 py-5 border-b flex items-center justify-between">
+          <h3 class="font-display text-lg font-bold">Règles de rapprochement déclarations ↔ GL</h3>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700">${ico.x}</button>
+        </div>
+        <div class="p-6 space-y-4">
+          <p class="text-sm text-slate-600">Définissez ici la formule de rapprochement pour chaque rubrique de déclaration. Les règles ci-dessous sont par défaut et seront remplacées par votre logique métier spécifique.</p>
+          ${[
+            ['TVA Collectée', '4431000', 'Σ Crédit − Σ Débit du mois'],
+            ['TVA Déductible biens & services', '4452000', 'Σ Débit − Σ Crédit du mois'],
+            ['IRPP retenu', '4471000', 'Σ Crédit − Σ Débit du mois'],
+            ['Cotisations CNPS', '4311000', 'Σ Crédit − Σ Débit du mois'],
+            ['Acompte IS', '4441000', 'Σ Débit du mois'],
+            ['Chiffre d\'affaires déclaré', 'Classe 70', 'Σ Crédit − Σ Débit du mois']
+          ].map(([rub, acc, formule]) => `
+            <div class="border border-slate-200 rounded-lg p-3 grid grid-cols-3 gap-3 items-center">
+              <div class="font-medium text-sm">${rub}</div>
+              <input class="inp font-mono text-xs" value="${acc}"/>
+              <input class="inp text-xs" value="${formule}"/>
+            </div>
+          `).join('')}
+        </div>
+        <div class="px-6 py-4 border-t bg-slate-50 flex justify-end gap-2">
+          <button onclick="closeModal()" class="btn btn-outline">Annuler</button>
+          <button onclick="closeModal()" class="btn btn-primary">Enregistrer les règles</button>
+        </div>
+      `);
+    });
+
+    document.getElementById('run-monthly')?.addEventListener('click', () => {
+      toast('Rapprochement lancé sur 12 mois...', 'info');
+      setTimeout(() => toast('Rapprochement terminé · 3 écarts détectés', 'ok'), 800);
+    });
+  },
+
+  invoices() {
+    Wire.attachDropzones();
+    document.getElementById('inv-filter')?.addEventListener('change', (e) => {
+      const s = e.target.value;
+      document.querySelectorAll('#inv-rows tr').forEach(r => {
+        r.style.display = (!s || r.dataset.status === s) ? '' : 'none';
+      });
+    });
+    document.querySelectorAll('.view-inv').forEach(btn => btn.addEventListener('click', () => {
+      const inv = App.state.data.supplierInvoices.find(x => x.id === btn.dataset.id);
+      const conds = [
+        ['hasDate','Date de la facture','forme'],
+        ['hasMontant','Montants HT/TVA/TTC distincts','forme'],
+        ['hasNIU','NIU du fournisseur','forme'],
+        ['hasAddress','Raison sociale et adresse fournisseur','forme'],
+        ['hasClientInfo','Identification du client','forme'],
+        ['hasTVA','Taux et montant TVA','forme'],
+        ['hasDesignation','Désignation des biens/services','forme'],
+      ];
+      modal(`
+        <div class="px-6 py-5 border-b flex items-center justify-between">
+          <div>
+            <h3 class="font-display text-lg font-bold">${inv.supplier}</h3>
+            <div class="text-xs text-slate-500 font-mono mt-1">${inv.invNo} · ${fmt.date(inv.date)} · NIU ${inv.niu||'—'}</div>
+          </div>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700">${ico.x}</button>
+        </div>
+        <div class="p-6">
+          <div class="grid grid-cols-3 gap-4 mb-5">
+            <div class="card card-pad"><div class="kpi-label">Montant HT</div><div class="text-lg font-bold mt-1">${fmt.money(inv.ht)}</div></div>
+            <div class="card card-pad"><div class="kpi-label">TVA</div><div class="text-lg font-bold mt-1">${fmt.money(inv.tva)}</div></div>
+            <div class="card card-pad"><div class="kpi-label">TTC</div><div class="text-lg font-bold mt-1">${fmt.money(inv.ttc)}</div></div>
+          </div>
+          <h4 class="font-semibold mb-3">Contrôles appliqués</h4>
+          <div class="space-y-2">
+            ${conds.map(([k,l,lv]) => `
+              <div class="flex items-center justify-between p-3 rounded-lg border ${inv[k]?'border-emerald-200 bg-emerald-50/40':'border-rose-200 bg-rose-50/40'}">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full ${inv[k]?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'} flex items-center justify-center">${inv[k]?ico.check:ico.x}</div>
+                  <div>
+                    <div class="text-sm font-medium">${l}</div>
+                    <div class="text-[11px] uppercase tracking-wider text-slate-500">Condition de ${lv}</div>
+                  </div>
+                </div>
+                <span class="badge ${inv[k]?'badge-ok':'badge-err'}">${inv[k]?'OK':'Manquant'}</span>
+              </div>
+            `).join('')}
+            <div class="flex items-center justify-between p-3 rounded-lg border ${inv.regimeFournisseur==='Réel'?'border-emerald-200 bg-emerald-50/40':'border-amber-200 bg-amber-50/40'}">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full ${inv.regimeFournisseur==='Réel'?'bg-emerald-100 text-emerald-700':'bg-amber-100 text-amber-700'} flex items-center justify-center">${inv.regimeFournisseur==='Réel'?ico.check:ico.warn}</div>
+                <div>
+                  <div class="text-sm font-medium">Régime d'imposition du fournisseur</div>
+                  <div class="text-[11px] uppercase tracking-wider text-slate-500">Condition de fond</div>
+                </div>
+              </div>
+              <span class="badge ${inv.regimeFournisseur==='Réel'?'badge-ok':'badge-warn'}">${inv.regimeFournisseur}</span>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t bg-slate-50 flex justify-between">
+          <span class="text-sm ${inv.valid?'text-emerald-700':'text-rose-700'} font-medium">${inv.valid?'✓ Facture conforme — TVA déductible':'⚠ Facture non-conforme — TVA non-déductible'}</span>
+          <button onclick="closeModal()" class="btn btn-primary">Fermer</button>
+        </div>
+      `);
+    }));
+    document.getElementById('new-invoice')?.addEventListener('click', () => {
+      modal(`
+        <div class="px-6 py-5 border-b flex items-center justify-between">
+          <h3 class="font-display text-lg font-bold">Saisir une facture fournisseur</h3>
+          <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700">${ico.x}</button>
+        </div>
+        <div class="p-6 grid md:grid-cols-2 gap-4">
+          <div class="md:col-span-2"><label class="lbl">Raison sociale du fournisseur</label><input class="inp"/></div>
+          <div><label class="lbl">NIU</label><input class="inp" placeholder="M021..."/></div>
+          <div><label class="lbl">N° facture</label><input class="inp"/></div>
+          <div><label class="lbl">Date</label><input type="date" class="inp"/></div>
+          <div><label class="lbl">Régime</label><select class="inp"><option>Réel</option><option>Simplifié</option><option>Inconnu</option></select></div>
+          <div><label class="lbl">Montant HT</label><input type="number" class="inp"/></div>
+          <div><label class="lbl">TVA</label><input type="number" class="inp"/></div>
+          <div><label class="lbl">TTC</label><input type="number" class="inp"/></div>
+          <div class="md:col-span-2"><label class="lbl">Désignation</label><input class="inp"/></div>
+        </div>
+        <div class="px-6 py-4 border-t bg-slate-50 flex justify-end gap-2">
+          <button onclick="closeModal()" class="btn btn-outline">Annuler</button>
+          <button onclick="closeModal()" class="btn btn-primary">Enregistrer & contrôler</button>
+        </div>
+      `);
+    });
+  },
+
+  /* ----- Dropzones (Excel parsing) ----- */
+  attachDropzones() {
+    document.querySelectorAll('.dropzone').forEach(zone => {
+      const input = zone.querySelector('input[type=file]');
+      zone.addEventListener('click', () => input?.click());
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault(); zone.classList.remove('drag');
+        if (e.dataTransfer.files.length) Wire.handleFile(e.dataTransfer.files[0], zone.dataset.target);
+      });
+      input?.addEventListener('change', e => { if (e.target.files[0]) Wire.handleFile(e.target.files[0], zone.dataset.target); });
+    });
+  },
+
+  handleFile(file, target) {
+    toast(`Lecture de ${file.name}...`, 'info');
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const wb = XLSX.read(ev.target.result, { type:'binary' });
+        const sheet = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(sheet, { defval:'' });
+        toast(`${rows.length} lignes importées · contrôles lancés`, 'ok');
+
+        if (target === 'tb' && rows.length) {
+          // map columns by first matching key
+          const mapped = rows.map(r => Wire.mapTBRow(r)).filter(r => r.acct);
+          if (mapped.length) {
+            App.state.data.trialBalance = mapped;
+            App.render();
+          }
+        }
+        if (target === 'gl' && rows.length) {
+          const mapped = rows.map(r => Wire.mapGLRow(r)).filter(r => r.acct);
+          if (mapped.length) {
+            App.state.data.generalLedger = mapped;
+            App.render();
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        toast('Erreur de lecture du fichier — vérifiez le format', 'err');
+      }
+    };
+    reader.readAsBinaryString(file);
+  },
+
+  mapTBRow(r) {
+    const keys = Object.keys(r);
+    const get = (...names) => {
+      for (const n of names) {
+        const k = keys.find(x => x.toLowerCase().includes(n.toLowerCase()));
+        if (k && r[k] !== '') return r[k];
+      }
+      return null;
+    };
+    const num = v => Number(String(v || '').replace(/[^\d.-]/g,'')) || 0;
+    return {
+      acct: String(get('compte','acct','account','n°','numero')||'').trim(),
+      name: String(get('libellé','libelle','intitulé','intitule','name','description')||'').trim(),
+      openD: num(get('ouverture débit','ouv.d','opening debit','sodebit','ouvd')),
+      openC: num(get('ouverture crédit','ouv.c','opening credit','socredit','ouvc')),
+      periodD: num(get('mouvement débit','mvt.d','mvt débit','period debit','movd')),
+      periodC: num(get('mouvement crédit','mvt.c','mvt crédit','period credit','movc')),
+      closeD: num(get('clôture débit','clô.d','closing debit','solded','scdebit')),
+      closeC: num(get('clôture crédit','clô.c','closing credit','soldec','sccredit')),
+    };
+  },
+
+  mapGLRow(r) {
+    const keys = Object.keys(r);
+    const get = (...names) => {
+      for (const n of names) {
+        const k = keys.find(x => x.toLowerCase().includes(n.toLowerCase()));
+        if (k && r[k] !== '') return r[k];
+      }
+      return null;
+    };
+    const num = v => Number(String(v || '').replace(/[^\d.-]/g,'')) || 0;
+    return {
+      date: String(get('date')||'').slice(0,10),
+      piece: String(get('pièce','piece','document')||'').trim(),
+      journal: String(get('journal','code journal')||'').trim(),
+      acct: String(get('compte','acct')||'').trim(),
+      name: String(get('libellé compte','intitulé','name')||'').trim(),
+      libelle: String(get('libellé','libelle','description')||'').trim(),
+      debit: num(get('débit','debit','montant débit')),
+      credit: num(get('crédit','credit','montant crédit'))
+    };
+  },
+
+  exportCurrent() {
+    Wire.exportToExcel(`fiscaudit_${App.state.view}_${Date.now()}.xlsx`);
+  },
+
+  exportToExcel(filename) {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(App.state.data.trialBalance);
+    XLSX.utils.book_append_sheet(wb, ws, 'Balance');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(App.state.data.generalLedger.slice(0,500)), 'GL');
+    XLSX.writeFile(wb, filename);
+    toast('Export généré', 'ok');
+  }
+};
+
+/* --------- Boot --------- */
+document.addEventListener('DOMContentLoaded', () => App.init());
+</script>
+</body>
+</html>

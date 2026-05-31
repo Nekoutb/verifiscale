@@ -1,0 +1,621 @@
+              +
+
+               ACTE UNIFORME RELATIF AU
+
+SYS DROIT COMPTABLE ET A
+               L'INFORMATION FINANCIERE
+                                     &
+
+CO
+HA
+DA SYSTEME COMPTABLE OHADA
+
+                                                                                                                                         1
+                     SOMMAIRE
+
+Liste des principaux sigles utilisés.......................................................7
+
+     ACTE UNIFORME RELATIF AU DROIT COMPTABLE
+                ET A L'INFORMATION FINANCIERE
+
+ TITRE I : DES COMPTES PERSONNELS DES ENTITES (PERSONNES
+                PHYSIQUES ET PERSONNES MORALES)........................................11
+
+ CHAPITRE 1 : Dispositions générales ..............................................................13
+ CHAPITRE 2 : Organisation comptable ..........................................................18
+ CHAPITRE 3 : Jeu complet d'états financiers annuels...........................................24
+ CHAPITRE 4 : Règles d'évaluation et de détermination du résultat ........................28
+ CHAPITRE 5 : Valeur probante des documents, contrôle des comptes,
+
+                         collecte et publicité des informations comptables.........................44
+ TITRE II : DES COMPTES CONSOLIDES ET DES COMPTES COMBINES.........47
+ CHAPITRE 1 : Comptes consolidés.................................................................48
+ CHAPITRE 2 : Comptes combinés..................................................................60
+ TITRE III : DES DISPOSITIONS PENALES....................................................64
+  TITRE IV : DES DISPOSITIONS TRANSITOIRES ET FINALES........................65
+
+          SYSTEME COMPTABLE OHADA (SYSCOHADA)
+
+ PREMIERE PARTIE : PLAN COMPTABLE GENERAL OHADA (PCGO)
+ TITRE V : CADRE CONCEPTUEL................................................................69
+ CHAPITRE 1 : Définition et principaux utilisateurs des états financiers....................72
+ CHAPITRE 2 : Structure et champ d'application du cadre conceptuel......................77
+ CHAPITRE 3 : Objectifs et principes de base des états financiers...........................82
+ CHAPITRE 4 : Définitions et structure des états financiers.................................103
+
+ ACTE UNIFORME & SYSCOHADA
+CHAPITRE 5 : Règles d'évaluation et de comptabilisation des éléments
+                     des états financiers................................................................118
+
+TITRE VI : DEFINITIONS DES TERMES.......................................................141
+CHAPITRE 1 : Liste des termes....................................................................143
+CHAPITRE 2 : Définitions...........................................................................156
+TITRE VII : STRUCTURE, CONTENU ET FONCTIONNEMENT DES
+
+              COMPTES................................................................................215
+CHAPITRE 1 : Cadre comptable...................................................................216
+CHAPITRE 2 : Structure du plan de comptes...................................................218
+CHAPITRE 3 : Contenu et fonctionnement des comptes.....................................277
+TITRE VIII : OPERATIONS ET PROBLEMES SPECIFIQUES..........................543
+CHAPITRE 1 : Frais de recherche et de développement .....................................546
+CHAPITRE 2 : Brevets, licences, marques, logiciels, sites internet ........................555
+CHAPITRE 3 : Frais de prospection et d'exploitation des ressources
+
+                         minérales ........................................................................581
+CHAPITRE 4 : Approche par composants ......................................................594
+CHAPITRE 5 : Frais d'inspections ou de révisions majeures, dépenses de sécurité
+
+                         et de mise en conformité ....................................................603
+CHAPITRE 6 : Coût de démantèlement, d'enlèvement et de remise en état du
+
+                         site ...............................................................................608
+CHAPITRE 7 : Coût d'emprunts ..................................................................617
+CHAPITRE 8 : Contrat de location ...............................................................622
+CHAPITRE 9 : Réserve de propriété ............................................................. 641
+CHAPITRE 10 : Immeubles de placement ......................................................645
+CHAPITRE 11 : Constructions sur sol d'autrui et contrat de rentes
+
+                         viagères..................................................................................................654
+CHAPITRE 12 : Dépréciation des immobilisations ............................................661
+CHAPITRE 13 : Portefeuille titres.................................................................672
+
+ACTE UNIFORME & SYSCOHADA
+CHAPITRE 14 : Stocks et en-cours de production.............................................684
+CHAPITRE 15 : Abandons de créances, opérations d'affacturage et titrisation.........697
+CHAPITRE 16 : Capitaux propres et autres fonds propres .................................705
+CHAPITRE 17 : Subventions et aides publiques ...............................................714
+CHAPITRE 18 : Provisions, passifs éventuels et actifs éventuels...........................726
+CHAPITRE 19 : Attribution gratuite d'actions au personnel salarié et aux
+
+                         dirigeants de la société .......................................................744
+CHAPITRE 20 : Emprunt obligataire ............................................................750
+CHAPITRE 21 : Engagements de retraite et autres avantages assimilés ..................763
+CHAPITRE 22 : Opérations en devises et contrats de couverture sur
+
+                         marchés financiers............................................................783
+CHAPITRE 23 : Contrats pluri-exercices .......................................................796
+CHAPITRE 24 : Abonnement des charges et produits .......................................809
+CHAPITRE 25 : Contrat de concessions de service public ...................................812
+CHAPITRE 26 : Groupement d'intérêt économique ..........................................823
+CHAPITRE 27 : Personnel intérimaire ..........................................................827
+CHAPITRE 28 : Réévaluation des bilans ........................................................830
+CHAPITRE 29 : Inventaire permanent en comptabilité financière.........................848
+CHAPITRE 30 : Engagements financiers et passifs éventuels ..............................854
+CHAPITRE 31 : Evènements postérieurs à la clôture de l'exercice .......................862
+CHAPITRE 32 : Opérations faites pour le compte de tiers ..................................870
+CHAPITRE 33 : Opérations faites en commun ................................................876
+CHAPITRE 34 : Comptabilité autonome par établissement .................................886
+CHAPITRE 35 : Contrat de franchise ............................................................892
+CHAPITRE 36 : Comptabilité pluri monétaire ................................................896
+CHAPITRE 37 : Opérations spécifiques des entités agricoles ...............................900
+CHAPITRE 38 : Fusions et opérations assimilées .............................................916
+CHAPITRE 39 : Comptes intermédiaires .......................................................935
+
+ACTE UNIFORME & SYSCOHADA
+ CHAPITRE 40 : Liquidation .......................................................................943
+ CHAPITRE 41 : Première application du SYSCOHADA révisé............................951
+
+ TITRE IX : PRESENTATION DES ETATS FINANCIERS ANNUELS DU
+                      SYSTEME NORMAL............................................................962
+
+ CHAPITRE 1 : Dispositions générales relatives à la présentation des états
+                          financiers........................................................................963
+
+ CHAPITRE 2 : Informations générales sur l'entité...........................................966
+ CHAPITRE 3 : Bilan du Système Normal.......................................................973
+ CHAPITRE 4 : Compte de résultat du Système Normal......................................983
+ CHAPITRE 5 : Tableau des flux de trésorerie du Système Normal.........................997
+ CHAPITRE 6 : Notes annexes du Système Normal..........................................998
+ CHAPITRE 7 : Tableau de correspondance Postes/Comptes du Système Normal....1048
+ TITRE X : PRESENTATION DES ETATS FINANCIERS ANNUELS DU
+
+                      SYSTEME MINIMAL DE TRESORERIE (SMT).......................1051
+ CHAPITRE 1 : Dispositions spécifiques relatives à la présentation des états
+
+                          financiers du Système Minimal de Trésorerie.........................1052
+ CHAPITRE 2 : Bilan et compte de résultat du Système Minimal de trésorerie........1055
+ CHAPITRE 3 : Notes annexes du Système Minimal de Trésorerie......................1057
+ TITRE XI : NOMENCLATURES.................................................................1064
+
+DEUXIEME PARTIE : DISPOSITIF COMPTABLE RELATIF AUX COMPTES
+                                 CONSOLIDES ET COMBINES (D4C)
+
+ INTRODUCTION........................................................................................1106
+ TITRE XII : COMPTES CONSOLIDES.......................................................1109
+ CHAPITRE 1 : Dispositions générales relatives aux comptes consolidés .................1110
+ CHAPITRE 2 : Périmètre et méthodes de consolidation......................................1113
+ CHAPITRE 3 : Retraitements des comptes individuels .......................................1121
+
+ ACTE UNIFORME & SYSCOHADA
+CHAPITRE 4 : Conversion des états financiers des entités étrangères...................1131
+CHAPITRE 5 : Opérations et techniques de consolidation....................................1137
+CHAPITRE 6 : Entrée d'une entité dans le périmètre de consolidation ..................1153
+CHAPITRE 7 : Variations du périmètre ou des pourcentages d'intérêts.................1160
+CHAPITRE 8 : Documents de synthèse consolidés...........................................1165
+CHAPITRE 9 : Première application du dispositif comptable relatif aux
+
+                   Comptes consolidés...............................................................1187
+TITRE XIII : COMPTES COMBINES..........................................................1190
+CHAPITRE 1 : Définition et objectif des comptes combinés...............................1191
+CHAPITRE 2 : Champ d'application et entités concernées.................................1193
+CHAPITRE 3 : Périmètre de combinaison......................................................1195
+CHAPITRE 4 : Règles et méthodes de combinaison..........................................1198
+CHAPITRE 5 : Présentation et contrôle des comptes combinés............................1202
+
+ACTE UNIFORME & SYSCOHADA
+                        LISTE DES SIGLES UTILISES
+
+A.F. : Autofinancement                       M.C.: Marge Commerciale
+
+B.F.: Besoin de financement                  O.B.S.A.: Obligation avec Bons de
+                                                         Souscription d'Actions
+B.F.E. : Besoin de Financement
+          d'Exploitation                     O.B.S.O.: Obligation avec Bons de
+                                                         Souscription d'Obligations
+B.F.G.: Besoin de Financement Global
+                                             O.H.A.D.A.: Organisation pour
+C.A.F.G.: Capacité d'Autofinancement                          l'Harmonisation en Afrique
+              Globale                                         du Droit des Affaires
+
+C.D.D.: Contrat à Durée Déterminée           O.P.C.V.M.: Organisme de Placement
+                                                             Collectif en Valeurs
+C.D.I.: Contrat à Durée Indéterminée                         Mobilières
+
+CEMAC: Communauté Economique et              O.R.A.: Obligations Remboursables en
+              Monétaire de l'Afrique                   Actions
+              Centrale
+                                             P.C.G.O.: Plan Comptable Général
+C.F.A.: Communauté Financière d'Afrique                  OHADA
+          (UEMOA) ou Coopération
+          Financière en Afrique (CEMAC)      P.E.P.S.: Premier Entré, Premier Sorti
+
+C.I.M.A.: Conférence Interafricaine des      R.A.O.: Résultat des Activités Ordianires
+            Marchés d'Assurance
+                                             R.D.: Recherche et développement
+C.M.P.: Coût Moyen Pondéré
+                                             R.E.: Résultat d'Exploitation
+CNC-OHADA : Commission de
+                     Normalisation           R.F.: Résultat Financier
+                     Comptable de l'OHADA
+                                             R.H.A.O.: Résultat Hors Activités
+D4C: Dispositif Comptable relatif aux                      Ordinaires
+       Comptes Consolidés et Combinés
+                                             R.P.: Réserve de Propriété
+E.B.E.:Excédent Brut d'Exploitation
+                                             S.P.: Société en Participation
+E.T.E.: Excédent de Trésorerie
+          d'Exploitation                     SYSCOAHADA: Système Comptable
+                                                                    OHADA
+F.A.S.B. : Financial Accounting Standards
+              Board                          T.I.A.P.: Titres Immobilisés de l'Activité
+                                                         de Portefeuille
+F.C.P.: Fonds commun de Placement
+                                             T.S.D.I.: Titres Subordonnés à Durée
+F.IF.O.: First in; First Out                             Indéterminée
+
+G.I.E.: Groupement d'Intérêt Economique      T.V.A.: Taxe sur Valeur Ajoutée
+
+H.A.O.: Hors Activités Ordinaires            UEMOA : Union Economique et
+                                             Monétaire Ouest Africaine
+I.A.S.: International Accounting Standards
+                                             V.A.: Valeur Ajoutée
+I.F.R.S.: International Financial Reporting
+          Standards                          V.N.C.: Valeur Nette Comptable
+
+                                                                                          7
+                     SY
+                      S
+REfErentiel C
+                      O
+                      H
+                      A
+                      D
+                      A
+
+                                                      8
+ ACTE UNIFORME RELATIF
+AU DROIT COMPTABLE ET A
+
+        L'INFORMATION
+           FINANCIERE
+
+                                              ACTE UNIFORME RELATIF AU
+                                                  DROIT COMPTABLE ET A
+
+                                              L'INFORMATION FINANCIERE
+
+TITRE I :      DES COMPTES PERSONNELS DES ENTREPRISES (PERSONNES
+TITRE II :     PHYSIQUES ET PERSONNES MORALES)
+TITRE III :    DES COMPTES CONSOLIDES ET DES COMPTES COMBINES
+TITRE IV :
+               DES DISPOSITIONS PENALES
+
+               DES DISPOSITIONS TRANSITOIRES ET FINALES
+
+ACTE UNIFORME
+                     SOMMAIRE
+
+TITRE I : DES COMPTES PERSONNELS DES ENTREPRISES (PERSONNES
+              PHYSIQUES ET PERSONNES MORALES)
+
+CHAPITRE 1 : Dispositions générales
+CHAPITRE 2 : Organisation comptable
+CHAPITRE 3 : Jeu complet d'états financiers annuels
+CHAPITRE 4 : Règles d'évaluation et de détermination du résultat
+CHAPITRE 5 : Valeur probante des documents, contrôle des comptes, collecte et
+
+                     publicité des informations comptables
+TITRE II : DES COMPTES CONSOLIDES ET DES COMPTES COMBINES
+CHAPITRE 1 : Comptes consolidés
+CHAPITRE 2 : Comptes combinés
+TITRE III : DES DISPOSITIONS PENALES
+TITRE IV : DES DISPOSITIONS TRANSITOIRES ET FINALES
+
+ACTE UNIFORME
+ACTE UNIFORME RELATIF AU
+   DROIT COMPTABLE ET A
+
+L'INFORMATION FINANCIERE
+
+                                 ACTE UNIFORME
+                                RELATIF AU DROIT
+                                 COMPTABLE ET A
+
+                                  L'INFORMATION
+                                     FINANCIERE
+
+          Le Conseil des Ministres de l'Organisation pour 1'Harmonisation en Afrique du Droit des
+                                                    Affaires (OHADA),
+
+       Vu le Traité relatif à 1'harmonisation du droit des affaires en Afrique, signé à Port-Louis le 17
+       octobre 1993, tel que révisé à Québec le 17 octobre 2008, notamment en ses articles 2, 5 à 10
+       et 12 ;
+       Vu le Rapport du Secrétariat Permanent et les observations des Etats Parties ;
+       Vu l'Avis n° 003/2106 en date du 20 décembre 2016 de la Cour Commune de Justice et
+       d'Arbitrage ;
+       Après en avoir délibéré, adopte à 1'unanimité des Etats Parties présents et votants, 1'Acte
+       uniforme dont la teneur suit :
+       ACTE UNIFORME
+ACTE UNIFORME RELATIF AU
+   DROIT COMPTABLE ET A
+
+L'INFORMATION FINANCIERE
+
+                         Titre I
+
+                                  DES COMPTES
+                                  PERSONNELS
+                                   DES ENTITES
+                                   (PERSONNES
+                                 PHYSIQUES ET
+                            PERSONNES MORALES)
+
+CHAPITRE 1 :   Dispositions générales
+CHAPITRE 2 :   Organisation comptable
+CHAPITRE 3 :
+CHAPITRE 4 :   Jeu complet d'états financiers annuels
+CHAPITRE 5 :
+               Règles d'évaluation et de détermination du résultat
+               Valeur probante des documents, contrôle des comptes, collecte et
+               publicité des informations comptables
+
+ACTE UNIFORME  12
+ ACTE UNIFORME RELATIF
+AU DROIT COMPTABLE ET A
+
+        L'INFORMATION
+           FINANCIERE
+
+Titre I
+
+Chapitre 1               Dispositions générales
+
+   Article 1er
+
+Toute entité au sens de l'article 2 ci-dessous est soumise aux dispositions du présent Acte
+uniforme et doit mettre en place, pour l'information externe et pour son propre usage, une
+comptabilité générale conformément audit Acte uniforme.
+A cet effet :
+
+     elle classe, saisit, enregistre dans sa comptabilité les événements qui sont constatés et
+         toutes opérations, entraînant des mouvements de valeur, qui sont traitées avec des tiers
+         ou qui sont constatées ou effectuées dans le cadre de sa gestion interne ;
+
+     elle fournit, après traitement approprié de ces opérations, les redditions de comptes
+         auxquelles elle est assujettie légalement ou de par ses statuts, ainsi que les
+         informations nécessaires aux besoins des divers utilisateurs.
+
+   Article 2
+
+Sont astreintes à la mise en place d'une comptabilité, dite comptabilité financière, les entités
+soumises aux dispositions de l'Acte uniforme portant sur le droit commercial général, de
+l'Acte uniforme relatif au droit des sociétés commerciales et du groupement d'intérêt
+économique et de l'Acte uniforme relatif au droit des sociétés coopératives, les entités
+publiques, parapubliques, d'économie mixte et, plus généralement, les entités produisant des
+biens et des services marchands ou non marchands, dans la mesure où elles exercent, dans un
+
+ACTE UNIFORME            13
+but lucratif ou non, des activités économiques à titre principal ou accessoire qui se fondent sur
+des actes répétitifs, à l'exception de celles soumises aux règles de la comptabilité publique.
+
+   Article 3
+
+La comptabilité doit satisfaire, dans le respect de la convention de prudence, aux obligations
+de régularité, de sincérité et de transparence inhérentes à la tenue, au contrôle, à la
+présentation et à la communication des informations qu'elle a traitées.
+
+   Article 4
+
+Pour garantir la fiabilité, la compréhension et la comparabilité des informations, la
+comptabilité de chaque entité implique :
+
+     le respect d'une terminologie et de principes directeurs communs à l'ensemble des
+         entités concernées des Etats parties au Traité relatif à l'harmonisation du droit des
+         affaires en Afrique ;
+
+     la mise en oeuvre de postulats, de conventions, de méthodes et de procédures
+         normalisées éventuellement par secteurs professionnels ;
+
+     une organisation répondant à tout moment aux exigences de collecte, de tenue, de
+         contrôle, de présentation et de communication des informations comptables se
+         rapportant aux opérations de l'entité visées à l'article premier.
+
+   Article 5
+
+Il est institué un système comptable unique, commun à tous les Etats parties composé du Plan
+comptable général OHADA et du Dispositif comptable relatif aux comptes consolidés et
+combinés, dénommé Système comptable OHADA en abrégé SYSCOHADA et annexé au
+présent Acte uniforme.
+
+Le SYSCOHADA a pour objet la collecte, la tenue, le contrôle, la présentation et la
+communication par les entités, d'informations financières établies dans les mêmes conditions
+de fiabilité, de compréhension et de comparabilité.
+
+Toutefois, les établissements de crédit, les établissements de microfinance, les acteurs du
+marché financier, les sociétés d'assurance et de réassurance, les organismes de sécurité et
+prévoyance sociale et les entités à but non lucratif ne sont pas assujettis au SYSCOHADA.
+
+ACTE UNIFORME  14
+Il est procédé régulièrement, par voie de décision, à la mise à jour du Plan comptable général
+OHADA et du Dispositif comptable relatif aux comptes consolidés et combinés, sur avis ou
+recommandation de la Commission de normalisation comptable de l'OHADA conformément
+au Règlement n°002/2009 portant création, organisation et fonctionnement de ladite
+Commission.
+
+   Article 6
+
+L'application du Système comptable OHADA implique que :
+     la convention de prudence soit en tous cas observée, à partir d'une appréciation
+         raisonnable des événements et des opérations à enregistrer au titre de l'exercice;
+     l'entité se conforme aux règles et procédures en vigueur en les appliquant de bonne
+         foi;
+     les responsables des comptes mettent en place et en oeuvre des procédures de contrôle
+         interne indispensables à la connaissance qu'ils doivent normalement avoir de la réalité
+         et de l'importance des événements, opérations et situations liés à l'activité de l'entité ;
+     les informations soient présentées et communiquées clairement sans intention de
+         dissimuler la réalité derrière l'apparence.
+
+   Article 7
+
+Les états financiers de synthèse regroupent les informations financières au moins une fois par
+an sur une période de douze mois, appelée exercice ; ils sont dénommés états financiers
+annuels.
+L'exercice coïncide avec l'année civile.
+La durée de l'exercice est exceptionnellement inférieure à douze mois pour le premier
+exercice débutant au cours du premier semestre de l'année civile. Cette durée peut être
+supérieure à douze mois pour le premier exercice commencé au cours du deuxième semestre
+de l'année.
+
+En cas de cessation d'activité, pour quelque cause que ce soit, la durée des opérations de
+liquidation est comptée pour un seul exercice, sous réserve de l'établissement de situations
+annuelles provisoires.
+
+ACTE UNIFORME  15
+   Article 8
+
+Un jeu complet d'états financiers annuels comprend le Bilan, le Compte de résultat, le
+Tableau des flux de trésorerie ainsi que les Notes annexes.
+
+Les états financiers forment un tout indissociable et décrivent de façon régulière et sincère les
+événements, opérations et situations de l'exercice pour donner une image fidèle du patrimoine,
+de la situation financière et du résultat de l'entité.
+
+Les états financiers sont établis et présentés conformément aux dispositions des articles 25 à
+34 ci-après, de façon à permettre leur comparaison dans le temps, exercice par exercice, et
+leur comparaison avec les états financiers annuels des autres entités dressés dans les mêmes
+conditions de régularité, de fidélité et de comparabilité.
+
+Les entités dont les titres sont inscrits à une bourse de valeurs et celles qui sollicitent un
+financement dans le cadre d'un appel public à l'épargne, doivent établir et présenter les états
+financiers annuels selon les normes internationales d'informations financières, appelées
+normes IFRS, en sus des états financiers visés aux alinéas précédents.
+
+Les états financiers annuels établis selon les normes IFRS sont destinés exclusivement aux
+marchés financiers. Ils ne peuvent servir de support de base pour la détermination du bénéfice
+distribuable visé par l'Acte uniforme relatif au droit des sociétés commerciales et du
+groupement d'intérêt économique.
+
+   Article 9
+
+La régularité et la sincérité des informations regroupées dans les états financiers annuels de
+l'entité résultent d'une description adéquate, loyale, claire, précise et complète des
+événements, opérations et situations se rapportant à l'exercice.
+La comparabilité des états financiers annuels au cours des exercices successifs nécessite la
+permanence dans la terminologie et dans les méthodes utilisées pour retracer les événements,
+opérations et situations présentés dans ces états.
+
+ACTE UNIFORME  16
+   Article 10
+
+Toute entité qui applique correctement le Système comptable OHADA est réputée donner,
+dans ses états financiers, une image fidèle de sa situation et de ses opérations exigée en
+application de l'article 8 ci-dessus.
+Lorsque l'application d'une prescription comptable se révèle insuffisante ou inadaptée pour
+donner l'image fidèle, des informations complémentaires ou des justifications nécessaires
+sont obligatoirement fournies dans les Notes annexes.
+
+   Article 11
+
+Les états financiers annuels visés à l'article 8 sont rendus obligatoires, en tout ou en partie, en
+fonction de la taille des entités appréciée selon des critères relatifs au chiffre d'affaires hors
+taxes de l'exercice.
+Les présentations des états financiers annuels et de tenue de comptes admises par le présent
+Acte uniforme sont le Système normal et le Système minimal de trésorerie.
+Toute entité est, sauf exception liée à sa taille, soumise au Système normal de présentation
+des états financiers et de tenue des comptes.
+
+   Article 12 abrogé
+
+ Article 13
+
+Les petites entités sont assujetties, sauf option, au Système minimal de trésorerie en abrégé
+SMT.
+
+Sont éligibles au Système minimal de trésorerie, les entités dont le chiffre d'affaires hors
+taxes annuel est inférieur aux seuils suivants :
+
+     soixante (60) millions de F CFA ou l'équivalent dans l'unité monétaire ayant cours
+         légal dans l'Etat partie, pour les entités de négoce ;
+
+     quarante (40) millions de F CFA ou l'équivalent dans l'unité monétaire ayant cours
+         légal dans l'Etat partie, pour les entités artisanales et assimilées ;
+
+     trente (30) millions de F CFA ou l'équivalent dans l'unité monétaire ayant cours
+         légal dans l'Etat partie, pour les entités de services.
+
+ACTE UNIFORME  17
+ ACTE UNIFORME RELATIF
+AU DROIT COMPTABLE ET A
+
+        L'INFORMATION
+           FINANCIERE
+
+       Titre I
+
+ Chapitre 2 Organisation comptable
+
+   Article 14
+
+L'organisation comptable mise en place dans l'entité doit satisfaire aux exigences de
+régularité et de sécurité pour assurer l'authenticité des écritures de façon à ce que la
+comptabilité puisse servir à la fois d'instrument de mesure des droits et obligations des
+partenaires de l'entité, d'instrument de preuve, d'information des tiers et de gestion.
+
+   Article 15
+
+L'organisation comptable doit assurer :
+     un enregistrement exhaustif, au jour le jour, et sans retard des informations de base ;
+     le traitement en temps opportun des données enregistrées ;
+     la mise à la disposition des utilisateurs des documents requis dans les délais légaux
+         fixés pour leur délivrance.
+
+ACTE UNIFORME            18
+  
+           Article 16
+Pour maintenir la continuité dans le temps de l'accès à l'information, toute entité établit un
+manuel décrivant les procédures et l'organisation comptables.
+Ce manuel, mis à jour périodiquement est destiné à garantir le caractère définitif de
+l'enregistrement des mouvements. Il est conservé aussi longtemps qu'est exigée la
+présentation des états financiers successifs auxquels il se rapporte.
+
+Les mouvements affectant le patrimoine de l'entité sont enregistrés en comptabilité, opération
+par opération, dans l'ordre de leur date de valeur comptable. Cette date est celle de l'émission
+par l'entité de la pièce justificative de l'opération, ou celle de la réception des pièces d'origine
+externe. Les opérations de même nature réalisées en un même lieu et au cours d'une même
+journée peuvent être récapitulées sur une pièce justificative unique.
+
+Les mouvements sont récapitulés par période préalablement déterminée qui ne peut excéder
+un mois.
+
+L'entité procède à l'opération d'inventaire par le relevé physique de tous les éléments de son
+patrimoine avec la mention de la nature, de la quantité et de la valeur de chacun d'eux à la
+date de l'inventaire.
+
+Les données d'inventaire sont organisées et conservées de manière à justifier le contenu de
+chacun des éléments recensés du patrimoine.
+
+   Article 17
+
+L'organisation comptable doit au moins respecter les conditions de régularité et de sécurité
+suivantes :
+
+       1°) la tenue de la comptabilité dans la langue officielle et dans l'unité monétaire ayant
+       cours légal dans l'Etat partie ;
+       2°) l'emploi de la technique de la partie double, qui se traduit par une écriture affectant
+       au moins deux comptes, l'un étant débité et l'autre crédité. Lorsqu'une opération est
+       enregistrée, le total des sommes inscrites au débit de comptes doit être égal au total des
+       sommes inscrites au crédit d'autres comptes ;
+       3°) la justification des écritures par des pièces datées, conservées, classées dans un ordre
+       défini dans le manuel décrivant les procédures et l'organisation comptables, susceptibles
+       de servir comme moyen de preuve et portant les références de leur enregistrement en
+       comptabilité ;
+
+ACTE UNIFORME  19
+       4°) le respect de l'enregistrement chronologique des opérations tel qu'il est prévu par les
+       alinéas 3, 4 et 5 de l'article 16 ci-dessus ;
+
+       5°) l'identification de chacun de ces enregistrements précisant l'indication de son origine
+       et de son imputation, le contenu de l'opération à laquelle il se rapporte ainsi que les
+       références de la pièce justificative qui l'appuie ;
+
+       6°) le contrôle par inventaire de l'existence et de la valeur des biens, créances et dettes
+       de l'entité conformément aux alinéas 6 et 7 de l'article 16 ci-dessus ;
+
+       7°) le recours, pour la tenue de la comptabilité de l'entité, à un plan de comptes
+       normalisé dont la liste figure dans le Système comptable OHADA ;
+
+       8°) la tenue obligatoire de livres ou autres supports autorisés ainsi que la mise en oeuvre
+       de procédures de traitement agréées, permettant d'établir les états financiers annuels
+       visés à l'article 8 ci-dessus.
+
+   Article 18
+
+Les comptes du Système comptable OHADA sont regroupés par catégories homogènes
+appelées classes.
+
+Pour la comptabilité financière, les classes comprennent :
+     des classes de comptes de situation ;
+     des classes de comptes de gestion.
+
+Chaque classe est subdivisée en comptes identifiés par des numéros à deux chiffres ou plus,
+selon leur degré de dépendance vis-à-vis des comptes de niveaux supérieurs, dans le cadre
+d'une codification décimale.
+
+Le plan de comptes de chaque entité doit être suffisamment détaillé pour permettre
+l'enregistrement des opérations.
+
+Lorsque les comptes prévus par le Système comptable OHADA ne suffisent pas à l'entité
+pour enregistrer distinctement toutes ses opérations, elle peut ouvrir toutes subdivisions
+nécessaires.
+
+Inversement, si des comptes prévus par le Système comptable OHADA sont trop détaillés par
+rapport aux besoins de l'entité, elle peut les regrouper dans un compte global de même
+niveau, plus contracté, conformément aux possibilités offertes par le Système comptable
+OHADA et à condition que le regroupement ainsi opéré puisse au moins permettre
+l'établissement des états financiers annuels dans les conditions prescrites.
+
+Les opérations sont enregistrées dans les comptes dont les intitulés correspondent à leur
+nature.
+
+ACTE UNIFORME  20
+

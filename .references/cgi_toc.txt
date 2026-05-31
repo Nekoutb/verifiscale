@@ -1,0 +1,735 @@
+    CODE GENERAL DES IMPOTS
+
+               Mis à jour au 1er janvier 2025
+
+                           Edition officielle
+                  (Direction Générale des Impôts)
+
+                     Site web : www.impots.cm
+N° gratuit : 82 00 (à partir d'un poste fixe ou d'un CT-phone).
+Code Général des Impôts ­ Edition 2025
+                       II
+               TABLE DES MATIERES
+
+LIVRE PRELIMINAIRE : DISPOSITIONS GENERALES................................1
+LIVRE PREMIER IMPOTS ET TAXES ............................................................. 3
+TITRE I : IMPOTS DIRECTS .............................................................................. 5
+
+    CHAPITRE I : IMPOT SUR LES SOCIETES ...................................................................5
+        SECTION I : GENERALITES ........................................................................................5
+        SECTION II : CHAMP D'APPLICATION DE L'IMPOT.............................................5
+        SECTION III : BENEFICE IMPOSABLE......................................................................7
+        SECTION IV : LIEU D'IMPOSITION.........................................................................20
+        SECTION V : PERIODE D'IMPOSITION ..................................................................21
+        SECTION VI : CALCUL DE L'IMPOT .......................................................................21
+        SECTION VII : OBLIGATIONS DES PERSONNES IMPOSABLES ...........................21
+        SECTION VIII : ETABLISSEMENT DE L'IMPOT......................................................23
+        SECTION IX : PAIEMENT DE L'IMPOT ...................................................................28
+        SECTION X : OBLIGATIONS DES CONTRIBUABLES ............................................30
+
+    CHAPITRE II : IMPOT SUR LE REVENU DES PERSONNES PHYSIQUES..............31
+        SECTION I : DISPOSITIONS GENERALES...............................................................31
+          SOUS-SECTION I PERSONNES IMPOSABLES ..................................... 31
+          SOUS-SECTION II : EXEMPTIONS ........................................................ 32
+          SOUS-SECTION III LIEU D'IMPOSITION............................................. 33
+        SECTION II : DETERMINATION DE L'ASSIETTE DE L'IMPOT SUR LE REVENU
+        DES PERSONNES PHYSIQUES ..................................................................................33
+          SOUS-SECTION I DES TRAITEMENTS, SALAIRES, PENSIONS ET
+          RENTES VIAGERES................................................................................. 33
+          SOUS-SECTION II : DES REVENUS DE CAPITAUX MOBILIERS ....... 35
+          SOUS-SECTION III : DES REVENUS FONCIERS.................................. 39
+          SOUS-SECTION IV : DES BENEFICES ARTISANAUX, INDUSTRIELS
+          ET COMMERCIAUX................................................................................ 40
+          SOUS-SECTION V : DES BENEFICES AGRICOLES ............................. 41
+          SOUS-SECTION VI : DES BENEFICES DES PROFESSIONS NON
+          COMMERCIALES ..................................................................................... 42
+          SOUS-SECTION VII : DES DISPOSITIONS COMMUNES AUX
+          BENEFICES ARTISANAUX, INDUS-TRIELS ET COMMERCIAUX, AUX
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                       III
+          BENEFICES AGRICOLES ET AUX BENEFICES NON COMMERCIAUX
+           ................................................................................................................... 43
+          SOUS-SECTION VIII : TAXATION D'APRES LES SIGNES EXTERIEURS
+          DE RICHESSE........................................................................................... 44
+          SOUS-SECTION IX FAIT GENERATEUR ET EXIGIBILITE .................. 47
+        SECTION III : CALCUL DE L'IMPOT.......................................................................47
+        SECTION IV : OBLIGATIONS COMPTABLES ..........................................................48
+        SECTION V : OBLIGATIONS DECLARATIVES.........................................................48
+        SECTION VI MODALITES DE PERCEPTION...........................................................50
+          SOUS-SECTION I : TRAITEMENTS, SALAIRES, PENSIONS ET RENTES
+          VIAGERES................................................................................................. 50
+          SOUS-SECTION II : REVENUS DES CAPITAUX MOBILIERS.............. 51
+          SOUS-SECTION III : REVENUS FONCIERS.......................................... 51
+          SOUS-SECTION IV : BENEFICES ARTISANAUX, INDUSTRIELS ET
+          COMMERCIAUX, BENEFICES AGRICOLES ET BENEFICES NON
+          COMMERCIAUX ...................................................................................... 52
+    CHAPITRE III : DISPOSITIONS GENERALES ET COMMUNES A L'IMPOT SUR
+    LES SOCIETES ET A L'IMPOT SUR LE REVENU DES PERSONNES PHYSIQUES 54
+        SECTION I : REGIMES D'IMPOSITION ...................................................................54
+        SECTION II : DEPART DU CAMEROUN ..................................................................58
+        SECTION III LIEU D'IMPOSITION..........................................................................58
+        SECTION IV : OBLIGATIONS DES CHEFS D'ENTREPRISES ET DES SOCIETES DE
+        PERSONNES ................................................................................................................58
+        SECTION V : MESURES INCITATIVES .....................................................................60
+    ANNEXES DU TITRE I : LISTE DES EQUIPEMENTS ET MATERIELS DE
+    L'AGRICULTURE, DE L'ELEVAGE ET DE LA PECHE EXONERES DE LA TVA ..71
+TITRE II : DISPOSITIONS RELA-TIVES A LA TAXE SUR LA VALEUR
+AJOUTEE ET AUX DROITS D'ACCISES ........................................................ 79
+    CHAPITRE I : CHAMP D'APPLICATION ....................................................................79
+        SECTION I : PERSONNES IMPOSABLES OU ASSUJETTIES ..................................79
+        SECTION II : OPERATIONS IMPOSABLES ..............................................................79
+        SECTION III : EXONERATIONS ................................................................................81
+        SECTION IV : TERRITORIALITE...............................................................................83
+        SECTION V : DROIT D'ACCISES ..............................................................................85
+    CHAPITRE II : MODALITES DE CALCUL ..................................................................85
+        SECTION I : MODALITES D'IMPOSITION ..............................................................85
+        SECTION II : FAIT GENERATEUR ET EXIGIBILITE...............................................85
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                       IV
+        SECTION III : LIQUIDATION....................................................................................87
+    CHAPITRE III : MODALITES DE PERCEPTION ET DECLARATIONS ....................94
+
+        SECTION I : PERCEPTION........................................................................................94
+        SECTION II : OBLIGATIONS DES REDEVABLES...................................................98
+    ANNEXES DU TITRE II : ANNEXE I : Liste des biens de première nécessité exonérés de
+    TVA .................................................................................................................................100
+    ANNEXE II : LISTE DES PRODUITS SOUMIS AUX DROITS D'ACCISES.............105
+TITRE III : FISCALITE LOCALE .................................................................. 109
+TITRE IV : IMPOTS ET TAXES DIVERS ..................................................... 109
+    CHAPITRE I : TAXE SUR LES JEUX DE HASARD ET DE DIVERTISSEMENT ...109
+        SECTION I : DISPOSITIONS COMMUNES.............................................................109
+        SECTION II : DISPOSITIONS SPECIFIQUES AUX CASINOS ...............................109
+        SECTION III : DISPOSITIONS SPECIFIQUES AUX JEUX DE DIVERTIS-SEMENT
+        ET MACHINES A SOUS...........................................................................................110
+    CHAPITRE II : TAXE DE SEJOUR ..............................................................................111
+    CHAPITRE III : TAXE SPECIALE SUR LE REVENU ...............................................112
+TITRE V : FISCALITES SPECIFIQUES ........................................................ 114
+    CHAPITRE I : TAXE SPECIALE SUR LES PRODUITS PETROLIERS ....................116
+    CHAPITRE II : DISPOSITIONS RELATIVES A LA FISCALITE MINIERE .............117
+    CHAPITRE III : FISCALITE FORESTIERE.................................................................119
+        SECTION I : TAXE D'ABATTAGE ...........................................................................119
+        SECTION II : REDEVANCE FORESTIERE ANNUELLE.........................................120
+        SECTION III : SURTAXE A L'EXPORTATION ET TAXE D'ENTREE USINE ........120
+        SECTION IV : CAUTIONNEMENT ..........................................................................121
+        SECTION V : AUTRES DROITS ET TAXES .............................................................122
+    CHAPITRE IV : REGIME FISCAL DES CONCESSIONS DE SERVICES PUBLICS
+    ......................................................................................................................................... 123
+        SECTION I : DISPOSITIONS GENERALES.............................................................123
+        SECTION II : REGIME DES PRODUITS IMPOSABLES .........................................123
+        SECTION III : REGLES SPECIFIQUES AUX CHARGES........................................124
+    CHAPITRE V : REGIME FISCAL APPLICABLE AUX INVESTISSEMENTS .........126
+        SECTION I : REGLES GENERALES ........................................................................126
+        SECTION II : REGIME DE LA ZONE FRANCHE....................................................126
+TITRE VI : ENREGISTREMENT, TIMBRE ET CURATELLE ................. 128
+SOUS-TITRE I : LEGISLATION HARMONISEE EN ZONE CEMAC ..... 128
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                        V
+CHAPITRE I : DROITS D'ENREGISTREMENT ET LEUR APPLICATION .............128
+    SECTION I : GENERALITES ....................................................................................128
+    SECTION II : DISPOSITIONS DEPENDANTES ET INDEPENDANTES ..............128
+    SECTION III : ENREGISTREMENT SUR MINUTES, BREVETS, ORIGINAUX OU
+    SUR DECLARATION ................................................................................................129
+    SECTION IV : MINIMUM DE PERCEPTION ..........................................................129
+    SECTION V : MUTATION SIMULTANEE DES MEUBLES ET IMMEUBLES : PRIX
+    UNIQUE .....................................................................................................................129
+    SECTION VI : DISPOSITIONS COMMUNES ..........................................................129
+
+CHAPITRE II : DELAIS D'ENREGISTREMENT DES ACTES ET DECLARATIONS
+......................................................................................................................................... 129
+CHAPITRE III : VALEURS SUR LESQUELLES SONT ASSIS LES DROITS
+PROPORTIONNELS, PROGRESSIFS OU DEGRESSIFS ............................................131
+
+    SECTION I : BAUX ET LOCATIONS........................................................................131
+    SECTION II : CONTRATS DE MARIAGE ................................................................132
+    SECTION III : CREANCES .......................................................................................132
+    SECTION IV : DELIVRANCES DE LEGS.................................................................132
+    SECTION V : JUGEMENTS......................................................................................132
+    SECTION VI : MAINLEVEES D'HYPOTHEQUES ..................................................132
+    SECTION VII : MARCHES........................................................................................132
+    SECTION VIII : PARTAGES .....................................................................................133
+    SECTION IX : PROROGATIONS DE DELAIS .........................................................133
+    SECTION X : QUITTANCES.....................................................................................133
+    SECTION XI : RENTES.............................................................................................133
+    SECTION XII : SOCIETES........................................................................................133
+    SECTION XIII : TRANSMISSION A TITRE ONEREUX DE BIENS MEUBLES ET
+    IMMEUBLES .............................................................................................................. 133
+    SECTION XIV : ACTE TRANSLATIF DE FONDS DE COMMERCE ET
+    MARCHANDISES NEUVES .......................................................................................134
+    SECTION XV : TRANSMISSIONS ENTRE VIFS A TITRE GRATUIT ET MUTATIONS
+    PAR DECES ...............................................................................................................134
+    SECTION XVI : DEDUCTION DES DETTES...........................................................134
+    SECTION XVII : VALEUR DE LA NUE-PROPRIETE ET L'USUFRUIT.................135
+CHAPITRE IV : BUREAUX OU LES ACTES ET MUTATIONS DOIVENT ETRE
+ENREGISTRES ...............................................................................................................136
+CHAPITRE V : PAIEMENT DES DROITS ET CEUX QUI DOIVENT LES ACQUITTER
+......................................................................................................................................... 136
+    SECTION I : PAIEMENT DES DROITS AVANT ENREGISTREMENT....................137
+
+                            Code Général des Impôts ­ Edition 2025
+
+                                                   VI
+    SECTION II : OBLIGATION DE PAIEMENT...........................................................137
+    SECTION III : CONTRIBUTION AU PAIEMENT ...................................................138
+    SECTION IV : FRACTIONNEMENT DE DROITS....................................................138
+CHAPITRE VI : SANCTIONS.......................................................................................139
+    SECTION I : DEFAUT D'ENREGISTRE-MENT DES ACTES ET DECLARATIONS
+    DANS LES DELAIS ....................................................................................................139
+    SECTION II : OMISSIONS........................................................................................140
+    SECTION III : INSUFFISANCES..............................................................................140
+    SECTION IV : DISSIMULATION..............................................................................141
+    SECTION V : PREEMPTION....................................................................................141
+    SECTION VI : REMISE DES PENALITES................................................................142
+CHAPITRE VII : DROITS ACQUIS ET PRESCRIPTIONS.........................................142
+    SECTION I : DROITS ACQUIS.................................................................................142
+    SECTION II : PRESCRIPTION .................................................................................142
+CHAPITRE VIII : ACTES A ENREGISTRER EN DEBET ..........................................143
+CHAPITRE IX : ACTES A ENREGISTRER GRATIS .................................................143
+CHAPITRE X : ACTES EXEMPTS DE LA FORMALITE ..........................................144
+CHAPITRE XI : FIXATION DES DROITS .................................................................145
+    SECTION I : DROITS PROPORTIONNELS .............................................................146
+    SECTION II : DROIT DE TITRE...............................................................................147
+    SECTION III : DROITS DEGRESSIFS .....................................................................147
+    SECTION IV : DROITS PROGRESSIFS ...................................................................148
+    SECTION V : DROITS FIXES ...................................................................................148
+CHAPITRE XII : OBLIGATIONS DES OFFICIERS PUBLICS ET MINISTERIELS, DES
+JUGES ET ARBITRES, DES PARTIES ET DES RECEVEURS ET DES PEINES
+QUISANCTIONNENT L'INOBSERVATION DE CES OBLIGATIONS .....................149
+    SECTION I : ACTES EN CONSEQUENCE ET ACTES PRODUITS EN JUSTICE ..149
+    SECTION II : ASSISTANCE JUDICIAIRE, DEPENS, TRANSMISSION DE LA
+    FORMULE EXECUTOIRE AU RECEVEUR .............................................................153
+    SECTION III : DROIT DE COMMUNICATION.......................................................153
+    SECTION IV : REPERTOIRES DE NOTAIRES, HUISSIERS, GREFFIERS,
+    SECRETAIRES, COMMISSAIRES-PRISEURS ET COURTIERS DE COMMERCE..155
+    SECTION V : VENTES PUBLIQUES DE MEUBLES ...............................................156
+    SECTION VI : OBLIGATIONS SPECIALES CONCERNANT LES MUTATIONS PAR
+    DECES ET FORME DES DECLARATIONS ..............................................................158
+
+                            Code Général des Impôts ­ Edition 2025
+
+                                                   VII
+        SECTION VII : IMMEUBLES : OBLIGATIONS DES ACQUEREURS, DES NOTAIRES
+        ET DES CONSERVATEURS DES HYPOTHEQUES ET PROPRIETES FONCIERES
+        .................................................................................................................................... 158
+        SECTION VIII : NOTICE DE DECES.......................................................................159
+        SECTION IX : INSCRIPTIONS NOMINATIVES DE RENTES SUR UN ETAT MEMBRE
+        DE LA COMMUNAUTE ET TITRE S NOMINATIFS OU A ORDRE PROVENANT DU
+        TITULAIRE DECEDE- TRANSFERT.........................................................................159
+        SECTION X : POLICE D'ASSURANCE CONTRE L'INCENDIE SOUSCRITE PAR
+        DES PERSONNES DECEDEES .................................................................................160
+        SECTION XI : AVIS A DONNER PAR LES ASSUREURS.........................................160
+        SECTION XII : OBLIGATIONS DES DEPOSITAIRES OU DEBITEURS DES SOMMES
+        DUES A RAISON DU DECES....................................................................................160
+        SECTION XIII : OBLIGATIONS DES RECEVEURS ................................................161
+        SECTION XIV : REMISE OU MODERATION DE PENALITES ET AMENDES .....162
+    CHAPITRE XIII : RECOUVREMENT ET CONTENTIEUX : .....................................162
+        SECTION I : RECOUVREMENT ..............................................................................162
+        SECTION II : ACTION DES PARTIES ET INSTANCES...........................................162
+    CHAPITRE XIV : TIMBRE ET CONTRIBUTION DU TIMBRE ................................163
+        SECTION I : DISPOSITIONS GENERALES.............................................................163
+        SECTION II : TIMBRE DE DIMENSION .................................................................163
+        SECTION III : TIMBRE DE DELIVRANCE DE CERTAINS DOCUMENTS ET DIVERS
+        .................................................................................................................................... 170
+        SECTION IV : TIMBRE EN DEBET .........................................................................173
+        SECTION V : EXEMPTIONS GENERALES..............................................................173
+        SECTION VI : DISPOSITIONS DIVERSES ..............................................................175
+    CHAPITRE XV : CURATELLE DES SUCCESSIONS VACANTES ..........................178
+        SECTION I : DISPOSITIONS GENERALES.............................................................178
+        SECTION II : OUVERTURE DE LA SUCCESSION VACANTE ...............................180
+        SECTION III : GESTION DES SUCCESSIONS VACANTES ET DES BIENS SANS
+        MAITRE......................................................................................................................181
+        SECTION IV : FIN DE LA CURATELLE..................................................................183
+        SECTION V : ENREGISTREMENT DU TIMBRE ET FRAIS DE PROCEDURE .....185
+SOUS-TITRE II : LEGISLATION NON HARMONISEE EN ZONE CEMAC
+............................................................................................................................... 185
+    CHAPITRE I : TARIFS DES DROITS D'ENREGISTREMENT ..................................186
+        SECTION I : DROITS PROPORTIONNELS .............................................................186
+        SECTION II : DROITS DEGRESSIFS ET DROITS PROGRESSIFS.........................187
+        SECTION III : DROITS FIXES..................................................................................188
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                      VIII
+        SECTION IV : EXONERATIONS ET EXEMPTIONS................................................189
+        SECTION V : EVALUATION ADMINISTRATIVE ....................................................190
+    CHAPITRE II : TARIFS DES DROITS DE TIMBRE...................................................191
+        SECTION I : TIMBRE DE DIMENSION...................................................................191
+        SECTION II : TIMBRE SPECIAL A CERTAINS DOCUMENTS ET DIVERS..........191
+    CHAPITRE III : OBLIGATIONS ET SANCTIONS .....................................................195
+        SECTION I : DELAIS, LIEUX D'ENREGISTREMENT ET OCTROI DE LA
+        FORMALITE ..............................................................................................................195
+        SECTION II : FRAIS FUNERAIRES .........................................................................196
+        SECTION III : PRESCRIPTION................................................................................196
+        SECTION IV : DROIT DE COMMUNICATION .......................................................196
+        SECTION V : REMUNERATION DES CURATEURS ET DES COMPTABLES
+        PUBLICS ....................................................................................................................196
+        SECTION VI : REPARATION DES IMMEUBLES PAR LE CURATEUR .................197
+        SECTION VII : REMISE DES TITRE S ET BIENS A L'ETAT...................................197
+        SECTION VIII : CURATELLES DE FAIBLE VALEUR ............................................198
+        SECTION IX : AMENDE CONTRE LE CURATEUR ................................................198
+        SECTION X : REMISE, MODERATION ET MAJORATION DES PENALITES DE
+        RETARD ET AMENDES.............................................................................................198
+SOUS-TITRE III : CODE NON HARMONISE EN ZONE CEMAC............ 199
+    CHAPITRE I : TAXE SPECIALE SUR LES SOCIETES..............................................199
+        SECTION I : CESSIONS D'ACTIONS ET PARTS SOUMISES AU DROIT DE
+        MUTATION ................................................................................................................199
+        SECTION II : PRESCRIPTIONS DIVERSES ............................................................200
+    CHAPITRE II : TAXE FONCIERE SUR LES PROPRIETES IMMOBILIERES .........200
+        SECTION I : CHAMP D'APPLICATION..................................................................200
+        SECTION II : EXONERATIONS ...............................................................................201
+        SECTION III : FAIT GENERATEUR ........................................................................201
+        SECTION V : LIEU D'IMPOSITION .......................................................................202
+        SECTION VI : OBLIGATIONS SPECIFIQUES ........................................................202
+        SECTION VII : DISPOSITIONS DIVERSES .............................................................202
+    CHAPITRE III : TIMBRE GRADUE.............................................................................202
+        SECTION I : REGLES GENERALES ........................................................................202
+        SECTION II : ASSIETTE ET TARIF..........................................................................203
+        SECTION III : MODE DE PERCEPTION ................................................................203
+    CHAPITRE IV TIMBRE SUR LA PUBLICITE............................................................203
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                       IX
+        SECTION I : GENERALITES ....................................................................................203
+        SECTION II : TARIFS ...............................................................................................204
+        SECTION III : MODE DE PERCEPTION ................................................................204
+        SECTION IV : PENALITES.......................................................................................207
+    CHAPITRE V : DROIT DE TIMBRE SUR LES AUTOMOBILES ..............................208
+    CHAPITRE VI : EXEMPTIONS SUR LES DROITS DE TIMBRE..............................210
+    CHAPITRE VII : DROIT DE TIMBRE D'AEROPORT ...............................................211
+    CHAPITRE VIII : TAXE A L'ESSIEU..........................................................................211
+LIVRE DEUXIEME LIVRE DES PROCEDURES FISCALES ................... 217
+SOUS-TITRE I : ASSIETTE DE L'IMPOT .................................................... 219
+    CHAPITRE UNIQUE OBLIGATIONS DES CONTRIBUABLES ...............................219
+        SECTION I : OBLIGATIONS DECLARATIVES........................................................219
+
+          SOUS-SECTION I : PRINCIPE GENERAL ........................................... 219
+          SOUS-SECTION II : MISE EN DEMEURE DE DECLARER ................ 221
+        SECTION II : OBLIGATIONS ET DELAIS DE CONSERVATION DES DOCUMENTS
+        .................................................................................................................................... 222
+        SECTION III : OBLIGATIONS DE PAIEMENT DE L'IMPOT ................................223
+        SECTION IV : OBLIGATIONS ADMINISTRATIVES................................................224
+SOUS-TITRE II : CONTROLE DE L'IMPOT ............................................... 226
+    CHAPITRE I : DROIT DE CONTROLE .......................................................................226
+        SECTION I : DISPOSITIONS GENERALES.............................................................226
+        SECTION II : DISPOSITIONS PARTICULIERES EN MATIERE DE TAXE SUR LA
+        VALEUR AJOUTEE (TVA).........................................................................................226
+        SECTION III : MODALITES D'EXERCICE DU DROIT DE CONTROLE...............226
+          SOUS-SECTION I : VERIFICATION SUR PLACE................................ 226
+          SOUS-SECTION II : CONTROLE SUR PIECES ................................... 230
+          SOUS-SECTION III : DEMANDES D'ECLAIRCISSEMENTS ET DE
+          JUSTIFICATIONS ................................................................................... 230
+        SECTION IV : PROCEDURES DE REDRESSEMENT ............................................231
+          SOUS-SECTION I : PROCEDURE DE REDRESSEMENT
+          CONTRADICTOIRE................................................................................ 231
+          SOUS-SECTION II : PROCEDURE DE TAXATION D'OFFICE.......... 233
+          SOUS-SECTION III : PROCEDURE DE L'ABUS DE DROIT .............. 234
+        SECTION V : LIMITES DU DROIT DE CONTROLE..............................................234
+    CHAPITRE II : DROIT DE COMMUNICATION.........................................................236
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                        X
+        SECTION I : PERSONNES SOUMISES AU DROIT DE COMMUNICATION .........237
+        SECTION II : PORTEE ET LIMITE DU SECRET PROFESSIONNEL OPPOSABLE A
+        L'ADMINIS-TRATION FISCALE ...............................................................................238
+        SECTION III : MODALITES PARTI-CULIERES D'EXERCICE DU DROIT DE
+        COMMUNICATION ...................................................................................................238
+    CHAPITRE III : DROITS D'ENQUETE, DE CONSTATATION DES STOCKS ET DE
+    VISITE.............................................................................................................................239
+SOUS-TITRE III : RECOUVREMENT DE L'IMPOT.................................. 241
+    CHAPITRE I : MODALITES DE RECOUVREMENT .................................................241
+        SECTION I : COMPETENCE EN MATIERE DE RECOUVREMENT......................241
+        SECTION II : AVIS DE MISE EN RECOUVREMENT..............................................241
+    CHAPITRE II : POURSUITES ......................................................................................242
+        SECTION I : POURSUITES DE DROIT COMMUN.................................................242
+
+          SOUS-SECTION I : MISE EN DEMEURE VALANT COMMANDEMENT
+          DE PAYER ............................................................................................... 242
+          SOUS-SECTION II : SAISIE................................................................... 242
+          SOUS-SECTION III VENTE ................................................................... 243
+        SECTION II : MESURES PARTICULIERES DE POURSUITES .............................244
+          SOUS-SECTION I : AVIS A TIERS DETENTEUR ................................. 244
+          SOUS-SECTION II : CONTRAINTE EXTERIEURE .............................. 245
+          SOUS-SECTION III : BLOCAGE DES COMPTES BANCAIRES .......... 245
+          SOUS-SECTION IV : FERMETURE DE L'ETABLISSEMENT ............. 245
+          SOUS-SECTION V : MISE EN FOURRIERE D'UN VEHICULE.......... 245
+          SOUS-SECTION VI : EXCLUSION DES MARCHES PUBLICS ........... 246
+    CHAPITRE III : GARANTIES DE RECOUVREMENT ...............................................246
+        SECTION I : PRIVILEGE DU TRESOR....................................................................246
+        SECTION II : HYPOTHEQUE LEGALE...................................................................247
+        SECTION III : SOLIDARITE DE PAIEMENT ..........................................................247
+        SECTION IV : PRESCRIPTION................................................................................248
+        SECTION V : ADMISSION EN NON-VALEUR DES COTES IRRECOUVRABLES .248
+    CHAPITRE IV : L'ATTESTATION DE CONFORMITE FISCALE ............................249
+SOUS-TITRE IV : SANCTIONS....................................................................... 250
+    CHAPITRE I : SANCTIONS FISCALES ......................................................................250
+        SECTION I : PENALITES D'ASSIETTE ...................................................................250
+          SOUS-SECTION I : INSUFFISANCE DE DECLARATION................... 250
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                       XI
+          SOUS-SECTION II : ABSENCE DE DECLARATION ........................... 251
+          SOUS-SECTION III : ABSENCE D'INDICATION DU NUMERO
+          IDENTIFIANT UNIQUE ......................................................................... 252
+          SOUS-SECTION IV : ABSENCE DE LA FACTURE OU FAUSSE
+          FACTURE................................................................................................ 252
+        SECTION II : SANCTIONS PARTICULIERES .........................................................252
+        SECTION III : PENALITES DE RECOUVREMENT................................................253
+          SOUS-SECTION I : DEFAUT OU RETARD DE PAIEMENT ............... 253
+    CHAPITRE II : SANCTIONS PENALES......................................................................254
+        SECTION I : PEINES PRINCIPALES .......................................................................254
+        SECTION II : PEINES COMPLEMENTAIRES .........................................................255
+        SECTION III : DEPOT DE PLAINTES .....................................................................255
+SOUS-TITRE V : CONTENTIEUX DE L'IMPOT......................................... 256
+    CHAPITRE I : JURIDICTION CONTENTIEUSE ........................................................256
+        SECTION I : RECOURS PREALABLE DEVANT L'ADMINIS-TRATION FISCALE256
+          SOUS-SECTION I : GENERALITES ...................................................... 256
+          SOUS-SECTION II : RECLAMATIONS ................................................. 256
+          SOUS-SECTION III : SURSIS DE PAIEMENT...................................... 257
+          SOUS-SECTION IV : DECISION DE L'ADMINISTRATION ................ 258
+          SOUS-SECTION V : FORME ET DELAI DE LA DECISION DE
+          L'ADMINISTRATION.............................................................................. 259
+        SECTION II : TRANSACTIONS ................................................................................259
+        SECTION III : PROCEDURE DEVANT LA JURIDICTION ADMINISTRATIVE.....260
+          SOUS-SECTION I : DELAI DE PRESENTATION DE LA REQUETE .. 260
+          SOUS-SECTION II : FORME DE LA REQUETE .................................. 260
+          SOUS-SECTION III : EXPERTISE......................................................... 262
+          SOUS-SECTION IV : DECISION DU TRIBUNAL ADMINISTRATIF... 263
+          SOUS-SECTION V : MEDIATION ......................................................... 263
+    CHAPITRE II : JURIDICTION GRACIEUSE...............................................................263
+        SECTION I : COMPETENCE DE LA JURIDICTION GRACIEUSE ........................263
+        SECTION II : DEMANDES DES CONTRIBUABLES ...............................................264
+          SOUS-SECTION I : FORME DE LA DEMANDE .................................. 264
+          SOUS-SECTION II : DECISION DE L'ADMINISTRATION ................. 264
+LIVRE TROISIEME FISCALITE LOCALE.................................................. 269
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                       XII
+TITRE PREMIER DES DISPOSITIONS GENERALES ............................... 271
+    CHAPITRE UNIQUE......................................................................................................271
+
+TITRE II : DES IMPOTS COMMUNAUX...................................................... 272
+    CHAPITRE I : DE LA CONTRIBUTION DES PATENTES ........................................272
+        SECTION I : DES DISPOSITIONS GENERALES....................................................272
+        SECTION II : DES EXEMPTIONS ET DES EXONERATIONS.................................273
+          SOUS-SECTION I : DES EXEMPTIONS ............................................... 273
+          SOUS-SECTION II : DE L'EXONERATION TEMPORAIRE ................ 274
+        SECTION III : DES TARIFS......................................................................................275
+        SECTION IV : DES DISPOSITIONS PARTICULIERES ..........................................276
+        SECTION V : DE LA PERSONNALITE DE LA PATENTE .......................................276
+        SECTION VI : DE L'ANNUALITE DE LA PATENTE..............................................277
+        SECTION VII : DES OBLIGATIONS DES REDEVABLES ......................................277
+        SECTION VIII : DE L'EMISSION ET DU PAIEMENT DE LA PATENTE..............278
+        SECTION IX : DES PENALITES...............................................................................279
+        ANNEXE DU CHAPITRE I : TABLEAU DES ACTIVITES SOUMISES DE PLEIN
+        DROIT A LA CONTRIBUTION DES PATENTES ......................................................280
+    CHAPITRE II DE LA CONTRIBUTION DES LICENCES ..........................................284
+        SECTION I : DES DISPOSITIONS GENERALES....................................................284
+        SECTION II : DES TARIFS DE LA CONTRIBUTION DES LICENCES ................286
+    CHAPITRE III : DE L'IMPOT LIBERATOIRE............................................................286
+        ANNEXES DU CHAPITRE III : ANNEXE I : Classification des activités soumises à
+        l'Impôt Libératoire .....................................................................................................289
+    CHAPITRE IV : DE LA TAXE FONCIERE SUR LES PROPRIETES IMMOBILIERES
+    ......................................................................................................................................... 292
+    CHAPITRE V : DES DROITS DE MUTATION D'IMMEUBLES...............................292
+    CHAPITRE VI : DE LA TAXE SUR LES JEUX DE HASARD ET DE
+    DIVERTISSEMENT .......................................................................................................292
+    CHAPITRE VII : DU DROIT DE TIMBRE AUTOMOBILE .......................................292
+    CHAPITRE VIII : DE LA REDEVANCE FORESTIERE .............................................292
+    CHAPITRE IX : DE LA TAXE DE SEJOUR ................................................................293
+
+TITRE III : DES CENTIMES ADDITIONNELS COMMUNAUX ............... 293
+TITRE IV : DES AUTRES TAXES COMMUNALES .................................... 293
+
+    CHAPITRE I : DE LA TAXE DE DEVELOPPEMENT LOCAL .................................294
+    CHAPITRE II : DES AUTRES TAXES COMMUNALES............................................295
+
+        SECTION I : DES GENERALITES SUR LES TAXES COMMUNALES ...................295
+                                Code Général des Impôts ­ Edition 2025
+
+                                                      XIII
+SECTION II : DE LA TAXE D'ABATTAGE DU BETAIL..........................................295
+SECTION III : DE LA TAXE COMMUNALE SUR LE BETAIL ...............................296
+
+   SOUS-SECTION I : DU CHAMP D'APPLICATION ............................. 296
+   SOUS-SECTION II : DES EXEMPTIONS.............................................. 296
+   SOUS-SECTION III : DE L'ASSIETTE, DES TAUX ET DU PAIEMENT
+    ................................................................................................................. 296
+   SOUS-SECTION IV : DES PENALITES................................................. 296
+SECTION IV : DE LA TAXE SUR LES ARMES A FEU ............................................297
+   SOUS-SECTION I : DU CHAMP D'APPLICATION ............................. 297
+   SOUS-SECTION II : DES EXEMPTIONS.............................................. 297
+   SOUS-SECTION III : DE LA LIQUIDATION ET DU PAIEMENT ....... 297
+   SOUS-SECTION IV : DES PENALITES................................................. 297
+SECTION V : DE LA TAXE D'HYGIENE ET DE SALUBRITE ................................297
+SECTION VI : DES DROITS DE FOURRIERE ........................................................298
+SECTION VII : DES DROITS DE PLACES SUR LES MARCHES............................298
+   SOUS-SECTION I : DES DROITS FIXES .............................................. 299
+   SOUS-SECTION II : DES DROITS JOURNALIERS .............................. 300
+SECTION VIII : DES DROITS SUR LE PERMIS DE BATIR OU D'IMPLANTER...300
+SECTION IX : DES DROITS D'OCCUPATION TEMPORAIRE DE LA VOIE
+PUBLIQUE.................................................................................................................301
+SECTION X : DE LA TAXE DE STATIONNEMENT................................................302
+SECTION XI : DES DROITS D'OCCUPATION DES PARCS DE STATIONNEMENT
+.................................................................................................................................... 302
+SECTION XII : DU TICKET DE QUAI : ..................................................................303
+SECTION XIII : DE LA TAXE SUR LES SPECTACLES ..........................................303
+SECTION XIV : DES DROITS DE STADE................................................................304
+SECTION XV : DE LA TAXE SUR LA PUBLICITE ................................................304
+SECTION XVI : DU DROIT DE TIMBRE COMMUNAL.........................................304
+SECTION XVII : DE LA REDEVANCE POUR LA DEGRADATION DE LA CHAUSSEE
+.................................................................................................................................... 305
+SECTION XVIII : DE LA TAXE COMMUNALE DE TRANSIT OU DE
+TRANSHUMANCE .....................................................................................................305
+SECTION XIX : DE LA TAXE SUR LE TRANSPORT DES PRODUITS DE
+CARRIERES ...............................................................................................................306
+SECTION XX DES DROITS D'OCCUPATION DES PARKINGS ............................307
+SECTION XXI : DE LA TAXE SUR LES PRODUITS DE RECUPERATION ...........307
+
+                        Code Général des Impôts ­ Edition 2025
+
+                                              XIV
+TITRE V : DES DISPOSITIONS PARTICULIERES APPLICABLES AUX
+COMMUNAUTES URBAINES ......................................................................... 308
+
+    CHAPITRE UNIQUE DE LA REPARTITION DES IMPOTS ET TAXES ENTRE LES
+    COMMUNAUTES UR-BAINES ET LES COMMUNES D'ARRONDISSEMENT.....308
+TITRE VI : DES RECETTES FISCALES D'INTERCOMMUNALITE ET DE
+PEREQUATION.................................................................................................. 309
+TITRE VII : DES IMPOTS ET TAXES DES REGIONS ............................... 310
+TITRE VIII DES PROCEDURES FISCALES SPECIFIQUES AUX IMPOTS
+LOCAUX .............................................................................................................. 311
+    CHAPITRE I DES DISPOSITIONS GENERALES......................................................311
+    CHAPITRE II : DES OBLIGATIONS DES CONTRIBUABLES .................................311
+
+        SECTION I : DE L'OBLIGATION D'IMMATRICULATION PREALABLE............311
+        SECTION II : DE L'OBLIGATION DE DECLARATION.........................................311
+    CHAPITRE III : DE L'EMISSION DES IMPOTS LOCAUX :.....................................312
+    CHAPITRE IV : DU RECOUVREMENT DES IMPOTS LOCAUX : .........................312
+        SECTION I : DU RECOUVREMENT AMIABLE ......................................................312
+        SECTION II : DU RECOUVREMENT FORCE.........................................................313
+        SECTION III : DU CONTROLE................................................................................314
+        SECTION IV : DE LA PRESCRIPTION ....................................................................314
+    CHAPITRE V : DU CONTENTIEUX DES IMPOTS LOCAUX : ................................315
+        SECTION I : DE LA JURIDICTION CONTENTIEUSE...........................................315
+        SECTION II : DE LA JURIDICTION GRACIEUSE.................................................316
+    CHAPITRE VI : DU REGIME DES SANCTIONS .......................................................316
+TITRE IX DES DISPOSITIONS DIVERSES, TRANSI-TOIRES ET FINALES
+............................................................................................................................... 317
+ANNEXES ............................................................................................................ 327
+ANNEXE 1 PARTIE LEGISLATIVE .............................................................. 329
+        LOI N° 77-10 DU 13 JUILLET 1977 PORTANT INSTITUTION D'UNE
+        CONTRIBUTION AU CREDIT FONCIER .................................................................330
+        LOI N°84/02 DU 30 JUIN 1984 PORTANT LOI DE FINANCES DE LA REPUBLIQUE
+        UNIE DU CAMEROUN POUR L'EXERCICE 1984/1985 .........................................339
+        LOI N°85/01 DU 29 JUIN 1985 PORTANT LOI DE FINANCES DE LA REPUBLIQUE
+        UNIE DU CAMEROUN POUR L'EXERCICE 1985/1986 .........................................348
+        LOI N°86/01 DU 1er JUILLET 1986 PORTANT LOI DE FINANCES DE LA
+        REPUBLIQUE DU CAMEROUN POUR L'EXERCICE 1986/1987 ..........................354
+        LOI N°88/005 DU 29 JUIN 1988 PORTANT LOI DE FINANCES DE LA REPUBLIQUE
+        DU CAMEROUN POUR L'EXERCICE 1988/1989 ...................................................356
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                       XV
+        ORDONNANCE N° 89/004 DU 12 DECEMBRE 1989 PORTANT INSTITUTION
+        D'UNE REDEVANCE AUDIOVISUELLE .................................................................358
+
+        LOI N° 90/050 DU 19 DECEMBRE 1990 MODIFIANT LA LOI N° 77/10 DU 13
+        JUILLET 1977 PORTANT INSTITUTION D'UNE CONTRIBUTION AU CREDIT
+        FONCIER ET FIXANT LA PART DE CETTE CONTRIBUTION DESTINEE AU FONDS
+        NATIONAL DE L'EMPLOI :......................................................................................361
+
+        LOI N°96/08 DU 1er JUILLET 1996 PORTANT LOI DE FINANCES DE LA
+        REPUBLIQUE DU CAMEROUN POUR L'EXERCICE 1996/1997 ..........................364
+
+        LOI N° 2001/01 DU 18 DECEMBRE 2001 PORTANT REAMENAGEMENT DES
+        PROCEDURES DE RECOUVREMENT DES COTISATIONS SOCIALES ................369
+
+        LOI N°2004/026 DU 30 DECEMBRE 2004 PORTANT LOI DE FINANCES DE LA
+        REPUBLIQUE DU CAMEROUN POUR L'EXERCICE 2005 ...................................370
+
+        LOI N° 2005/008 DU 19 DECEMBRE 2005 PORTANT LOI : DE FINANCES DE LA
+        REPUBLIQUE DU CAMEROUNPOUR L'EXERCICE 2006 ....................................372
+
+        LOI N° 2008/009 DU 16 JUILLET 2008 FIXANT LE REGIME FISCAL, FINANCIER
+        ET COMPTABLE APPLICABLE AUX CONTRATS DE PARTENARIAT ..................373
+
+        LOI N° 2009/018 DU 15 DECEMBRE 2009 PORTANT LOI DES FINANCES DE LA
+        REPUBLIQUE DU CAMEROUN POUR L'EXERCICE 2010 ...................................377
+
+        LOI N° 2013/004 DU 18 AVRIL 2013 FIXANT LES INCITATIONS A
+        L'INVESTISSEMENT PRIVE EN REPUBLIQUE DU CAMEROUN .........................379
+
+        LOI N° 2013 / 011 DU 16 DECEMBRE 2013 REGISSANT LES ZONES
+        ECONOMIQUES AU CAMEROUN ...........................................................................392
+
+        ORDONNANCE N° 2014/001 DU 07 JUILLET 2014 PORTANT REDUCTION DE LA
+        TAXE SPECIALE SUR LES PRODUITS PETROLIERS (TSPP) ET DE CERTAINES
+        TAXES DUES PAR LES TRANSPORTEURS DE PERSONNES ET DE
+        MARCHANDISES ....................................................................................................... 403
+
+        LOI N° 2015/011 DU 16 JUILLET 2015 PORTANT RATIFICATION DE
+        L'ORDONNANCE N° 2015/002 DU 02 JUIN 2015 MODIFIANT ET COMPLETANT
+        CERTAINES DISPOSITIONS DE LA LOI N° 2002/003 DU 19 AVRIL 2002 PORTANT
+        CODE GENERAL DES IMPOTS................................................................................405
+
+        LOI N°2018/012 DU 11 JUILLET 2018 PORTANT REGIME FINANCIER DE L'ETAT
+        ET DES AUTRES ENTITES PUBLIQUES ................................................................406
+
+        LOI N° 2024/13 DU 23 DÉCEMBRE 2024 PORTANT LOI DE FINANCES DE LA
+        REPUBLIQUE DU CAMEROUN POUR L'EXERCICE 20254 .................................441
+
+ANNEXE 2 PARTIE REGLEMENTAIRE ...................................................... 469
+
+        DECRETS ...................................................................................................................470
+
+        DECRET N° 97/283/PM DU 30 JUILLET 1997 FIXANT LES MODALITES
+        D'APPLICATION DE CERTAINES DISPOSITIONS DE LA LOI N° 97/14 DU 18
+        JUILLET 1997 PORTANT LOI DE FINANCES DE LA REPUBLIQUE DU CAMEROUN
+        POUR L'EXERCICE 1997/1998 ................................................................................471
+
+        DECRET N°98/009/PM DU 23 JANVIER 1998 FIXANT L'ASSIETTE ET LES
+        MODALITES DE RECOUVREMENT DES DROITS, REDEVANCES ET TAXES
+        RELATIFS A L'ACTIVITE FORESTIERE ..................................................................478
+
+                                Code Général des Impôts ­ Edition 2025
+
+                                                      XVI
+DECRET N° 98/265/PM DU 12 AOUT 1998 FIXANT LES TAUX DE BENEFICE NET
+DES CONTRIBUABLES RELEVANT DU REGIME SIMPLIFIE D'IMPOSITION....484
+
+DECRET N° 2000/961/PM DU 08 DECEMBRE 2000 FIXANT L'ASSIETTE AINSI
+QUE LES MODALITES DE RECOUVREMENT ET DE CONTROLE DES TAXES,
+APPLICABLES AUX PRODUCTIONS ANIMALES ET HALIEUTIQUES.................485
+
+DECRET N° 2011/0975/PM DU 04 AVRIL 2011 FIXANT LES MODALITES DE
+REEVALUATION DES IMMOBILISATIONS AMORTISSABLES ET NON
+AMORTISSABLES DES ENTREPRISES ....................................................................488
+
+DECRET N° 2011/1732/PM DU 18 JUILLET 2011 PORTANT ORGANISATION ET
+FONCTIONNEMENT DU COMITE NATIONAL DES FINANCES LOCALES .......497
+
+DECRET N°2012/3731/PM DU 13 NOVEMBRE 2012 FIXANT LES MODALITES
+D'APPLICATION DU CODE GENERAL DES IMPOTS RELATIVES A
+L'IMMATRICULATION FISCALE.............................................................................503
+
+DECRET N° 2013 / 299 DU 09 SEPTEMBRE 2013 PORTANT CREATION,
+ORGANISATION ET FONCTIONNEMENT DU COMITE PARITAIRE DE SUIVI DE
+LA STABILITE DES INCITATIONS A L'INVESTISSEMENT PRIVE AU CAMEROUN
+.................................................................................................................................... 509
+
+DECRET N°2014/1881/PM DU 04 JUILLET 2014 FIXANT LES MODALITES
+D'EVALUATION ADMINISTRATIVE DES IMMEUBLES EN MATIERE FISCALE.
+.................................................................................................................................... 515
+
+DECRET N° 2014/609 DU 31 DECEMBRE 2014 PORTANT RATIFICATION DE LA
+CONVENTION ENTRE LE GOUVERNEMENT DE LA REPUBLIQUE DU
+CAMEROUN ET LE GOUVERNEMENT DU ROYAUME DU MAROC, TENDANT A
+EVITER LA DOUBLE IMPOSITION ET A PREVENIR L'EVASION FISCALE EN
+MATIERE D'IMPOT SUR LE REVENU. ...................................................................520
+
+DECRET N°2015/210 DU 28 AVRIL 2015 PORTANT RATIFICATION DE LA
+CONVENTION DE L'OCDE RELATIVE A L'ASSISTANCE ADMINISTRATIVE
+MUTUELLE EN MATIERE FISCALE, SIGNEE LE 25 JANVIER 1988 ET AMENDEE
+PAR LE PROTOCOLE DU 27 MAI 2010...................................................................521
+
+DECRET N° 2015/2517/PM DU 16 JUILLET 2015 FIXANT LES
+MODALITESD'APPLICATION DE LA LOI N° 2001/017 DU 18 DECEMBRE 2001
+PORTANT REAMENAGEMENT DES PROCEDURES DE RECOUVREMENT DES
+CREANCES DES COTISATIONS SOCIALES ............................................................522
+
+DECRET N°2016 /072 DU 15 FEVRIER 2016 FIXANT LES TAUX DES COTISATIONS
+SOCIALES ET LA REMUNERATION APPLICABLES DANS LES BRANCHES DES
+PRESTATIONS FAMILIALES, D'ASSURANCES PENSIONS DE VIEILLESSE,
+D'INVALIDITE ET DE DECES, DES ACCIDENTS DU TRAVAIL ET DES MALADIES
+PROFESSIONNELLES GEREES PAR LA CAISSE NATIONALE DE PREVOYANCE
+SOCIALE. ...................................................................................................................540
+
+DECRET N°2017/133 DU 18 AVRIL 2017 PORTANT RATIFICATION DE LA
+CONVENTION ENTRE LE GOUVERNEMENT DE LA REPUBLIQUE DU
+CAMEROUN ET LE GOUVERNEMENT DE LA REPUBLIQUE D'AFRIQUE DU SUD,
+TENDANT A EVITER LA DOUBLE IMPOSITION ET A PREVENIR L'EVASION
+FISCALE EN MATIERE D'IMPOTS SUR LE REVENU, SIGNEE LE 19 AVRIL 2015 A
+YAOUNDE..................................................................................................................546
+
+DÉCRET N° 2018/3633/ PM DU 0 9 MAI 2018 MODIFIANT ET COMPLETANT
+CERTAINES DISPOSITIONS DU DECRET N° 2011/1731/PM DU 18 JUILLET 2011
+
+                        Code Général des Impôts ­ Edition 2025
+
+                                             XVII
+FIXANT LES MODALITES DE CENTRALISATION, DE REPARTITION ET DE
+REVERSEMENT DU PRODUIT DES IMPOTS COMMUNAUX SOUMIS A
+PEREQUATION. ........................................................................................................547
+
+DECRET N°2019/262 DU 28 MAI 2019 MODIFIANT ET COMPLETANT CERTAINES
+DISPOSITIONS DU DECRET N°2004/073 DU 05 AVRIL 2004 PORTANT
+APPLICATION DU SYSTEME COMPTABLE OHADA ET DE LA DECLARATION
+STATISTIQUE ET FISCALE. .....................................................................................550
+
+DECRET N° 2019/2652/PM DU 05 AOUT 2019 RELATIF A LA GESTION DES
+TIMBRES FISCAUX ET AUTRES VALEURS FISCALES. .........................................552
+
+DECRET N°2019/3178/PM DU 02 SEPTEMBRE 2019 PRECISANT LES MODALITES
+DE MISE EN OEUVRE DU STATUT DES ZONES ECONOMIQUEMENT SINISTREES
+ET LES CONDITIONS DU BENEFICE DES AVANTAGES FISCAUX Y RELATIFS
+PREVUS PAR LES DISPOSITIONS DES ARTICLES 121 ET 121 BIS DU CODE
+GENERAL DES IMPOTS. ..........................................................................................558
+
+DECRET N°2019/3179/PM DU 02 SEPTEMBRE 2019 PORTANT RECONNAISSANCE
+DU STATUT DE ZONE ECONOMIQUEMENT SINISTREE AUX REGIONS DE
+L'EXTREME-NORD, DU NORD-OUEST ET DU SUD-OUEST. ..............................561
+
+DECRET N°2022/8001 CAB/PM DU 16 SEPT 2022 FIXANT LE CADRE
+GENERAL DES OPERATIONS FINANCIERES DE L'ETAT ET DES AUTRES
+ENTITES PUBLIQUES PAR VOIE ELECTRONIQUE.............................561
+
+DECRET N° 2023/06801/CAB/PM DU 27 SEPTEMBRE 2023 FIXANT LES
+MODALITES D'APPLICATION DE L'ARTICLE L8 QUINQUIES DU CODE
+GENERAL DES IMPÖTSRELATIF A LA TRANSPARENCE DU
+BENEFICIAIRE EFFECTIF, .......................................................................561
+
+ARRETE N° 00000402/MINFI DU 17 DÉCEMBRE 2013 PORTANT ORGANISATION
+DU CENTRE DES IMPÔTS DES MOYENNES ENTREPRISES. ...............................606
+
+ARRETE N° 00366/MINFI/SG/DGI/DGD DU 19 NOVEMBRE 2013 PRECISANT LES
+MODALITES DE MISE EN OEUVRE DES AVANTAGES FISCAUX ET DOUANIERS
+DE LA LOI N° 2013/004 DU 18 AVRIL 2013 FIXANT LES INCITATIONS A
+L'INVESTISSEMENT PRIVE EN REPUBLIQUE DU CAMEROUN .....................59816
+
+ARRETE N°00000313/MINFI DU 24 JUIN 2014 PORTANT ORGANISATION DES
+CENTRES DIVISIONNAIRES DES IMPOTS ........................................................61028
+
+ARRETE N° 004263/ MINMIDT DU 03 JUILLET 2014 FIXANT LA COMPOSITION
+DU DOSSIER D'AGREMENT AUX AVANTAGES PREVUS PAR LA LOI NO 2013/004
+DU 18 AVRIL2013 FIXANT LES INCITATIONS A L'INVESTISSEMENT PRIVE EN
+REPUBLIQUE DU CAMEROUN...........................................................................61735
+
+ARRETE N° 00000331/MINFI/SG/DGI/DGD DU 17 JUILLET 2014 MODIFIANT ET
+
+COMPLÉTANT CERTAINES  DISPOSITIONS DE L'ARRÊTÉ
+
+N°00366/MINFI/SG/DGI/DGD DU 19 NOVEMBRE 2013 PRÉCISANT LES
+
+MODALITÉS DE MISE EN OEUVRE DES AVANTAGES FISCAUX ET DOUANIERS
+
+DE LA LOI N° 2013/004 DU 18 AVRIL 2013 FIXANT LES INCITATIONS À
+
+L'INVESTISSEMENT PRIVÉ EN RÉPUBLIQUE DU CAMEROUN. ...................62038
+
+ARRETE CONJOINT N° 00000017/MINFI/MINCOMMERCE DU 12 FEVRIER 2015
+FIXANT LES MODALITES DE MISE EN OEUVRE DES DROITS D'ACCISES SUR LES
+BOISSONS ALCOOLISEES...................................................................................62442
+
+Code Général des Impôts ­ Edition 2025
+                     XVIII
+
