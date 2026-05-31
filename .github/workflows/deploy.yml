@@ -1,0 +1,100 @@
+name: Deploy to verifiscale.com
+
+# Trigger on every push to main, plus manual "Run workflow" button.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel any in-progress deploy if a newer one starts.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false   # do NOT cancel a running deploy mid-restart
+
+jobs:
+  deploy:
+    name: Pull + restart on Vultr (45.32.150.96)
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH into server, git pull, smart restart
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 45.32.150.96
+          username: root
+          key: ${{ secrets.VULTR_SSH_KEY }}
+          port: 22
+          command_timeout: 10m
+          script: |
+            set -euo pipefail
+            cd /srv/cmimpot
+
+            BEFORE=$(git rev-parse HEAD)
+            echo "==> Before pull: $BEFORE"
+
+            echo "==> Pulling from GitHub..."
+            git pull --ff-only
+
+            AFTER=$(git rev-parse HEAD)
+            echo "==> After pull:  $AFTER"
+
+            if [ "$BEFORE" = "$AFTER" ]; then
+              echo "==> Already up to date — no restart needed."
+              exit 0
+            fi
+
+            CHANGED=$(git diff --name-only "$BEFORE" "$AFTER" || true)
+            echo "==> Changed files:"
+            echo "$CHANGED"
+            echo "==> ----------"
+
+            # Categorise the changes
+            MIGRATION_CHANGED=$(echo "$CHANGED" | grep -E '^apps/api/alembic/versions/' || true)
+            API_CHANGED=$(echo "$CHANGED" | grep -E '^apps/api/' | grep -v '^apps/api/alembic/' || true)
+            WEB_CHANGED=$(echo "$CHANGED" | grep -E '^apps/web/' || true)
+            NGINX_CHANGED=$(echo "$CHANGED" | grep -E '^infra/nginx/' || true)
+            COMPOSE_CHANGED=$(echo "$CHANGED" | grep -E '^docker-compose' || true)
+
+            ACTED=0
+
+            if [ -n "$MIGRATION_CHANGED" ]; then
+              echo "==> Migrations changed — running alembic upgrade head"
+              docker compose -f docker-compose.prod.yml --env-file .env.prod \
+                exec -T api alembic upgrade head
+              ACTED=1
+            fi
+
+            if [ -n "$API_CHANGED" ] || [ -n "$MIGRATION_CHANGED" ] || [ -n "$COMPOSE_CHANGED" ]; then
+              echo "==> Restarting API container..."
+              docker compose -f docker-compose.prod.yml --env-file .env.prod \
+                up -d --build api
+              ACTED=1
+            fi
+
+            if [ -n "$NGINX_CHANGED" ]; then
+              echo "==> Nginx config changed — reloading inner nginx..."
+              docker compose -f docker-compose.prod.yml --env-file .env.prod \
+                exec -T nginx nginx -t
+              docker compose -f docker-compose.prod.yml --env-file .env.prod \
+                exec -T nginx nginx -s reload
+              ACTED=1
+            fi
+
+            if [ -n "$WEB_CHANGED" ]; then
+              echo "=================================================================="
+              echo "==> ⚠️  WEB (Next.js) changed — NOT auto-rebuilt (1 GB RAM safety)"
+              echo "==> Run this MANUALLY on the server when ready:"
+              echo "    docker compose -f docker-compose.prod.yml stop web"
+              echo "    echo 3 | tee /proc/sys/vm/drop_caches"
+              echo "    docker compose -f docker-compose.prod.yml \\"
+              echo "      --env-file .env.prod up -d --build web"
+              echo "=================================================================="
+              ACTED=1
+            fi
+
+            if [ "$ACTED" = "0" ]; then
+              echo "==> Only docs / .gitignore / non-runtime files changed — nothing to restart."
+            fi
+
+            echo "==> Final container status:"
+            docker compose -f docker-compose.prod.yml ps
+            echo "==> Deploy complete."
