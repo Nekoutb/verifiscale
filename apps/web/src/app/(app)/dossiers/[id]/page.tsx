@@ -151,11 +151,11 @@ function LPFTimeline({ dossier }: { dossier: AuditCase }) {
           <div key={i} className="flex items-start gap-3 py-2 border-b border-slate-100 last:border-0">
             <div className="mt-0.5 flex-shrink-0">
               {step.check === true ? (
-                <CheckCircle className="w-4 h-4 text-emerald-500" />
+                <CheckCircle className="w-4 h-4 text-neutral-700" />
               ) : step.check === false ? (
-                <AlertCircle className="w-4 h-4 text-rose-500" />
+                <AlertCircle className="w-4 h-4 text-black" />
               ) : isOverdue ? (
-                <AlertCircle className="w-4 h-4 text-rose-500" />
+                <AlertCircle className="w-4 h-4 text-black" />
               ) : (
                 <Clock className="w-4 h-4 text-slate-300" />
               )}
@@ -168,7 +168,7 @@ function LPFTimeline({ dossier }: { dossier: AuditCase }) {
                 ) : step.deadline ? (
                   <span className={cn(
                     'text-[11px] font-medium',
-                    isOverdue ? 'text-rose-600' : isUrgent ? 'text-amber-600' : 'text-slate-400'
+                    isOverdue ? 'text-black font-bold' : isUrgent ? 'text-neutral-700' : 'text-slate-400'
                   )}>
                     {isOverdue
                       ? `${t('dossier.lpf.deadlineOver')} (${formatDate(step.deadline)})`
@@ -190,7 +190,7 @@ function LPFTimeline({ dossier }: { dossier: AuditCase }) {
                       <>
                         <label
                           htmlFor={inputId}
-                          className="text-[10px] underline text-navy cursor-pointer hover:text-navy-deep"
+                          className="text-[10px] underline text-black cursor-pointer hover:text-black"
                           title={existing ? existing.original_filename : ''}
                         >
                           {existing ? `📎 ${t('lpf.viewDoc')}` : `+ ${t('lpf.uploadDoc')}`}
@@ -220,7 +220,7 @@ function LPFTimeline({ dossier }: { dossier: AuditCase }) {
       {prescriptionExpiry && (
         <div className={cn(
           'mt-3 pt-3 border-t border-dashed border-slate-200 flex items-center justify-between text-xs',
-          prescJours != null && prescJours < 180 ? 'text-amber-700' : 'text-slate-500'
+          prescJours != null && prescJours < 180 ? 'text-neutral-700' : 'text-slate-500'
         )}>
           <span className="font-medium">{t('dossier.lpf.prescription')}</span>
           <span className="font-semibold">
@@ -387,7 +387,7 @@ export default function DossierPage({ params }: { params: Promise<{ id: string }
             key={k}
             onClick={() => setActiveTab(k as typeof activeTab)}
             className={`pb-2 -mb-px text-sm font-medium border-b-2 ${
-              activeTab === k ? 'border-navy text-navy' : 'border-transparent text-slate-500 hover:text-slate-800'
+              activeTab === k ? 'border-black text-black' : 'border-transparent text-slate-500 hover:text-slate-800'
             }`}
           >
             {label}
@@ -414,7 +414,7 @@ export default function DossierPage({ params }: { params: Promise<{ id: string }
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CalendarDays className="w-4 h-4 text-rose-700" />
+                  <CalendarDays className="w-4 h-4 text-black" />
                   {t('dossier.lpfProcedure')}
                 </CardTitle>
               </CardHeader>
@@ -529,7 +529,7 @@ function DeclarationsGrid({
         <Card>
           <CardContent>
             <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">TVA — Exercice {fiscalYear}</div>
-            <div className={cn('text-2xl font-bold mt-1 font-display', tvaReturns.length === 12 ? 'text-emerald-600' : 'text-amber-600')}>
+            <div className={cn('text-2xl font-bold mt-1 font-display', tvaReturns.length === 12 ? 'text-neutral-700' : 'text-black')}>
               {tvaReturns.length}/12
             </div>
           </CardContent>
@@ -538,7 +538,7 @@ function DeclarationsGrid({
           <CardContent>
             <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Σ déclaré · Σ payé</div>
             <div className="text-base font-bold mt-1 font-display">{formatXAF(totalDeclared)}</div>
-            <div className={cn('text-xs mt-0.5', totalPaid >= totalDeclared ? 'text-emerald-600' : 'text-amber-600')}>
+            <div className={cn('text-xs mt-0.5', totalPaid >= totalDeclared ? 'text-neutral-700' : 'text-black')}>
               payé : {formatXAF(totalPaid)} FCFA
             </div>
           </CardContent>
@@ -546,7 +546,7 @@ function DeclarationsGrid({
         <Card>
           <CardContent>
             <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">Dépôts tardifs</div>
-            <div className={cn('text-2xl font-bold mt-1 font-display', lateFilings ? 'text-rose-600' : 'text-emerald-600')}>
+            <div className={cn('text-2xl font-bold mt-1 font-display', lateFilings ? 'text-black font-bold' : 'text-neutral-700')}>
               {lateFilings}
             </div>
           </CardContent>
@@ -574,7 +574,7 @@ function DeclarationsGrid({
                 <th colSpan={12} className="text-center px-2 py-2 text-[11px] uppercase tracking-wider text-slate-500 border-b border-slate-200">
                   Exercice {fiscalYear}
                 </th>
-                <th className="text-center px-2 py-2 text-[11px] uppercase tracking-wider text-slate-500 bg-amber-50 border-l border-slate-200">
+                <th className="text-center px-2 py-2 text-[11px] uppercase tracking-wider text-slate-500 bg-neutral-100 border-l border-slate-200">
                   YE&nbsp;Recon
                 </th>
                 <th rowSpan={2} className="text-right px-4 py-3 text-[11px] uppercase tracking-wider text-slate-500 min-w-[110px]">Σ déclaré</th>
@@ -586,7 +586,7 @@ function DeclarationsGrid({
                     {m}
                   </th>
                 ))}
-                <th className="text-center px-1 py-2 text-[10px] uppercase tracking-wider text-slate-500 bg-amber-50 border-l border-slate-200 min-w-[48px]">
+                <th className="text-center px-1 py-2 text-[10px] uppercase tracking-wider text-slate-500 bg-neutral-100 border-l border-slate-200 min-w-[48px]">
                   Jan&nbsp;{(fiscalYear + 1).toString().slice(-2)}
                 </th>
               </tr>
@@ -613,7 +613,7 @@ function DeclarationsGrid({
                       return (
                         <td
                           key={col}
-                          className={cn('text-center px-1 py-1', isYeRecon && 'bg-amber-50/40 border-l border-slate-200')}
+                          className={cn('text-center px-1 py-1', isYeRecon && 'bg-neutral-100/40 border-l border-slate-200')}
                         >
                           <DeclarationCell
                             tax={tax}
@@ -631,7 +631,7 @@ function DeclarationsGrid({
                       {sumDeclared > 0 ? formatXAF(sumDeclared) : <span className="text-slate-300">—</span>}
                     </td>
                     <td className={cn('px-4 py-2 text-right font-mono text-xs',
-                      sumDeclared > 0 && sumPaid < sumDeclared ? 'text-rose-600' : 'text-slate-700'
+                      sumDeclared > 0 && sumPaid < sumDeclared ? 'text-black font-bold' : 'text-slate-700'
                     )}>
                       {sumPaid > 0 ? formatXAF(sumPaid) : <span className="text-slate-300">—</span>}
                     </td>
@@ -652,10 +652,10 @@ function DeclarationsGrid({
         </div>
         <CardContent>
           <div className="flex items-center gap-4 text-[11px] text-slate-500 flex-wrap">
-            <LegendDot color="bg-emerald-500" label="Déclarée + payée" />
-            <LegendDot color="bg-sky-500" label="Déclarée (paiement en attente)" />
-            <LegendDot color="bg-amber-500" label="Déposée hors délai" />
-            <LegendDot color="bg-rose-500" label="Manquante (échéance passée)" />
+            <LegendDot color="bg-black" label="Déclarée + payée" />
+            <LegendDot color="bg-neutral-700" label="Déclarée (paiement en attente)" />
+            <LegendDot color="bg-neutral-400" label="Déposée hors délai" />
+            <LegendDot color="bg-white border-2 border-black" label="Manquante (échéance passée)" />
             <LegendDot color="bg-slate-200" label="Non encore due" />
           </div>
         </CardContent>
@@ -739,10 +739,10 @@ function DeclarationCell({
   else status = 'pending';
 
   const colors: Record<typeof status, string> = {
-    paid:    'bg-emerald-500 hover:bg-emerald-600 text-white',
-    filed:   'bg-sky-500 hover:bg-sky-600 text-white',
-    late:    'bg-amber-500 hover:bg-amber-600 text-white',
-    missing: 'bg-rose-500 hover:bg-rose-600 text-white',
+    paid:    'bg-black hover:bg-neutral-900 text-white',
+    filed:   'bg-neutral-700 hover:bg-neutral-800 text-white',
+    late:    'bg-neutral-400 hover:bg-neutral-500 text-white',
+    missing: 'bg-white border-2 border-black hover:bg-neutral-100 text-black',
     pending: 'bg-slate-200 hover:bg-slate-300 text-slate-500',
   };
   const icons: Record<typeof status, string> = {
@@ -790,7 +790,7 @@ function DeclarationCell({
             className={cn(
               'inline-flex items-center justify-center w-9 h-5 rounded text-[9px] font-medium cursor-pointer transition',
               hasPayment
-                ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700'
+                ? 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
                 : 'bg-slate-100 hover:bg-slate-200 text-slate-500 border border-dashed border-slate-300',
               disabled && 'opacity-50 cursor-wait',
             )}
@@ -830,11 +830,11 @@ function FindingRow({ f }: { f: ControlFinding }) {
     <div className="p-4">
       <div className="flex items-start gap-3">
         {isInfo ? (
-          <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-sky-600" />
+          <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-neutral-700" />
         ) : (
           <AlertTriangle className={cn('w-5 h-5 flex-shrink-0 mt-0.5',
-            f.severity === 'BLOCKING' || f.severity === 'HIGH' ? 'text-rose-600'
-            : f.severity === 'MEDIUM' ? 'text-amber-600' : 'text-slate-400'
+            f.severity === 'BLOCKING' || f.severity === 'HIGH' ? 'text-black'
+            : f.severity === 'MEDIUM' ? 'text-neutral-700' : 'text-slate-400'
           )} />
         )}
         <div className="flex-1 min-w-0">
@@ -850,7 +850,7 @@ function FindingRow({ f }: { f: ControlFinding }) {
         {f.estimated_impact_xaf ? (
           <div className="text-right text-sm">
             <div className="text-[10px] text-slate-500 uppercase">Impact</div>
-            <div className="font-bold text-rose-600">{formatXAF(f.estimated_impact_xaf)} FCFA</div>
+            <div className="font-bold text-black">{formatXAF(f.estimated_impact_xaf)} FCFA</div>
           </div>
         ) : null}
       </div>
@@ -859,7 +859,7 @@ function FindingRow({ f }: { f: ControlFinding }) {
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-black font-bold' : tone === 'warn' ? 'text-neutral-700' : tone === 'ok' ? 'text-neutral-700' : 'text-slate-900';
   return (
     <Card>
       <CardContent>
@@ -871,7 +871,7 @@ function KPI({ label, value, tone = 'neutral' }: { label: string; value: number 
 }
 
 function MiniKPI({ label, value, tone }: { label: string; value: number; tone?: 'err' | 'warn' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : 'text-slate-700';
+  const cls = tone === 'err' ? 'text-black font-bold' : tone === 'warn' ? 'text-neutral-700' : 'text-slate-700';
   return (
     <div>
       <div className={`text-xl font-bold ${cls}`}>{value}</div>

@@ -102,7 +102,7 @@ export default function AuditDataPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Upload className="w-6 h-6 text-navy" />
+          <Upload className="w-6 h-6 text-black" />
           {t('data.pageTitle')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">
@@ -122,18 +122,18 @@ export default function AuditDataPage() {
             <Card key={sec.kind}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Icon className="w-5 h-5 text-navy" />
+                  <Icon className="w-5 h-5 text-black" />
                   {t(sec.titleKey)}
                 </CardTitle>
                 <div className="text-xs text-slate-500 mt-1">{t(sec.hintKey)}</div>
               </CardHeader>
               <CardContent>
                 {banks?.bank_accounts.length === 0 ? (
-                  <div className="text-sm text-slate-500 bg-amber-50 border border-amber-200 rounded-lg p-3 flex gap-3">
-                    <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
+                  <div className="text-sm text-slate-500 bg-neutral-100 border border-neutral-300 rounded-lg p-3 flex gap-3">
+                    <AlertCircle className="w-5 h-5 text-neutral-700 flex-shrink-0" />
                     <div>
-                      <div className="font-medium text-amber-800">{t('data.noBankDetected')}</div>
-                      <div className="text-xs text-amber-700 mt-0.5">
+                      <div className="font-medium text-black">{t('data.noBankDetected')}</div>
+                      <div className="text-xs text-neutral-700 mt-0.5">
                         {banks?.note ?? t('data.noBankDetectedBody')}
                       </div>
                     </div>
@@ -148,7 +148,7 @@ export default function AuditDataPage() {
                       <div key={acct.account_code} className="border border-slate-200 rounded-lg p-3">
                         <div className="flex items-center justify-between mb-2">
                           <div>
-                            <div className="font-mono text-sm font-semibold text-navy">{acct.account_code}</div>
+                            <div className="font-mono text-sm font-semibold text-black">{acct.account_code}</div>
                             <div className="text-xs text-slate-500">{acct.account_name}</div>
                           </div>
                           <div className="text-[10px] text-slate-400 font-mono">
@@ -179,7 +179,7 @@ export default function AuditDataPage() {
             <Card key={sec.kind}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
-                  <Icon className="w-5 h-5 text-navy" />
+                  <Icon className="w-5 h-5 text-black" />
                   Déclarations mensuelles (DMM)
                 </CardTitle>
                 <div className="text-xs text-slate-500 mt-1">
@@ -200,7 +200,7 @@ export default function AuditDataPage() {
           <Card key={sec.kind}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <Icon className="w-5 h-5 text-navy" />
+                <Icon className="w-5 h-5 text-black" />
                 {t(sec.titleKey)}
               </CardTitle>
               <div className="text-xs text-slate-500 mt-1">{t(sec.hintKey)}</div>
@@ -244,17 +244,17 @@ function YearGrid({
         return (
           <div key={year} className={cn(
             'border rounded-lg p-2.5 text-xs',
-            ds?.status === 'PARSED' ? 'border-emerald-200 bg-emerald-50'
-            : ds?.status === 'PARSE_ERROR' ? 'border-rose-200 bg-rose-50'
-            : ds?.status === 'PARSING' ? 'border-sky-200 bg-sky-50'
+            ds?.status === 'PARSED' ? 'border-neutral-300 bg-white'
+            : ds?.status === 'PARSE_ERROR' ? 'border-2 border-black bg-white'
+            : ds?.status === 'PARSING' ? 'border-black bg-neutral-100'
             : ds ? 'border-slate-200 bg-slate-50'
             : 'border-dashed border-slate-300 bg-white',
           )}>
             <div className="flex items-center justify-between mb-1.5">
               <span className="font-semibold text-slate-800">{t('app.year')} {year}</span>
-              {ds?.status === 'PARSED' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />}
-              {ds?.status === 'PARSE_ERROR' && <AlertCircle className="w-3.5 h-3.5 text-rose-600" />}
-              {ds?.status === 'PARSING' && <Loader2 className="w-3.5 h-3.5 text-sky-600 animate-spin" />}
+              {ds?.status === 'PARSED' && <CheckCircle2 className="w-3.5 h-3.5 text-neutral-700" />}
+              {ds?.status === 'PARSE_ERROR' && <AlertCircle className="w-3.5 h-3.5 text-black" />}
+              {ds?.status === 'PARSING' && <Loader2 className="w-3.5 h-3.5 text-black animate-spin" />}
             </div>
             {ds ? (
               <div className="space-y-1">
@@ -274,17 +274,17 @@ function YearGrid({
                 </div>
                 <div className="text-[10px] text-slate-400">{formatDate(ds.uploaded_at)}</div>
                 {ds.parse_error && (
-                  <div className="text-[10px] text-rose-700 line-clamp-2">{ds.parse_error}</div>
+                  <div className="text-[10px] text-black font-bold line-clamp-2">{ds.parse_error}</div>
                 )}
                 {ds.status === 'PARSED' && ds.column_mapping?.detected && (
                   <ColumnDetectionReport kind={ds.kind} detected={ds.column_mapping.detected as Record<string, boolean>} />
                 )}
-                <label htmlFor={inputId} className="inline-block mt-1 text-[10px] text-navy underline cursor-pointer hover:no-underline">
+                <label htmlFor={inputId} className="inline-block mt-1 text-[10px] text-black underline cursor-pointer hover:no-underline">
                   {t('app.replace')}
                 </label>
               </div>
             ) : (
-              <label htmlFor={inputId} className="block w-full text-center py-3 cursor-pointer text-slate-500 hover:text-navy hover:bg-slate-50 rounded transition">
+              <label htmlFor={inputId} className="block w-full text-center py-3 cursor-pointer text-slate-500 hover:text-black hover:bg-slate-50 rounded transition">
                 <Upload className="w-4 h-4 inline mr-1" />
                 {t('app.upload')}
               </label>
@@ -366,8 +366,8 @@ function ColumnDetectionReport({ kind, detected }: { kind: string; detected: Rec
               className={cn(
                 'inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-medium',
                 ok
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-rose-50 text-rose-700 border border-rose-200',
+                  ? 'bg-white text-neutral-700 border border-neutral-300'
+                  : 'bg-white text-black font-bold border-2 border-black',
               )}
               title={ok ? t('data.detect.detected') : t('data.detect.missing')}
             >
@@ -538,7 +538,7 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
               type="button"
               onClick={() => uploadMut.mutate(files)}
               disabled={!files.length || uploadMut.isPending}
-              className="px-3 py-1.5 text-xs rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-40"
+              className="px-3 py-1.5 text-xs rounded bg-black text-white hover:bg-neutral-900 disabled:opacity-40"
             >
               {uploadMut.isPending ? 'Extraction en cours…' : 'Charger & extraire'}
             </button>
@@ -546,7 +546,7 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
               <button
                 type="button"
                 onClick={() => setFiles([])}
-                className="px-2 py-1.5 text-xs text-slate-500 hover:text-rose-600"
+                className="px-2 py-1.5 text-xs text-slate-500 hover:text-black"
               >
                 vider
               </button>
@@ -570,7 +570,7 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
             </div>
             <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
               <div
-                className="h-full bg-navy transition-all duration-300 ease-out"
+                className="h-full bg-black transition-all duration-300 ease-out"
                 style={{ width: `${progress.total > 0 ? (progress.done / progress.total) * 100 : 0}%` }}
               />
             </div>
@@ -623,8 +623,8 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
                     key={`${it.filename}-${i}`}
                     className={cn(
                       'border-b border-slate-100',
-                      !yearOK && it.status === 'OK' && 'bg-amber-50',
-                      it.status !== 'OK' && 'bg-rose-50',
+                      !yearOK && it.status === 'OK' && 'bg-neutral-100',
+                      it.status !== 'OK' && 'bg-white border-2 border-black',
                     )}
                   >
                     <td className="px-3 py-1.5 truncate max-w-[280px]" title={it.filename}>
@@ -635,9 +635,9 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
                     </td>
                     <td className="px-3 py-1.5">
                       {it.status === 'OK' ? (
-                        <span className="text-emerald-700">✅ OK</span>
+                        <span className="text-neutral-700">✅ OK</span>
                       ) : (
-                        <span className="text-rose-700">⚠ {it.status}</span>
+                        <span className="text-black font-bold">⚠ {it.status}</span>
                       )}
                       {it.source && <span className="ml-1 text-[10px] text-slate-400">[{it.source}]</span>}
                     </td>
@@ -646,14 +646,14 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
                     </td>
                     <td className="px-3 py-1.5">
                       {!yearOK && it.status === 'OK' && (
-                        <span className="text-amber-700 text-[11px]">
+                        <span className="text-neutral-700 text-[11px]">
                           ⚠ Exercice <b>{it.period_year}</b> hors scope du dossier (
                           {years.join(', ')}). La DMM a été conservée — vous pouvez la supprimer si
                           c&apos;est une erreur, ou la garder pour consultation.
                         </span>
                       )}
                       {it.error && (
-                        <span className="text-rose-700 text-[11px]">{it.error}</span>
+                        <span className="text-black font-bold text-[11px]">{it.error}</span>
                       )}
                     </td>
                     <td className="px-3 py-1.5 text-right">
@@ -666,7 +666,7 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
                               setLastResults((prev) => prev.filter((_, j) => j !== i));
                             }
                           }}
-                          className="text-rose-600 hover:bg-rose-50 rounded px-1.5 py-0.5"
+                          className="text-black hover:bg-neutral-100 rounded px-1.5 py-0.5"
                           title="Supprimer cette DMM"
                         >
                           🗑 Supprimer
@@ -691,7 +691,7 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
             className={cn(
               'px-2 py-1 rounded border',
               y === selectedYear
-                ? 'bg-navy text-white border-navy'
+                ? 'bg-black text-white border-black'
                 : 'bg-white border-slate-300 hover:bg-slate-50',
             )}
           >
@@ -724,10 +724,10 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
             </thead>
             <tbody>
               {grid.months.map((m) => (
-                <tr key={m.month} className={cn('border-b border-slate-100', !m.has_dmm && 'bg-rose-50/30')}>
+                <tr key={m.month} className={cn('border-b border-slate-100', !m.has_dmm && 'bg-neutral-100/30')}>
                   <td className="px-2 py-1.5 sticky left-0 bg-white">
                     <div className="font-medium">{m.month_label}</div>
-                    {!m.has_dmm && <div className="text-[10px] text-rose-600">DMM manquante</div>}
+                    {!m.has_dmm && <div className="text-[10px] text-black font-bold">DMM manquante</div>}
                   </td>
                   {grid.tax_types.map((tt) => {
                     const cell = m.by_tax_type[tt];
@@ -763,7 +763,7 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
                             deleteDatasetMut.mutate(m.source_dataset_id!);
                           }
                         }}
-                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded p-1"
+                        className="text-black hover:text-black hover:bg-neutral-100 rounded p-1"
                         title={`Supprimer la DMM de ${m.month_label}`}
                         disabled={deleteDatasetMut.isPending}
                       >
@@ -775,8 +775,8 @@ function DmmBulkSection({ caseId, years }: { caseId: string; years: number[] }) 
                   </td>
                 </tr>
               ))}
-              <tr className="bg-navy text-white font-semibold">
-                <td className="px-2 py-2 sticky left-0 bg-navy">TOTAL ANNUEL</td>
+              <tr className="bg-black text-white font-semibold">
+                <td className="px-2 py-2 sticky left-0 bg-black">TOTAL ANNUEL</td>
                 {grid.tax_types.map((tt) => (
                   <td key={tt} className="px-2 py-2 text-right font-mono">
                     {formatXAF(grid.annual_totals_by_tax_type[tt] || 0)}

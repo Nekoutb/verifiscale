@@ -11,14 +11,14 @@ export function LanguageToggle() {
   const setLocale = useApp((s) => s.setLocale);
 
   return (
-    <div className="inline-flex items-center bg-slate-100 rounded-md p-0.5 text-xs font-semibold">
+    <div className="inline-flex items-center border border-neutral-300 text-xs font-semibold">
       <button
         type="button"
         onClick={() => setLocale('fr')}
         aria-pressed={locale === 'fr'}
         className={cn(
-          'px-2.5 py-1 rounded transition',
-          locale === 'fr' ? 'bg-white text-navy shadow-sm' : 'text-slate-500 hover:text-slate-700',
+          'px-2.5 py-1 transition',
+          locale === 'fr' ? 'bg-black text-white' : 'text-neutral-500 hover:text-black',
         )}
       >
         FR
@@ -28,8 +28,8 @@ export function LanguageToggle() {
         onClick={() => setLocale('en')}
         aria-pressed={locale === 'en'}
         className={cn(
-          'px-2.5 py-1 rounded transition',
-          locale === 'en' ? 'bg-white text-navy shadow-sm' : 'text-slate-500 hover:text-slate-700',
+          'px-2.5 py-1 transition',
+          locale === 'en' ? 'bg-black text-white' : 'text-neutral-500 hover:text-black',
         )}
       >
         EN

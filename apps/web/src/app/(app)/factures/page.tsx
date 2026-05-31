@@ -152,7 +152,7 @@ export default function SupplierInvoicesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <FileText className="w-6 h-6 text-navy" />
+          <FileText className="w-6 h-6 text-black" />
           {t('inv.title')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">{t('inv.subtitle')}</p>
@@ -167,7 +167,7 @@ export default function SupplierInvoicesPage() {
             onDragOver={(e) => e.preventDefault()}
             onDrop={onDrop}
             onClick={() => inputRef.current?.click()}
-            className="border-2 border-dashed border-slate-300 rounded-xl p-10 text-center cursor-pointer hover:border-navy hover:bg-slate-50 transition"
+            className="border-2 border-dashed border-slate-300 rounded-xl p-10 text-center cursor-pointer hover:border-black hover:bg-slate-50 transition"
           >
             <Upload className="w-10 h-10 mx-auto text-slate-400 mb-3" />
             <div className="font-semibold text-slate-800">{t('inv.dropTitle')}</div>
@@ -189,12 +189,12 @@ export default function SupplierInvoicesPage() {
               </div>
               <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-navy transition-all"
+                  className="h-full bg-black transition-all"
                   style={{ width: `${(batchProgress.done / batchProgress.total) * 100}%` }}
                 />
               </div>
               {batchProgress.done === batchProgress.total && (
-                <div className="text-xs text-emerald-700 mt-1 flex items-center gap-1">
+                <div className="text-xs text-neutral-700 mt-1 flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" /> {batchProgress.done} {t('inv.uploaded')}
                 </div>
               )}
@@ -213,7 +213,7 @@ export default function SupplierInvoicesPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-navy" />
+            <Building2 className="w-4 h-4 text-black" />
             {t('inv.vendorsTabTitle')}
           </CardTitle>
         </CardHeader>
@@ -278,7 +278,7 @@ function VendorCard({ v, isActive, onToggle }: { v: VendorRow; isActive: boolean
   const t = useT();
   const failureRate = v.total_invoices ? Math.round((v.failed_invoices / v.total_invoices) * 100) : 0;
   return (
-    <div className={cn('px-5 py-3 transition', v.failed_invoices ? 'hover:bg-rose-50/40' : 'hover:bg-emerald-50/30')}>
+    <div className={cn('px-5 py-3 transition', v.failed_invoices ? 'hover:bg-neutral-100/40' : 'hover:bg-neutral-50/30')}>
       <button onClick={onToggle} className="w-full text-left flex items-center gap-3">
         {isActive ? <ChevronDown className="w-4 h-4 text-slate-500" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
         <div className="flex-1 min-w-0">
@@ -288,9 +288,9 @@ function VendorCard({ v, isActive, onToggle }: { v: VendorRow; isActive: boolean
           </div>
           <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-3 flex-wrap">
             <span>{v.total_invoices} {t('inv.totalInvoices').toLowerCase()}</span>
-            <span className="text-emerald-700">{v.compliant_invoices} {t('inv.compliant').toLowerCase()}</span>
+            <span className="text-neutral-700">{v.compliant_invoices} {t('inv.compliant').toLowerCase()}</span>
             {v.failed_invoices > 0 && (
-              <span className="text-rose-700 font-semibold">
+              <span className="text-black font-bold underline decoration-2">
                 {v.failed_invoices} {t('inv.failed').toLowerCase()} ({failureRate}%)
               </span>
             )}
@@ -345,7 +345,7 @@ function InvoiceRow({ inv }: { inv: Invoice }) {
             {failedControls.map((l, i) => <li key={i}>{l}</li>)}
           </ul>
         ) : inv.status === 'OCR_ERROR' ? (
-          <span className="text-rose-600">{inv.ocr_error}</span>
+          <span className="text-black font-bold">{inv.ocr_error}</span>
         ) : (
           <span className="text-slate-400">—</span>
         )}
@@ -381,7 +381,7 @@ function PdfButton({ invoiceId }: { invoiceId: string }) {
 
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-black font-bold' : tone === 'warn' ? 'text-neutral-700' : tone === 'ok' ? 'text-neutral-700' : 'text-slate-900';
   return (
     <Card>
       <CardContent>

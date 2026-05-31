@@ -132,14 +132,14 @@ export default function CashPaymentsPage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy">
+      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" />
         {t('nav.corporateTax')}
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" />
+        <h1 className="font-display text-2xl font-extrabold flex items-center gap-2 text-black tracking-tight">
+          <Building2 className="w-6 h-6 text-black" />
           {t('cash.title')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">{t('cash.subtitle')}</p>
@@ -156,7 +156,7 @@ export default function CashPaymentsPage() {
       {data?.note && (
         <Card><CardContent>
           <div className="flex items-start gap-3 py-2">
-            <FileWarning className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <FileWarning className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
             <div className="text-sm text-slate-700">{data.note}</div>
           </div>
         </CardContent></Card>
@@ -238,7 +238,7 @@ export default function CashPaymentsPage() {
                         <td className="px-3 py-2 font-mono font-bold">{c.class_code}XXX</td>
                         <td className="px-3 py-2 text-slate-800">{c.class_label}</td>
                         <td className="px-3 py-2 text-right font-mono">{c.line_count}</td>
-                        <td className="px-3 py-2 text-right font-mono font-semibold text-rose-700">
+                        <td className="px-3 py-2 text-right font-mono tabular-nums font-bold text-black">
                           {formatXAF(c.total_amount_xaf)}
                         </td>
                       </tr>
@@ -274,19 +274,19 @@ export default function CashPaymentsPage() {
                         <td className="px-3 py-2 text-right font-mono">{s.piece_count}</td>
                         <td className="px-3 py-2 text-right font-mono">{s.line_count}</td>
                         <td className="px-3 py-2 text-right font-mono">{formatXAF(s.total_amount_xaf)}</td>
-                        <td className="px-3 py-2 text-right font-mono font-semibold text-rose-700">
+                        <td className="px-3 py-2 text-right font-mono tabular-nums font-bold text-black">
                           {formatXAF(s.estimated_reintegration_xaf)}
                         </td>
                       </tr>
                     ))}
-                    <tr className="bg-slate-50 border-t-2 border-slate-300 font-bold">
-                      <td colSpan={4} className="px-3 py-3 text-right uppercase tracking-wider text-slate-700">
+                    <tr className="bg-neutral-50 border-t-2 border-black font-bold">
+                      <td colSpan={4} className="px-3 py-3 text-right uppercase tracking-wider text-black">
                         {t('rec.total')}
                       </td>
-                      <td className="px-3 py-3 text-right font-mono">
+                      <td className="px-3 py-3 text-right font-mono tabular-nums text-black">
                         {formatXAF(data.by_supplier.reduce((s, r) => s + r.total_amount_xaf, 0))}
                       </td>
-                      <td className="px-3 py-3 text-right font-mono text-rose-700">
+                      <td className="px-3 py-3 text-right font-mono tabular-nums text-black font-extrabold underline decoration-2 underline-offset-2">
                         {formatXAF(data.summary.estimated_reintegration_xaf)}
                       </td>
                     </tr>
@@ -326,10 +326,10 @@ export default function CashPaymentsPage() {
                     const isOpen = openLine === lineKey;
                     return (
                     <>
-                    <tr key={lineKey} className={cn('border-b border-slate-100 hover:bg-slate-50',
-                      l.excluded && 'bg-slate-50 opacity-70',
-                      !l.excluded && l.current_year === 'YES' && 'bg-rose-50/30',
-                      !l.excluded && l.current_year === 'NO' && 'bg-amber-50/30')}>
+                    <tr key={lineKey} className={cn('border-b border-neutral-100 hover:bg-neutral-50',
+                      l.excluded && 'bg-neutral-50 opacity-70',
+                      !l.excluded && l.current_year === 'YES' && 'bg-neutral-100/50',
+                      !l.excluded && l.current_year === 'NO' && 'bg-neutral-50/60')}>
                       <td className="px-3 py-2">
                         {l.excluded ? <Badge variant="neutral">Exclue ({l.exclusion_kind})</Badge> : <TagBadge tag={l.tag} />}
                       </td>
@@ -360,20 +360,20 @@ export default function CashPaymentsPage() {
                                             source={l.current_year_source} reason={l.current_year_reason} />
                         )}
                       </td>
-                      <td className={cn('px-3 py-2 text-right font-mono',
-                          l.is_supplement_xaf > 0 ? 'text-rose-700 font-semibold' : 'text-slate-400')}>
+                      <td className={cn('px-3 py-2 text-right font-mono tabular-nums',
+                          l.is_supplement_xaf > 0 ? 'text-black font-bold' : 'text-neutral-400')}>
                         {l.is_supplement_xaf > 0 ? formatXAF(l.is_supplement_xaf) : '—'}
                       </td>
-                      <td className={cn('px-3 py-2 text-right font-mono',
-                          l.ircm_xaf > 0 ? 'text-amber-700' : 'text-slate-400')}>
+                      <td className={cn('px-3 py-2 text-right font-mono tabular-nums',
+                          l.ircm_xaf > 0 ? 'text-neutral-800' : 'text-neutral-400')}>
                         {l.ircm_xaf > 0 ? formatXAF(l.ircm_xaf) : '—'}
                       </td>
-                      <td className="px-3 py-2 text-right font-mono font-semibold text-rose-700">
+                      <td className="px-3 py-2 text-right font-mono tabular-nums font-extrabold text-black">
                         {l.total_penalty_xaf > 0 ? formatXAF(l.total_penalty_xaf) : '—'}
                       </td>
                       <td className="px-3 py-2 text-right">
                         <button onClick={() => setOpenLine(isOpen ? null : lineKey)}
-                          className="text-navy text-[10px] hover:underline inline-flex items-center gap-0.5">
+                          className="text-black text-[10px] hover:underline inline-flex items-center gap-0.5">
                           {isOpen ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
                           {isOpen ? 'fermer' : 'détail'}
                         </button>
@@ -416,12 +416,16 @@ function TagBadge({ tag }: { tag: 'CONFIRMED' | 'LIKELY' | 'REVIEW' }) {
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls =
+    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
+    : tone === 'warn' ? 'text-black font-semibold'
+    : tone === 'ok'   ? 'text-neutral-700 font-medium'
+    : 'text-black font-bold';
   return (
     <Card>
       <CardContent>
-        <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
+        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
+        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
       </CardContent>
     </Card>
   );
@@ -430,25 +434,25 @@ function KPI({ label, value, tone = 'neutral' }: { label: string; value: number 
 function CurrentYearBadge({ cy, confidence, source, reason }: {
   cy: 'YES' | 'NO' | 'UNKNOWN'; confidence: string; source: string; reason: string;
 }) {
-  const confDot = confidence === 'HIGH' ? '🟢' : confidence === 'MEDIUM' ? '🟠' : '🟡';
+  const pip = confidence === 'HIGH' ? '●●●' : confidence === 'MEDIUM' ? '●●○' : '●○○';
   if (cy === 'YES') return (
     <span title={reason} className="inline-flex flex-col items-start">
-      <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold">
+      <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
         <ShieldX className="w-3 h-3" /> Exercice : OUI
       </span>
-      <span className="text-[9px] text-slate-500 mt-0.5">{confDot} {confidence}{source === 'MANUAL' && ' · override'}</span>
+      <span className="text-[9px] text-neutral-500 mt-0.5 tracking-widest">{pip} {confidence}{source === 'MANUAL' && ' · override'}</span>
     </span>
   );
   if (cy === 'NO') return (
     <span title={reason} className="inline-flex flex-col items-start">
-      <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-semibold">
+      <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-medium">
         <ShieldCheck className="w-3 h-3" /> Exercice : NON
       </span>
-      <span className="text-[9px] text-slate-500 mt-0.5">{confDot} {confidence}{source === 'MANUAL' && ' · override'}</span>
+      <span className="text-[9px] text-neutral-500 mt-0.5 tracking-widest">{pip} {confidence}{source === 'MANUAL' && ' · override'}</span>
     </span>
   );
   return (
-    <span title={reason} className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold">
+    <span title={reason} className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-600 font-medium">
       <ShieldAlert className="w-3 h-3" /> ?
     </span>
   );
@@ -487,7 +491,7 @@ function CashLineDetail({ line, onOverride }: {
                   <div className="text-[10px] text-slate-500 truncate" title={s.libelle || ''}>{s.libelle}</div>
                   <div className="flex flex-wrap gap-1 mt-0.5">
                     {s.match_reasons.map((r, j) => (
-                      <span key={j} className="text-[9px] px-1 py-0 rounded bg-emerald-100 text-emerald-700">{r}</span>
+                      <span key={j} className="text-[9px] px-1 py-0 rounded border border-neutral-300 text-neutral-700">{r}</span>
                     ))}
                   </div>
                 </div>
@@ -506,19 +510,19 @@ function CashLineDetail({ line, onOverride }: {
           className="w-full text-xs p-2 border border-slate-300 rounded h-14 mb-2" />
         <div className="flex flex-wrap gap-1.5">
           <button onClick={() => onOverride({ current_year_decision: 'YES', decision_reason: reason })}
-            className="px-2 py-1 text-[11px] rounded bg-rose-100 text-rose-700 hover:bg-rose-200">
+            className="px-2 py-1 text-[11px] rounded bg-black text-white border border-black hover:bg-neutral-800">
             Forcer : OUI exercice
           </button>
           <button onClick={() => onOverride({ current_year_decision: 'NO', decision_reason: reason })}
-            className="px-2 py-1 text-[11px] rounded bg-amber-100 text-amber-700 hover:bg-amber-200">
+            className="px-2 py-1 text-[11px] rounded border border-black text-black bg-transparent hover:bg-neutral-50">
             Forcer : NON exercice
           </button>
           <button onClick={() => onOverride({ excluded: true, exclusion_kind: 'OTHER', decision_reason: reason })}
-            className="px-2 py-1 text-[11px] rounded bg-slate-200 text-slate-700 hover:bg-slate-300">
+            className="px-2 py-1 text-[11px] rounded bg-neutral-200 text-neutral-700 hover:bg-neutral-300">
             Exclure du contrôle
           </button>
           <button onClick={() => onOverride({ excluded: false, current_year_decision: null, decision_reason: '' })}
-            className="px-2 py-1 text-[11px] rounded border border-slate-300 text-slate-600 hover:bg-slate-50">
+            className="px-2 py-1 text-[11px] rounded border border-neutral-300 text-neutral-700 hover:border-black">
             Réinitialiser (auto)
           </button>
         </div>

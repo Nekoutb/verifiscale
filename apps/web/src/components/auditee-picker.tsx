@@ -30,32 +30,32 @@ interface Theme {
 
 const THEMES: Record<Variant, Theme> = {
   dark: {
-    wrap:        'bg-navy/40 border-y border-white/5 px-3 py-3 space-y-2.5',
+    wrap:        'bg-black/40 border-y border-white/5 px-3 py-3 space-y-2.5',
     label:       'text-[10px] uppercase tracking-widest text-slate-400 font-semibold flex items-center gap-1.5 px-1',
     hint:        'text-[9px] uppercase tracking-wider text-slate-500 mb-1 px-1',
-    select:      'w-full bg-white/5 border border-white/10 rounded-md text-white text-xs px-2 py-1.5 pr-7 appearance-none focus:outline-none focus:border-gold/50 cursor-pointer disabled:opacity-50',
-    input:       'w-full bg-white/5 border border-white/10 rounded-md text-white text-xs px-2 py-1.5 focus:outline-none focus:border-gold/50 disabled:opacity-50',
+    select:      'w-full bg-white/5 border border-white/10 rounded-md text-white text-xs px-2 py-1.5 pr-7 appearance-none focus:outline-none focus:border-white/50 cursor-pointer disabled:opacity-50',
+    input:       'w-full bg-white/5 border border-white/10 rounded-md text-white text-xs px-2 py-1.5 focus:outline-none focus:border-white/50 disabled:opacity-50',
     badgeBase:   'text-[9px] font-mono px-1.5 py-0.5 rounded',
-    badgeActive: 'bg-gold/20 text-gold border border-gold/30',
+    badgeActive: 'bg-white/20 text-white border border-white/30',
     badgeIdle:   'bg-white/5 text-slate-400 border border-white/10',
     niu:         'text-[10px] text-slate-400 px-1 leading-relaxed',
     niuValue:    'font-mono text-slate-300',
     niuSub:      'text-slate-500',
-    updating:    'text-[9px] text-gold/80 px-1',
+    updating:    'text-[9px] text-white/80 px-1',
   },
   light: {
     wrap:        'space-y-3',
     label:       'text-[11px] uppercase tracking-widest text-slate-500 font-semibold flex items-center gap-1.5',
     hint:        'text-[10px] uppercase tracking-wider text-slate-500 mb-1',
-    select:      'w-full bg-white border border-slate-200 rounded-md text-slate-900 text-sm px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-navy focus:ring-2 focus:ring-navy/15 cursor-pointer disabled:opacity-50',
-    input:       'w-full bg-white border border-slate-200 rounded-md text-slate-900 text-sm px-3 py-2 focus:outline-none focus:border-navy focus:ring-2 focus:ring-navy/15 disabled:opacity-50',
+    select:      'w-full bg-white border border-slate-200 rounded-md text-slate-900 text-sm px-3 py-2 pr-8 appearance-none focus:outline-none focus:border-black focus:ring-2 focus:ring-black/15 cursor-pointer disabled:opacity-50',
+    input:       'w-full bg-white border border-slate-200 rounded-md text-slate-900 text-sm px-3 py-2 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/15 disabled:opacity-50',
     badgeBase:   'text-[10px] font-mono px-2 py-0.5 rounded',
-    badgeActive: 'bg-gold/15 text-amber-700 border border-gold/40',
+    badgeActive: 'bg-neutral-100 text-black border border-black',
     badgeIdle:   'bg-slate-100 text-slate-500 border border-slate-200',
     niu:         'text-xs text-slate-500 leading-relaxed',
     niuValue:    'font-mono text-slate-700',
     niuSub:      'text-slate-400',
-    updating:    'text-[10px] text-amber-600',
+    updating:    'text-[10px] text-neutral-700',
   },
 };
 
@@ -130,7 +130,7 @@ export function AuditeePicker({ variant = 'dark' }: { variant?: Variant } = {}) 
     }
   };
 
-  const optionBg = variant === 'dark' ? 'bg-navy-deep' : '';
+  const optionBg = variant === 'dark' ? 'bg-black' : '';
 
   return (
     <div className={th.wrap}>

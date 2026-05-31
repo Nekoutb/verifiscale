@@ -47,29 +47,29 @@ export function DropZone({ label, accept, onFile, hint, uploadedFilename }: Prop
       {...getRootProps()}
       className={cn(
         'border-2 border-dashed rounded-xl p-6 text-center transition cursor-pointer',
-        isDragActive ? 'border-navy bg-navy/5'
-                     : done   ? 'border-emerald-300 bg-emerald-50/40'
-                     : error  ? 'border-rose-300 bg-rose-50/40'
-                     :          'border-slate-300 bg-slate-50/60 hover:border-navy',
+        isDragActive ? 'border-black bg-neutral-100'
+                     : done   ? 'border-black bg-neutral-50'
+                     : error  ? 'border-black border-2 bg-white'
+                     :          'border-slate-300 bg-slate-50/60 hover:border-black',
         busy && 'opacity-60 pointer-events-none',
       )}
     >
       <input {...getInputProps()} />
       <div className="flex flex-col items-center gap-2">
         {done ? (
-          <CheckCircle2 className="w-8 h-8 text-emerald-600" />
+          <CheckCircle2 className="w-8 h-8 text-black" />
         ) : error ? (
-          <AlertCircle className="w-8 h-8 text-rose-600" />
+          <AlertCircle className="w-8 h-8 text-black" strokeWidth={2.5} />
         ) : (
           <Upload className="w-8 h-8 text-slate-400" />
         )}
         <div className="text-sm font-medium text-slate-700">{label}</div>
         {done ? (
-          <div className="flex items-center gap-2 text-xs text-emerald-700">
+          <div className="flex items-center gap-2 text-xs text-neutral-700">
             <FileSpreadsheet className="w-4 h-4" /> {done}
           </div>
         ) : error ? (
-          <div className="text-xs text-rose-700">{error}</div>
+          <div className="text-xs text-black font-semibold">{error}</div>
         ) : (
           <div className="text-xs text-slate-500">{hint ?? 'Glisser le fichier ou cliquer pour parcourir'}</div>
         )}

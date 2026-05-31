@@ -111,7 +111,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-navy-deep/60 backdrop-blur-sm flex items-start justify-center p-4 sm:p-8 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center p-4 sm:p-8 overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -121,7 +121,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
         {/* Header */}
         <div className="flex items-start justify-between px-6 py-5 border-b border-slate-200">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-navy/10 text-navy flex items-center justify-center flex-shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-black/10 text-black flex items-center justify-center flex-shrink-0">
               <Briefcase className="w-5 h-5" />
             </div>
             <div>
@@ -365,7 +365,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
           </section>
 
           {err && (
-            <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+            <div className="text-sm text-black font-bold underline decoration-2 bg-white border-2 border-black rounded-lg px-3 py-2">
               {err}
             </div>
           )}

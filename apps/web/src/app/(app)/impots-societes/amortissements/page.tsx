@@ -60,15 +60,15 @@ export default function AmortissementsPage() {
     <div className="space-y-6">
       <Link
         href="/impots-societes"
-        className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy"
+        className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         {t('nav.corporateTax')}
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" />
+        <h1 className="font-display text-2xl font-extrabold flex items-center gap-2 text-black tracking-tight">
+          <Building2 className="w-6 h-6 text-black" />
           {t('is.amortissements.title')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">{t('is.amortissements.subtitle')}</p>
@@ -86,7 +86,7 @@ export default function AmortissementsPage() {
         <Card>
           <CardContent>
             <div className="flex items-start gap-3 py-2">
-              <FileWarning className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <FileWarning className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
               <div className="text-sm text-slate-700">{data.note}</div>
             </div>
           </CardContent>
@@ -167,10 +167,10 @@ export default function AmortissementsPage() {
                       <td className="px-3 py-2 text-right font-mono">{r.prescribed_rate_pct.toFixed(2)} %</td>
                       <td className="px-3 py-2 text-center">
                         {r.rate_match
-                          ? <CheckCircle2 className="w-4 h-4 text-emerald-600 inline" />
+                          ? <CheckCircle2 className="w-4 h-4 text-neutral-700 inline" />
                           : <span className="inline-flex items-center gap-1">
-                              <AlertTriangle className="w-4 h-4 text-rose-600" />
-                              <span className="text-[10px] text-rose-700">
+                              <AlertTriangle className="w-4 h-4 text-black" />
+                              <span className="text-[10px] text-black font-bold">
                                 {r.rate_match_delta_pp > 0 ? '+' : ''}{r.rate_match_delta_pp.toFixed(2)} pp
                               </span>
                             </span>
@@ -181,10 +181,10 @@ export default function AmortissementsPage() {
                         {r.register_year_depreciation_xaf != null ? formatXAF(r.register_year_depreciation_xaf) : '—'}
                       </td>
                       <td className={cn(
-                        'px-3 py-2 text-right font-mono font-semibold',
-                        Math.abs(r.variance_xaf) < 100 ? 'text-emerald-700'
-                        : r.variance_xaf > 0 ? 'text-rose-700'
-                        : 'text-amber-700',
+                        'px-3 py-2 text-right font-mono tabular-nums',
+                        Math.abs(r.variance_xaf) < 100 ? 'text-neutral-700'
+                        : r.variance_xaf > 0 ? 'text-black font-extrabold underline decoration-2 underline-offset-2'
+                        : 'text-black font-semibold',
                       )}>
                         {formatXAF(r.variance_xaf)}
                       </td>
@@ -207,8 +207,8 @@ export default function AmortissementsPage() {
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(data.summary.total_recomputed_year_depreciation_xaf)}</td>
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(data.summary.total_register_year_depreciation_xaf)}</td>
                         <td className={cn(
-                          'px-3 py-3 text-right font-mono',
-                          Math.abs(data.summary.total_variance_xaf) < 1000 ? 'text-emerald-700' : 'text-rose-700',
+                          'px-3 py-3 text-right font-mono tabular-nums',
+                          Math.abs(data.summary.total_variance_xaf) < 1000 ? 'text-neutral-700' : 'text-black font-extrabold underline decoration-2 underline-offset-2',
                         )}>
                           {formatXAF(data.summary.total_variance_xaf)}
                         </td>
@@ -238,12 +238,16 @@ export default function AmortissementsPage() {
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls =
+    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
+    : tone === 'warn' ? 'text-black font-semibold'
+    : tone === 'ok'   ? 'text-neutral-700 font-medium'
+    : 'text-black font-bold';
   return (
     <Card>
       <CardContent>
-        <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
+        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
+        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
       </CardContent>
     </Card>
   );

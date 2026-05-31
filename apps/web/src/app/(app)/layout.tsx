@@ -114,13 +114,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen">
-      <aside className="bg-navy-deep text-slate-200 w-64 flex-shrink-0 flex flex-col">
-        <div className="px-5 py-5 border-b border-white/5">
+      <aside className="bg-white text-neutral-700 w-64 flex-shrink-0 flex flex-col border-r border-neutral-200">
+        <div className="px-5 py-5 border-b border-neutral-200">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gold flex items-center justify-center text-navy-deep font-bold text-sm shadow">FA</div>
+            <div className="w-9 h-9 bg-black flex items-center justify-center text-white font-bold text-sm">FA</div>
             <div>
-              <div className="font-display font-bold text-white text-sm">{t('app.title')}</div>
-              <div className="text-[10px] text-slate-400 tracking-wider">{t('app.subtitle')}</div>
+              <div className="font-display font-extrabold text-black text-sm">{t('app.title')}</div>
+              <div className="text-[10px] text-neutral-500 tracking-wider uppercase">{t('app.subtitle')}</div>
             </div>
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <nav className="flex-1 px-3 py-2 overflow-y-auto">
           {NAV.filter((sec) => !sec.adminOnly || user?.role === 'ADMIN').map((sec) => (
             <div key={sec.sectionKey}>
-              <div className="text-[10px] uppercase tracking-widest text-slate-500 font-semibold px-4 mt-5 mb-2">
+              <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-4 mt-5 mb-2">
                 {t(sec.sectionKey)}
               </div>
               {sec.items
@@ -140,16 +140,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
 
-        <div className="px-3 py-4 border-t border-white/5">
-          <div className="flex items-center gap-3 px-2 py-2 rounded-lg">
-            <div className="w-9 h-9 rounded-full bg-gold/20 text-gold flex items-center justify-center font-semibold text-sm">
+        <div className="px-3 py-4 border-t border-neutral-200">
+          <div className="flex items-center gap-3 px-2 py-2">
+            <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center font-semibold text-sm">
               {user?.full_name?.split(' ').map(p => p[0]).slice(0, 2).join('') || '?'}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm text-white font-medium truncate">{user?.full_name || '…'}</div>
-              <div className="text-[11px] text-slate-400 truncate">{user?.role || ''}</div>
+              <div className="text-sm text-black font-medium truncate">{user?.full_name || '…'}</div>
+              <div className="text-[11px] text-neutral-500 truncate">{user?.role || ''}</div>
             </div>
-            <button onClick={logout} className="text-slate-400 hover:text-white" title={t('app.logout')}>
+            <button onClick={logout} className="text-neutral-500 hover:text-black" title={t('app.logout')}>
               <LogOut className="w-5 h-5" />
             </button>
           </div>
@@ -157,18 +157,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="bg-white border-b border-slate-200 px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+        <header className="bg-white border-b border-neutral-200 px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
           <div className="hidden lg:block">
-            <div className="text-[11px] text-slate-500 uppercase tracking-widest">{t('app.platform')}</div>
-            <div className="text-sm font-semibold text-slate-900 mt-0.5">
+            <div className="text-[11px] text-neutral-500 uppercase tracking-widest">{t('app.platform')}</div>
+            <div className="text-sm font-semibold text-black mt-0.5">
               {t('app.platformDesc')}
             </div>
           </div>
           <div className="flex items-center gap-2 flex-1 max-w-md">
             <div className="relative w-full">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
               <input
-                className="pl-9 pr-3 py-2 w-full text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/20 focus:border-navy bg-slate-50"
+                className="pl-9 pr-3 py-2 w-full text-sm border border-neutral-300 rounded-none focus:outline-none focus:border-black bg-transparent"
                 placeholder={t('app.searchPlaceholder')}
               />
             </div>
@@ -176,9 +176,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3">
             <ActiveAuditeeBadge />
             <LanguageToggle />
-            <button className="relative p-2 rounded-lg hover:bg-slate-100 text-slate-600">
+            <button className="relative p-2 rounded-none border border-neutral-300 hover:border-black text-neutral-700 hover:text-black transition">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-gold" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-black" />
             </button>
           </div>
         </header>
@@ -217,10 +217,10 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
     <>
       <div
         className={cn(
-          'flex items-center gap-1 px-1 rounded-lg transition',
+          'flex items-center gap-1 px-1 transition',
           selfActive
-            ? 'text-white bg-gradient-to-r from-gold/20 to-transparent border-l-[3px] border-gold pl-[1px]'
-            : 'text-slate-300 hover:text-white hover:bg-white/5',
+            ? 'text-black bg-neutral-100 border-l-[3px] border-black pl-[1px] font-semibold'
+            : 'text-neutral-700 hover:text-black hover:bg-neutral-50',
         )}
       >
         <Link
@@ -234,7 +234,7 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); setOpen((v) => !v); }}
-            className="p-1 mr-1 rounded hover:bg-white/10 text-slate-400"
+            className="p-1 mr-1 hover:bg-neutral-200 text-neutral-500"
             aria-label={open ? 'Collapse' : 'Expand'}
           >
             {open ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -243,7 +243,7 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
       </div>
 
       {hasChildren && open && (
-        <div className="ml-8 mt-0.5 mb-1 space-y-0.5 border-l border-white/10 pl-3">
+        <div className="ml-8 mt-0.5 mb-1 space-y-0.5 border-l border-neutral-200 pl-3">
           {children!.map((c) => {
             const active = pathname === c.href;
             return (
@@ -251,10 +251,10 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
                 key={c.href}
                 href={c.href}
                 className={cn(
-                  'block py-1.5 px-2 rounded text-[12.5px] transition',
+                  'block py-1.5 px-2 text-[12.5px] transition',
                   active
-                    ? 'text-gold bg-gold/10 font-semibold'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5',
+                    ? 'text-black bg-neutral-100 font-semibold border-l-[3px] border-black -ml-3 pl-3'
+                    : 'text-neutral-700 hover:text-black hover:bg-neutral-50',
                 )}
               >
                 {t(c.labelKey)}
@@ -280,18 +280,18 @@ function ActiveAuditeeBadge() {
   return (
     <Link
       href="/dashboard"
-      className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/10 border border-gold/30 hover:bg-gold/20 transition group"
+      className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-neutral-300 hover:border-black transition group"
       title={t('header.activeAuditeeTooltip')}
     >
-      <Building2 className="w-4 h-4 text-amber-700 flex-shrink-0" />
+      <Building2 className="w-4 h-4 text-black flex-shrink-0" />
       <div className="min-w-0 max-w-[260px]">
-        <div className="text-[10px] uppercase tracking-wider text-amber-700 font-semibold leading-none">
+        <div className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold leading-none">
           {t('header.activeAuditee')}
         </div>
-        <div className="text-xs font-semibold text-slate-900 truncate leading-tight mt-0.5">
+        <div className="text-xs font-semibold text-black truncate leading-tight mt-0.5">
           {currentCase.taxpayer.raison_sociale}
         </div>
-        <div className="text-[10px] font-mono text-slate-500 truncate leading-none mt-0.5">
+        <div className="text-[10px] font-mono text-neutral-500 truncate leading-none mt-0.5">
           {currentCase.reference} · {t('app.year')} {currentCase.fiscal_year}
         </div>
       </div>

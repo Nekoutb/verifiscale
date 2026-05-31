@@ -120,13 +120,13 @@ export default function PrimesAssurancePage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy">
+      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" /> Impôts sur les sociétés
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" /> Primes d&apos;assurance
+        <h1 className="font-display text-2xl font-extrabold flex items-center gap-2 text-black tracking-tight">
+          <Building2 className="w-6 h-6 text-black" /> Primes d&apos;assurance
         </h1>
         <p className="text-sm text-slate-500 mt-1">
           CGI Cameroun, Art. 7 A (4) — déductibles si compagnie locale, bénéficiaire entreprise,
@@ -178,7 +178,7 @@ export default function PrimesAssurancePage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Charges sans contrat</div>
-                  <div className="font-mono text-base font-semibold text-rose-700">
+                  <div className="font-mono tabular-nums text-base font-extrabold text-black border-b-2 border-black inline-block">
                     {formatXAF(data.summary.charges_sans_contrat_xaf)}
                   </div>
                   <div className="text-[10px] text-slate-500 mt-2 italic">
@@ -188,7 +188,7 @@ export default function PrimesAssurancePage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Auto-assurance (cpt 6911)</div>
-                  <div className="font-mono text-base font-semibold text-rose-700">
+                  <div className="font-mono tabular-nums text-base font-extrabold text-black border-b-2 border-black inline-block">
                     {formatXAF(data.summary.auto_insurance_xaf)}
                   </div>
                   <div className="text-[10px] text-slate-500 mt-2 italic">
@@ -204,7 +204,7 @@ export default function PrimesAssurancePage() {
             <CardHeader><CardTitle>Contrats d&apos;assurance — chargement en lot (DC L40 LPF)</CardTitle></CardHeader>
             <CardContent>
               <div
-                className="border-2 border-dashed border-slate-300 rounded-lg p-4 bg-slate-50/50"
+                className="border border-dashed border-neutral-300 rounded-lg p-4 bg-neutral-50/60"
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
                   e.preventDefault();
@@ -218,7 +218,7 @@ export default function PrimesAssurancePage() {
                     de ses polices en vigueur sur l&apos;exercice, puis chargez-les ici.
                   </div>
                   <div className="flex items-center gap-2">
-                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded border border-slate-300 bg-white hover:bg-slate-50 cursor-pointer">
+                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded border border-neutral-300 bg-white hover:border-black cursor-pointer">
                       <Upload className="w-3.5 h-3.5" /> Sélectionner PDF
                       <input type="file" multiple hidden accept=".pdf"
                         onChange={(e) => {
@@ -229,11 +229,11 @@ export default function PrimesAssurancePage() {
                     </label>
                     <button type="button" onClick={() => uploadMut.mutate(files)}
                       disabled={!files.length || uploadMut.isPending}
-                      className="px-3 py-1.5 text-xs rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-40">
+                      className="px-3 py-1.5 text-xs rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-40">
                       {uploadMut.isPending ? 'Extraction en cours…' : 'Charger & extraire'}
                     </button>
                     {files.length > 0 && !uploadMut.isPending && (
-                      <button onClick={() => setFiles([])} className="px-2 py-1.5 text-xs text-slate-500 hover:text-rose-600">vider</button>
+                      <button onClick={() => setFiles([])} className="px-2 py-1.5 text-xs text-neutral-500 hover:text-black">vider</button>
                     )}
                   </div>
                 </div>
@@ -339,16 +339,16 @@ function ContractRow({
 
   return (
     <>
-      <tr className={cn('border-b border-slate-100 hover:bg-slate-50',
-                       contract.verdict === 'NON_ELIGIBLE' && 'bg-rose-50/40',
-                       contract.verdict === 'A_REINSTRUIRE' && 'bg-amber-50/40')}>
+      <tr className={cn('border-b border-neutral-100 hover:bg-neutral-50',
+                       contract.verdict === 'NON_ELIGIBLE' && 'bg-neutral-100/60',
+                       contract.verdict === 'A_REINSTRUIRE' && 'bg-neutral-50/70')}>
         <td className="px-3 py-2 font-mono text-[11px]">{contract.numero_police || '—'}</td>
         <td className="px-3 py-2">
           <div className="font-medium">{contract.assureur_nom || '—'}</div>
           <div className="text-[10px] text-slate-500 flex items-center gap-1">
             {contract.assureur_local
-              ? <><MapPin className="w-2.5 h-2.5 text-emerald-600" /> Local ({contract.assureur_pays})</>
-              : <><Globe className="w-2.5 h-2.5 text-rose-600" /> Étranger ({contract.assureur_pays})</>}
+              ? <><MapPin className="w-2.5 h-2.5 text-neutral-700" /> Local ({contract.assureur_pays})</>
+              : <><Globe className="w-2.5 h-2.5 text-black" /> Étranger ({contract.assureur_pays})</>}
           </div>
         </td>
         <td className="px-3 py-2">{TYPE_LABELS[contract.type_assurance] || contract.type_assurance}</td>
@@ -371,12 +371,12 @@ function ContractRow({
             <div className="text-[9px] text-slate-500 mt-0.5">override</div>
           )}
         </td>
-        <td className="px-3 py-2 text-right font-mono font-semibold text-rose-700">
+        <td className="px-3 py-2 text-right font-mono tabular-nums font-extrabold text-black">
           {contract.estimated_reintegration_xaf > 0 ? formatXAF(contract.estimated_reintegration_xaf) : '—'}
         </td>
         <td className="px-3 py-2 text-right">
-          <button onClick={() => setOpen(!open)} className="text-navy hover:underline text-[10px] mr-2">détail</button>
-          <button onClick={onDelete} className="text-rose-500 hover:bg-rose-50 rounded p-1" title="Supprimer">
+          <button onClick={() => setOpen(!open)} className="text-black hover:underline text-[10px] mr-2">détail</button>
+          <button onClick={onDelete} className="text-neutral-600 hover:text-black hover:bg-neutral-100 rounded p-1" title="Supprimer">
             <Trash2 className="w-3 h-3" />
           </button>
         </td>
@@ -394,12 +394,12 @@ function ContractRow({
                   {contract.findings.length > 0 && (
                     <div className="flex flex-wrap gap-1">
                       {contract.findings.map((f) => (
-                        <span key={f} className="text-[9px] px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded font-mono">{f}</span>
+                        <span key={f} className="text-[9px] px-1.5 py-0.5 border border-neutral-300 text-neutral-800 rounded font-mono">{f}</span>
                       ))}
                     </div>
                   )}
                 </div>
-                <button onClick={openFile} className="mt-2 inline-flex items-center gap-1 text-xs text-navy hover:underline">
+                <button onClick={openFile} className="mt-2 inline-flex items-center gap-1 text-xs text-black hover:underline">
                   <Paperclip className="w-3 h-3" /> Voir le PDF du contrat
                 </button>
               </div>
@@ -412,7 +412,7 @@ function ContractRow({
                     {(['ELIGIBLE', 'A_REINSTRUIRE', 'NON_ELIGIBLE'] as const).map((v) => (
                       <label key={v} className="inline-flex items-center gap-1 text-xs cursor-pointer">
                         <input type="radio" checked={overrideV === v}
-                          onChange={() => setOverrideV(v)} className="text-navy" />
+                          onChange={() => setOverrideV(v)} className="accent-black" />
                         <VerdictBadge v={v} />
                       </label>
                     ))}
@@ -423,7 +423,7 @@ function ContractRow({
                   <div className="flex justify-end mt-2">
                     <button onClick={() => overrideMut.mutate()}
                       disabled={!overrideR.trim() || overrideMut.isPending}
-                      className="px-3 py-1.5 text-xs rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-50">
+                      className="px-3 py-1.5 text-xs rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-50">
                       {overrideMut.isPending ? 'Enregistrement…' : 'Enregistrer le verdict'}
                     </button>
                   </div>
@@ -439,29 +439,33 @@ function ContractRow({
 
 function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' }) {
   if (v === 'ELIGIBLE') return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold">
-      <ShieldCheck className="w-3 h-3" /> Éligible
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-normal">
+      <ShieldCheck className="w-3 h-3" /> Éligible <span className="tracking-widest">●○○</span>
     </span>
   );
   if (v === 'NON_ELIGIBLE') return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold">
-      <ShieldX className="w-3 h-3" /> Non éligible
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
+      <ShieldX className="w-3 h-3" /> Non éligible <span className="tracking-widest">●●●</span>
     </span>
   );
   return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-semibold">
-      <ShieldAlert className="w-3 h-3" /> À réinstruire
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-medium">
+      <ShieldAlert className="w-3 h-3" /> À réinstruire <span className="tracking-widest">●●○</span>
     </span>
   );
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls =
+    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
+    : tone === 'warn' ? 'text-black font-semibold'
+    : tone === 'ok'   ? 'text-neutral-700 font-medium'
+    : 'text-black font-bold';
   return (
     <Card>
       <CardContent>
-        <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
+        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
+        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
       </CardContent>
     </Card>
   );
@@ -480,9 +484,9 @@ function UploadProgress({ progress }: { progress: { done: number; total: number;
         </span>
         <span className="font-mono font-semibold">{pct}%</span>
       </div>
-      <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+      <div className="h-2 w-full bg-neutral-200 rounded-full overflow-hidden">
         <div
-          className="h-full bg-navy transition-all duration-300 ease-out"
+          className="h-full bg-black transition-all duration-300 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>

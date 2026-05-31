@@ -10,7 +10,7 @@ export default function IRCMPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Coins className="w-6 h-6 text-navy" />
+          <Coins className="w-6 h-6 text-black" />
           {t('nav.ircm')}
         </h1>
       </div>

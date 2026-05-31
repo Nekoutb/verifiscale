@@ -210,15 +210,15 @@ export default function DonsLiberalitesPage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy">
+      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" />
         {t('nav.corporateTax')}
       </Link>
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-            <Building2 className="w-6 h-6 text-navy" />
+          <h1 className="font-display text-2xl font-extrabold flex items-center gap-2 text-black tracking-tight">
+            <Building2 className="w-6 h-6 text-black" />
             Dons et libéralités
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -227,7 +227,7 @@ export default function DonsLiberalitesPage() {
         </div>
         {data?.summary && (
           <button onClick={downloadDjp}
-            className="inline-flex items-center gap-2 px-3 py-2 text-xs rounded-md border border-slate-300 hover:bg-slate-50">
+            className="inline-flex items-center gap-2 px-3 py-2 text-xs rounded-md border border-neutral-300 hover:border-black">
             <Download className="w-3.5 h-3.5" />
             Exporter DJP (CSV)
           </button>
@@ -245,7 +245,7 @@ export default function DonsLiberalitesPage() {
       {data?.note && (
         <Card><CardContent>
           <div className="flex items-start gap-3 py-2">
-            <FileWarning className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <FileWarning className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
             <div className="text-sm text-slate-700">{data.note}</div>
           </div>
         </CardContent></Card>
@@ -282,11 +282,11 @@ export default function DonsLiberalitesPage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Éligible avant plafond</div>
-                  <div className="font-mono text-base font-semibold text-emerald-700">{formatXAF(data.summary.total_eligible_avant_plafond_xaf)}</div>
+                  <div className="font-mono tabular-nums text-base font-semibold text-neutral-700">{formatXAF(data.summary.total_eligible_avant_plafond_xaf)}</div>
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Excédent plafond</div>
-                  <div className="font-mono text-base font-semibold text-rose-700">{formatXAF(data.summary.excedent_plafond_xaf)}</div>
+                  <div className="font-mono tabular-nums text-base font-extrabold text-black border-b-2 border-black inline-block">{formatXAF(data.summary.excedent_plafond_xaf)}</div>
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Pièces justificatives uploadées</div>
@@ -320,9 +320,9 @@ export default function DonsLiberalitesPage() {
                         <td className="px-3 py-2 font-mono text-[11px]">{b.niu || '—'}</td>
                         <td className="px-3 py-2 text-right font-mono">{b.line_count}</td>
                         <td className="px-3 py-2 text-right font-mono">{formatXAF(b.total_xaf)}</td>
-                        <td className="px-3 py-2 text-right font-mono text-emerald-700">{formatXAF(b.eligible_xaf)}</td>
-                        <td className="px-3 py-2 text-right font-mono text-rose-700">{formatXAF(b.non_eligible_xaf)}</td>
-                        <td className="px-3 py-2 text-right font-mono text-amber-700">{formatXAF(b.to_reinstruct_xaf)}</td>
+                        <td className="px-3 py-2 text-right font-mono tabular-nums text-neutral-700">{formatXAF(b.eligible_xaf)}</td>
+                        <td className="px-3 py-2 text-right font-mono tabular-nums text-black font-bold">{formatXAF(b.non_eligible_xaf)}</td>
+                        <td className="px-3 py-2 text-right font-mono tabular-nums text-neutral-800">{formatXAF(b.to_reinstruct_xaf)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -338,7 +338,7 @@ export default function DonsLiberalitesPage() {
               <CardContent>
                 <div className="space-y-2">
                   {data.groups.map((g) => (
-                    <div key={g.id} className="border border-slate-200 rounded p-2 text-xs">
+                    <div key={g.id} className="border border-neutral-200 rounded p-2 text-xs">
                       <div className="flex items-center justify-between flex-wrap gap-2">
                         <div>
                           <span className="font-semibold">{g.name}</span>
@@ -353,7 +353,7 @@ export default function DonsLiberalitesPage() {
                         <div className="flex items-center gap-1">
                           <button onClick={() => groupAiMut.mutate(g.id)}
                             disabled={groupAiMut.isPending}
-                            className="px-2 py-0.5 text-[11px] rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-50">
+                            className="px-2 py-0.5 text-[11px] rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-50">
                             Analyser via Claude (pièces)
                           </button>
                           {(['ELIGIBLE', 'A_REINSTRUIRE', 'NON_ELIGIBLE'] as const).map((v) => (
@@ -362,12 +362,12 @@ export default function DonsLiberalitesPage() {
                                 const reason = window.prompt('Motivation :', g.group_verdict_reason || '');
                                 if (reason !== null) groupSetVerdictMut.mutate({ groupId: g.id, verdict: v, reason });
                               }}
-                              className="px-1.5 py-0.5 text-[10px] rounded border border-slate-300 hover:bg-slate-50">
+                              className="px-1.5 py-0.5 text-[10px] rounded border border-neutral-300 hover:border-black">
                               {v === 'ELIGIBLE' ? '✓ Élig.' : v === 'A_REINSTRUIRE' ? '? Réinst.' : '✗ Non élig.'}
                             </button>
                           ))}
                           <button onClick={() => { if (confirm('Supprimer le groupe ?')) groupDeleteMut.mutate(g.id); }}
-                            className="px-1.5 py-0.5 text-[10px] rounded border border-rose-300 text-rose-600 hover:bg-rose-50">
+                            className="px-1.5 py-0.5 text-[10px] rounded border border-neutral-400 text-neutral-700 hover:border-black hover:text-black">
                             🗑
                           </button>
                         </div>
@@ -397,15 +397,15 @@ export default function DonsLiberalitesPage() {
                       <span className="text-slate-500"><b>{selected.size}</b> ligne(s) sélectionnée(s)</span>
                       <button onClick={handleAnalyzeSelection}
                         disabled={triggerAiMut.isPending}
-                        className="px-2 py-1 rounded border border-navy text-navy hover:bg-navy/5 disabled:opacity-50">
+                        className="px-2 py-1 rounded border border-black text-black hover:bg-neutral-100 disabled:opacity-50">
                         {triggerAiMut.isPending ? 'Analyse IA…' : 'Analyser via Claude'}
                       </button>
                       <button onClick={handleGroupSelection}
                         disabled={createGroupMut.isPending}
-                        className="px-2 py-1 rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-50">
+                        className="px-2 py-1 rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-50">
                         Grouper par nature
                       </button>
-                      <button onClick={() => setSelected(new Set())} className="text-slate-500 hover:text-rose-600">
+                      <button onClick={() => setSelected(new Set())} className="text-neutral-500 hover:text-black">
                         annuler
                       </button>
                     </>
@@ -447,9 +447,9 @@ export default function DonsLiberalitesPage() {
                     return (
                       <>
                         <tr key={lineKey}
-                            className={cn('border-b border-slate-100 hover:bg-slate-50',
-                              isOpen && 'bg-slate-50',
-                              l.group_id && 'border-l-2 border-l-navy/60')}>
+                            className={cn('border-b border-neutral-100 hover:bg-neutral-50',
+                              isOpen && 'bg-neutral-50',
+                              l.group_id && 'border-l-2 border-l-black')}>
                           <td className="px-2 py-2" onClick={(e) => e.stopPropagation()}>
                             <input type="checkbox" checked={selected.has(lineKey)}
                               onChange={() => toggleSelected(lineKey)} />
@@ -463,7 +463,7 @@ export default function DonsLiberalitesPage() {
                           </td>
                           <td className="px-3 py-2 text-slate-700 max-w-[260px] truncate" title={l.libelle || ''}>
                             {l.libelle || '—'}
-                            {l.group_name && <div className="text-[9px] text-navy">↳ {l.group_name}</div>}
+                            {l.group_name && <div className="text-[9px] text-black font-semibold">↳ {l.group_name}</div>}
                           </td>
                           <td className="px-3 py-2">
                             <div className="text-slate-800">{l.beneficiary_name_guess || <span className="italic text-slate-400">non identifié</span>}</div>
@@ -477,16 +477,16 @@ export default function DonsLiberalitesPage() {
                           <td className="px-3 py-2"><VerdictBadge v={l.verdict} /></td>
                           <td className="px-3 py-2 text-center">
                             {l.has_evidence ? (
-                              <span className="inline-flex items-center gap-1 text-emerald-700 font-medium">
+                              <span className="inline-flex items-center gap-1 text-black font-semibold">
                                 <Paperclip className="w-3 h-3" /> {l.evidence_count}
                               </span>
                             ) : (
-                              <span className="text-slate-400">—</span>
+                              <span className="text-neutral-400">—</span>
                             )}
                           </td>
                         </tr>
                         {isOpen && currentCase && (
-                          <tr key={`${lineKey}-detail`} className="bg-slate-50 border-b border-slate-200">
+                          <tr key={`${lineKey}-detail`} className="bg-neutral-50 border-b border-neutral-200">
                             <td colSpan={11} className="px-4 py-4">
                               <LineDetail
                                 caseId={currentCase.id}
@@ -596,13 +596,13 @@ function LineDetail({
         <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-2">
           Justificatifs
         </div>
-        <div className="border border-dashed border-slate-300 rounded-md p-3 bg-white">
+        <div className="border border-dashed border-neutral-300 rounded-md p-3 bg-white">
           <div className="flex items-center gap-2 mb-2">
             <select value={docKind} onChange={(e) => setDocKind(e.target.value)}
-              className="text-xs px-2 py-1 rounded border border-slate-300">
+              className="text-xs px-2 py-1 rounded border border-neutral-300">
               {DOC_KINDS.map((k) => <option key={k.value} value={k.value}>{k.label}</option>)}
             </select>
-            <label className="inline-flex items-center gap-1.5 px-2 py-1 text-xs rounded border border-slate-300 bg-slate-50 hover:bg-slate-100 cursor-pointer">
+            <label className="inline-flex items-center gap-1.5 px-2 py-1 text-xs rounded border border-neutral-300 bg-neutral-50 hover:border-black cursor-pointer">
               <Upload className="w-3.5 h-3.5" />
               Charger un fichier
               <input type="file" hidden
@@ -618,7 +618,7 @@ function LineDetail({
           </div>
           <div className="space-y-1.5">
             {(evidenceQ.data?.items || []).map((e) => (
-              <div key={e.id} className="flex items-center justify-between text-xs bg-slate-50 rounded px-2 py-1.5">
+              <div key={e.id} className="flex items-center justify-between text-xs bg-neutral-50 rounded px-2 py-1.5">
                 <div className="flex items-center gap-2 min-w-0">
                   <Paperclip className="w-3 h-3 text-slate-500 flex-shrink-0" />
                   <button
@@ -635,11 +635,11 @@ function LineDetail({
                       window.open(url, '_blank');
                       setTimeout(() => URL.revokeObjectURL(url), 60_000);
                     }}
-                    className="truncate text-navy hover:underline text-left">{e.filename}</button>
-                  <span className="text-[10px] text-slate-500 flex-shrink-0">[{e.doc_kind}]</span>
+                    className="truncate text-black hover:underline text-left">{e.filename}</button>
+                  <span className="text-[10px] text-neutral-500 flex-shrink-0">[{e.doc_kind}]</span>
                 </div>
                 <button onClick={() => deleteMut.mutate(e.id)}
-                  className="text-rose-600 hover:bg-rose-50 rounded p-0.5">
+                  className="text-neutral-600 hover:text-black hover:bg-neutral-100 rounded p-0.5">
                   <Trash2 className="w-3 h-3" />
                 </button>
               </div>
@@ -650,7 +650,7 @@ function LineDetail({
           </div>
         </div>
 
-        <div className="mt-3 text-[11px] text-slate-600 bg-amber-50 border border-amber-200 rounded p-2">
+        <div className="mt-3 text-[11px] text-neutral-700 bg-neutral-50 border border-neutral-300 rounded p-2">
           <div className="font-semibold flex items-center gap-1 mb-0.5">
             <Info className="w-3 h-3" /> Pièces attendues
           </div>
@@ -664,13 +664,13 @@ function LineDetail({
         <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-2">
           Verdict actuel
         </div>
-        <div className="bg-white border border-slate-200 rounded-md p-3">
+        <div className="bg-white border border-neutral-200 rounded-md p-3">
           <div className="flex items-center gap-2 mb-2">
             <VerdictBadge v={line.verdict} />
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider">{line.verdict_source}</span>
+            <span className="text-[10px] text-neutral-500 uppercase tracking-wider">{line.verdict_source}</span>
           </div>
-          <div className="text-xs text-slate-700 mb-3">{line.verdict_reason}</div>
-          <div className="border-t border-slate-100 pt-3">
+          <div className="text-xs text-neutral-700 mb-3">{line.verdict_reason}</div>
+          <div className="border-t border-neutral-100 pt-3">
             <div className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold mb-2 flex items-center gap-1">
               <Pencil className="w-3 h-3" /> Override par le vérificateur
             </div>
@@ -679,18 +679,18 @@ function LineDetail({
                 <label key={v} className="inline-flex items-center gap-1 text-xs cursor-pointer">
                   <input type="radio" checked={overrideVerdict === v}
                     onChange={() => setOverrideVerdict(v)}
-                    className="text-navy" />
+                    className="accent-black" />
                   <VerdictBadge v={v} />
                 </label>
               ))}
             </div>
             <textarea value={overrideReason} onChange={(e) => setOverrideReason(e.target.value)}
               placeholder="Motivation écrite (obligatoire)…"
-              className="w-full text-xs p-2 border border-slate-300 rounded h-16" />
+              className="w-full text-xs p-2 border border-neutral-300 rounded h-16" />
             <div className="flex justify-end mt-2">
               <button onClick={() => overrideMut.mutate()}
                 disabled={!overrideReason.trim() || overrideMut.isPending}
-                className="px-3 py-1.5 text-xs rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-50">
+                className="px-3 py-1.5 text-xs rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-50">
                 {overrideMut.isPending ? 'Enregistrement…' : 'Enregistrer le verdict'}
               </button>
             </div>
@@ -707,52 +707,68 @@ function LineDetail({
 
 function AiBadge({ v, c }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE'; c: 'HIGH' | 'MEDIUM' | 'LOW' }) {
   const isUnset = !v || (v === 'A_REINSTRUIRE' && c === 'LOW');
-  if (isUnset) return <span className="text-[10px] text-slate-300 italic">non analysé</span>;
-  const dot = c === 'HIGH' ? '🟢' : c === 'MEDIUM' ? '🟠' : '🟡';
+  if (isUnset) return <span className="text-[10px] text-neutral-300 italic">non analysé</span>;
+  const pip = c === 'HIGH' ? '●●●' : c === 'MEDIUM' ? '●●○' : '●○○';
   const cls =
-    v === 'ELIGIBLE' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
-    v === 'NON_ELIGIBLE' ? 'bg-rose-50 text-rose-700 border-rose-200' :
-    'bg-amber-50 text-amber-700 border-amber-200';
+    v === 'ELIGIBLE'     ? 'border-neutral-300 text-neutral-700 font-normal' :
+    v === 'NON_ELIGIBLE' ? 'border-black text-black font-extrabold' :
+                           'border-neutral-300 text-neutral-700 font-medium';
   return (
-    <span className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border ${cls}`}>
-      <span>{dot}</span>
-      <span className="font-semibold">{v === 'ELIGIBLE' ? 'Élig.' : v === 'NON_ELIGIBLE' ? 'Non élig.' : 'Réinst.'}</span>
+    <span className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border bg-transparent ${cls}`}>
+      <span className="tracking-widest">{pip}</span>
+      <span>{v === 'ELIGIBLE' ? 'Élig.' : v === 'NON_ELIGIBLE' ? 'Non élig.' : 'Réinst.'}</span>
       <span className="opacity-70">{c}</span>
     </span>
   );
 }
 
 function ConfidenceBadge({ c }: { c: 'VERT' | 'ORANGE' | 'ROUGE' }) {
-  if (c === 'VERT') return <Badge variant="ok">Vert</Badge>;
-  if (c === 'ORANGE') return <Badge variant="warn">Orange</Badge>;
-  return <Badge variant="err">Rouge</Badge>;
+  if (c === 'VERT') return (
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 text-neutral-700">
+      <span className="tracking-widest">●○○</span> Vert
+    </span>
+  );
+  if (c === 'ORANGE') return (
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 text-neutral-700 font-medium">
+      <span className="tracking-widest">●●○</span> Orange
+    </span>
+  );
+  return (
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black text-black font-extrabold">
+      <span className="tracking-widest">●●●</span> Rouge
+    </span>
+  );
 }
 
 function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' }) {
   if (v === 'ELIGIBLE') return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold">
-      <ShieldCheck className="w-3 h-3" /> Éligible
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-normal">
+      <ShieldCheck className="w-3 h-3" /> Éligible <span className="tracking-widest">●○○</span>
     </span>
   );
   if (v === 'NON_ELIGIBLE') return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold">
-      <ShieldX className="w-3 h-3" /> Non éligible
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
+      <ShieldX className="w-3 h-3" /> Non éligible <span className="tracking-widest">●●●</span>
     </span>
   );
   return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-semibold">
-      <ShieldAlert className="w-3 h-3" /> À réinstruire
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-medium">
+      <ShieldAlert className="w-3 h-3" /> À réinstruire <span className="tracking-widest">●●○</span>
     </span>
   );
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls =
+    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
+    : tone === 'warn' ? 'text-black font-semibold'
+    : tone === 'ok'   ? 'text-neutral-700 font-medium'
+    : 'text-black font-bold';
   return (
     <Card>
       <CardContent>
-        <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
+        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
+        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
       </CardContent>
     </Card>
   );

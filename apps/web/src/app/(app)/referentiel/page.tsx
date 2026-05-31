@@ -137,7 +137,7 @@ export default function ReferentielPage() {
           <Card key={cat.code}>
             <CardHeader>
               <CardTitle className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-navy text-white flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-black text-white flex items-center justify-center">
                   <Icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -194,7 +194,7 @@ export default function ReferentielPage() {
 }
 
 function Stat({ label, value, tone = 'neutral', sub }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral'; sub?: string }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-black font-extrabold underline decoration-2 underline-offset-4' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
   return (
     <Card>
       <CardContent>

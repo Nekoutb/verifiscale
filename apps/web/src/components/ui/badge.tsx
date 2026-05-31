@@ -3,15 +3,27 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const badgeVariants = cva(
-  'inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-full',
+  'inline-flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-full bg-transparent',
   {
     variants: {
       variant: {
-        ok: 'bg-emerald-100 text-emerald-800',
-        warn: 'bg-amber-100 text-amber-800',
-        err: 'bg-rose-100 text-rose-800',
-        info: 'bg-sky-100 text-sky-800',
-        neutral: 'bg-slate-100 text-slate-700',
+        // FAIBLE — weight 400 + pip ●○○ + 1px ink-300 outline
+        ok: 'font-normal text-[#404040] border border-[#A3A3A3]',
+        // MOYEN — weight 500 + pip ●●○ + 1px ink-300 outline
+        warn: 'font-medium text-[#404040] border border-[#A3A3A3]',
+        // ÉLEVÉ — weight 700 + pip ●●● + 1px pure-black outline + under-rule
+        err: 'font-bold text-black border border-black underline decoration-2 underline-offset-4',
+        info: 'font-normal text-[#404040] border border-[#A3A3A3]',
+        neutral: 'font-normal text-[#404040] border border-[#A3A3A3]',
+        // Status variants — outlined neutral
+        default: 'font-medium text-[#404040] border border-[#A3A3A3]',
+        secondary: 'font-normal text-[#737373] border border-[#D4D4D4]',
+        destructive: 'font-bold text-black border border-black',
+        outline: 'font-normal text-[#404040] border border-[#A3A3A3]',
+        // Risk-specific typographic variants
+        faible: 'font-normal text-[#404040] border border-[#A3A3A3]',
+        moyen: 'font-medium text-[#404040] border border-[#A3A3A3]',
+        eleve: 'font-bold text-black border border-black underline decoration-2 underline-offset-4',
       },
     },
     defaultVariants: { variant: 'neutral' },

@@ -30,7 +30,7 @@ export default function CorporateIncomeTaxPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" />
+          <Building2 className="w-6 h-6 text-black" />
           {t('nav.corporateTax')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">{t('is.subtitle')}</p>
@@ -49,7 +49,7 @@ export default function CorporateIncomeTaxPage() {
                 <div className="font-semibold text-slate-900 text-sm">{t(l.titleKey)}</div>
                 <div className="text-xs text-slate-500 mt-0.5">{t(l.subtitleKey)}</div>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-navy" />
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-black" />
             </Link>
           ))}
         </div>

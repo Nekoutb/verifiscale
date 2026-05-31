@@ -107,13 +107,13 @@ export default function ChargesFinancieresPage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy">
+      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" /> Impôts sur les sociétés
       </Link>
 
       <div>
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" /> Charges financières
+        <h1 className="font-display text-2xl font-extrabold flex items-center gap-2 text-black tracking-tight">
+          <Building2 className="w-6 h-6 text-black" /> Charges financières
         </h1>
         <p className="text-sm text-slate-500 mt-1">
           CGI Cameroun, Art. 7 B — intérêts servis aux associés : plafond de taux (BEAC + 2 pts),
@@ -186,14 +186,14 @@ function CcRollforwardCard({ data }: { data: ChgFinResp }) {
         <div className="flex items-center justify-between">
           <CardTitle>Comptes courants d&apos;associés — rollforward mensuel (acte anormal de gestion)</CardTitle>
           <span className="text-xs text-slate-500">
-            Intérêt théorique total : <b className="font-mono text-rose-700">{formatXAF(cc.total_imputed_interest_xaf)}</b>
+            Intérêt théorique total : <b className="font-mono tabular-nums text-black font-extrabold border-b-2 border-black">{formatXAF(cc.total_imputed_interest_xaf)}</b>
           </span>
         </div>
       </CardHeader>
       <CardContent>
         <div className="text-[11px] text-slate-500 mb-3">
           Solde de clôture mois par mois (ouverture {cc.opening_source === 'trial_balance' ? 'depuis la balance' : 'supposée 0 — balance absente'} + mouvements).
-          🟥 mois <b>débiteur</b> = la société a avancé des fonds à l&apos;associé → intérêt théorique réintégré
+          ■ mois <b>débiteur</b> = la société a avancé des fonds à l&apos;associé → intérêt théorique réintégré
           (taux BEAC+2 prorata temporis). On ne nette jamais entre associés.
         </div>
         <div className="space-y-4">
@@ -207,12 +207,12 @@ function CcRollforwardCard({ data }: { data: ChgFinResp }) {
                 </div>
                 <div className="flex items-center gap-3">
                   {acc.debtor_months > 0 ? (
-                    <span className="text-rose-700 font-semibold">{acc.debtor_months} mois débiteur(s) · max {formatXAF(acc.max_debtor_xaf)}</span>
+                    <span className="text-black font-extrabold">{acc.debtor_months} mois débiteur(s) · max {formatXAF(acc.max_debtor_xaf)}</span>
                   ) : (
-                    <span className="text-emerald-700">toujours créditeur ✓</span>
+                    <span className="text-neutral-700">toujours créditeur ✓</span>
                   )}
                   {acc.imputed_interest_xaf > 0 && (
-                    <span className="font-mono text-rose-700">intérêt {formatXAF(acc.imputed_interest_xaf)}</span>
+                    <span className="font-mono tabular-nums text-black font-bold">intérêt {formatXAF(acc.imputed_interest_xaf)}</span>
                   )}
                 </div>
               </div>
@@ -221,11 +221,11 @@ function CcRollforwardCard({ data }: { data: ChgFinResp }) {
                 {acc.months.map((m) => (
                   <div key={m.month}
                     className={cn('rounded text-center py-1 px-0.5',
-                      m.debtor ? 'bg-rose-100 border border-rose-300' : 'bg-emerald-50 border border-emerald-200')}
+                      m.debtor ? 'bg-black text-white border border-black' : 'bg-white border border-neutral-200')}
                     title={`${m.label} : clôture ${m.closing_xaf.toLocaleString('fr-FR')} FCFA`}>
-                    <div className="text-[9px] uppercase text-slate-500">{m.label}</div>
-                    <div className={cn('text-[9px] font-mono font-semibold',
-                      m.debtor ? 'text-rose-700' : 'text-emerald-700')}>
+                    <div className={cn('text-[9px] uppercase', m.debtor ? 'text-neutral-300' : 'text-neutral-500')}>{m.label}</div>
+                    <div className={cn('text-[9px] font-mono tabular-nums font-semibold',
+                      m.debtor ? 'text-white' : 'text-neutral-700')}>
                       {Math.abs(m.closing_xaf) >= 1_000_000
                         ? `${(m.closing_xaf / 1_000_000).toFixed(1)}M`
                         : Math.round(m.closing_xaf / 1000) + 'k'}
@@ -254,7 +254,7 @@ function BeacBanner({ caseId, beac, onChange }: {
       <CardContent>
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-3">
-            <Landmark className="w-5 h-5 text-navy" />
+            <Landmark className="w-5 h-5 text-black" />
             <div className="text-xs">
               <div className="font-semibold text-slate-700">Taux de référence BEAC — TIAO (live · beac.int)</div>
               <div className="text-slate-600 mt-0.5">
@@ -266,11 +266,11 @@ function BeacBanner({ caseId, beac, onChange }: {
             </div>
           </div>
           <div className="flex items-center gap-3 text-xs">
-            <div className="px-2 py-1 rounded bg-emerald-50 text-emerald-700 font-mono font-semibold">
+            <div className="px-2 py-1 rounded border border-black text-black font-mono tabular-nums font-bold">
               Plafond Art. 7 B = TIAO + 2 = {beac.art7b_cap_pct}%
             </div>
             <button onClick={() => refreshMut.mutate()} disabled={refreshMut.isPending}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded border border-slate-300 hover:bg-slate-50">
+              className="inline-flex items-center gap-1 px-2 py-1 rounded border border-neutral-300 hover:border-black">
               <RefreshCw className={cn('w-3 h-3', refreshMut.isPending && 'animate-spin')} /> Actualiser
             </button>
           </div>
@@ -310,14 +310,14 @@ function ParamsCard({ caseId, data, onSaved }: { caseId: string; data: ChgFinRes
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Paramètres dérivés de la comptabilité (T3 sous-cap. · T4 earnings-stripping)</CardTitle>
-          <button onClick={() => setOverride(!override)} className="text-[11px] text-navy hover:underline inline-flex items-center gap-1">
+          <button onClick={() => setOverride(!override)} className="text-[11px] text-black hover:underline inline-flex items-center gap-1">
             <Pencil className="w-3 h-3" /> {override ? 'annuler la saisie manuelle' : 'forcer une valeur manuelle'}
           </button>
         </div>
       </CardHeader>
       <CardContent>
         {!d.available && (
-          <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2 mb-3">
+          <div className="text-xs text-black bg-neutral-50 border border-neutral-300 rounded p-2 mb-3">
             Aucune balance générale (TB) parsée — chargez la balance dans Données pour le calcul
             automatique des capitaux propres et de l'EBITDA fiscal.
           </div>
@@ -328,7 +328,7 @@ function ParamsCard({ caseId, data, onSaved }: { caseId: string; data: ChgFinRes
             <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
               Capitaux propres (comptes 10–15)
             </div>
-            <div className="font-mono text-lg font-bold text-navy">
+            <div className="font-mono tabular-nums text-lg font-extrabold text-black">
               {data.summary.capitaux_propres_xaf != null ? formatXAF(data.summary.capitaux_propres_xaf) : '—'}
               <span className="ml-2 text-[10px] font-normal text-slate-400">
                 {eqAuto ? 'auto · balance' : data.equity_source === 'manual' ? 'saisie manuelle' : 'indisponible'}
@@ -344,7 +344,7 @@ function ParamsCard({ caseId, data, onSaved }: { caseId: string; data: ChgFinRes
             <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-1">
               EBITDA fiscal (résultat av. IS + intérêts 67X + amortissements 68X)
             </div>
-            <div className="font-mono text-lg font-bold text-navy">
+            <div className="font-mono tabular-nums text-lg font-extrabold text-black">
               {data.summary.ebitda_fiscal_xaf != null ? formatXAF(data.summary.ebitda_fiscal_xaf) : '—'}
               <span className="ml-2 text-[10px] font-normal text-slate-400">
                 {ebAuto ? 'auto · balance' : data.ebitda_source === 'manual' ? 'saisie manuelle' : 'indisponible'}
@@ -381,7 +381,7 @@ function ParamsCard({ caseId, data, onSaved }: { caseId: string; data: ChgFinRes
                 placeholder={d.ebitda_fiscal_xaf?.toString() || 'auto'} />
             </div>
             <button onClick={() => saveMut.mutate()} disabled={saveMut.isPending}
-              className="px-3 py-2 text-xs rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-50">
+              className="px-3 py-2 text-xs rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-50">
               {saveMut.isPending ? 'Enregistrement…' : 'Enregistrer (laisser vide = auto)'}
             </button>
           </div>
@@ -405,7 +405,7 @@ function AssociesCard({ caseId, data, onChange }: { caseId: string; data: ChgFin
         <div className="flex items-center justify-between">
           <CardTitle>Associés prêteurs — tests T1 à T4</CardTitle>
           <button onClick={() => setShowAdd(!showAdd)}
-            className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-navy text-white hover:bg-navy/90">
+            className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded bg-black text-white hover:bg-neutral-800">
             <Plus className="w-3 h-3" /> Ajouter un associé
           </button>
         </div>
@@ -429,44 +429,44 @@ function AssociesCard({ caseId, data, onChange }: { caseId: string; data: ChgFin
           </thead>
           <tbody>
             {data.associes.map((a) => (
-              <tr key={a.id} className={cn('border-b border-slate-100',
-                a.verdict === 'NON_ELIGIBLE' && 'bg-rose-50/40',
-                a.verdict === 'A_REINSTRUIRE' && 'bg-amber-50/40')}>
+              <tr key={a.id} className={cn('border-b border-neutral-100',
+                a.verdict === 'NON_ELIGIBLE' && 'bg-neutral-100/60',
+                a.verdict === 'A_REINSTRUIRE' && 'bg-neutral-50/70')}>
                 <td className="px-3 py-2">
                   <div className="font-medium">{a.nom}</div>
                   <div className="text-[10px] text-slate-500 flex items-center gap-1">
-                    {a.is_resident ? <><MapPin className="w-2.5 h-2.5 text-emerald-600" /> Résident</>
-                                   : <><Globe className="w-2.5 h-2.5 text-rose-600" /> Non-résident</>}
+                    {a.is_resident ? <><MapPin className="w-2.5 h-2.5 text-neutral-700" /> Résident</>
+                                   : <><Globe className="w-2.5 h-2.5 text-black" /> Non-résident</>}
                     {a.niu && <span className="font-mono">· {a.niu}</span>}
                   </div>
                 </td>
                 <td className="px-3 py-2 text-right font-mono">
                   {a.pct_detention != null ? `${a.pct_detention}%` : '—'}
-                  {a.is_significant && <span className="ml-1 text-[9px] px-1 rounded bg-amber-100 text-amber-700">≥25%</span>}
+                  {a.is_significant && <span className="ml-1 text-[9px] px-1 rounded border border-black text-black font-bold">≥25%</span>}
                 </td>
                 <td className="px-3 py-2 text-right font-mono">{formatXAF(a.avance_moyenne_xaf)}</td>
                 <td className="px-3 py-2 text-right font-mono">{formatXAF(a.interet_servi_xaf)}</td>
                 <td className="px-3 py-2 text-right font-mono">{a.taux_implicite_pct != null ? `${a.taux_implicite_pct.toFixed(2)}%` : '—'}</td>
                 <td className="px-3 py-2">
                   {a.convention_enregistree
-                    ? <span className="text-emerald-700 text-[11px]">✓ enregistrée</span>
-                    : <span className="text-rose-700 text-[11px]">✗ absente</span>}
+                    ? <span className="text-neutral-700 text-[11px]">✓ enregistrée</span>
+                    : <span className="text-black font-bold text-[11px]">✗ absente</span>}
                   <ConventionUpload caseId={caseId} associeId={a.id} hasFile={a.has_convention_file} onDone={onChange} />
                 </td>
                 <td className="px-3 py-2">
                   <div className="flex flex-wrap gap-0.5">
                     {a.findings.filter(f => f.startsWith('T')).map((f) => (
-                      <span key={f} className="text-[8px] px-1 py-0.5 rounded bg-rose-100 text-rose-700 font-mono">{f.split('-')[0]}</span>
+                      <span key={f} className="text-[8px] px-1 py-0.5 rounded border border-black text-black font-mono font-bold">{f.split('-')[0]}</span>
                     ))}
                   </div>
                 </td>
                 <td className="px-3 py-2"><VerdictBadge v={a.verdict} /></td>
-                <td className="px-3 py-2 text-right font-mono font-semibold text-rose-700">
+                <td className="px-3 py-2 text-right font-mono tabular-nums font-extrabold text-black">
                   {a.reintegration_xaf > 0 ? formatXAF(a.reintegration_xaf) : '—'}
                 </td>
                 <td className="px-3 py-2 text-right">
                   <button onClick={() => { if (confirm(`Supprimer ${a.nom} ?`)) delMut.mutate(a.id); }}
-                    className="text-rose-500 hover:bg-rose-50 rounded p-1" title="Supprimer">
+                    className="text-neutral-600 hover:text-black hover:bg-neutral-100 rounded p-1" title="Supprimer">
                     <Trash2 className="w-3 h-3" />
                   </button>
                 </td>
@@ -530,7 +530,7 @@ function AddAssocieForm({ caseId, onDone }: { caseId: string; onDone: () => void
       </div>
       <div className="flex justify-end mt-2">
         <button onClick={() => addMut.mutate()} disabled={!f.nom.trim() || addMut.isPending}
-          className="px-3 py-1.5 text-xs rounded bg-navy text-white hover:bg-navy/90 disabled:opacity-50">
+          className="px-3 py-1.5 text-xs rounded bg-black text-white hover:bg-neutral-800 disabled:opacity-50">
           {addMut.isPending ? 'Ajout…' : 'Ajouter'}
         </button>
       </div>
@@ -560,12 +560,12 @@ function ConventionUpload({ caseId, associeId, hasFile, onDone }: { caseId: stri
   };
   return (
     <div className="mt-1 flex items-center gap-1">
-      <label className="inline-flex items-center gap-0.5 text-[10px] text-navy hover:underline cursor-pointer">
+      <label className="inline-flex items-center gap-0.5 text-[10px] text-black hover:underline cursor-pointer">
         <Upload className="w-2.5 h-2.5" /> {hasFile ? 'remplacer' : 'charger PDF'}
         <input type="file" hidden accept=".pdf" onChange={(e) => { const f = e.target.files?.[0]; if (f) upMut.mutate(f); e.target.value=''; }} />
       </label>
       {hasFile && (
-        <button onClick={openFile} className="text-[10px] text-navy hover:underline inline-flex items-center gap-0.5">
+        <button onClick={openFile} className="text-[10px] text-black hover:underline inline-flex items-center gap-0.5">
           <Paperclip className="w-2.5 h-2.5" /> voir
         </button>
       )}
@@ -575,28 +575,32 @@ function ConventionUpload({ caseId, associeId, hasFile, onDone }: { caseId: stri
 
 function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' }) {
   if (v === 'ELIGIBLE') return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold">
-      <ShieldCheck className="w-3 h-3" /> Conforme
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-normal">
+      <ShieldCheck className="w-3 h-3" /> Conforme <span className="tracking-widest">●○○</span>
     </span>
   );
   if (v === 'NON_ELIGIBLE') return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold">
-      <ShieldX className="w-3 h-3" /> Non conforme
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
+      <ShieldX className="w-3 h-3" /> Non conforme <span className="tracking-widest">●●●</span>
     </span>
   );
   return (
-    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-semibold">
-      <ShieldAlert className="w-3 h-3" /> À réinstruire
+    <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-medium">
+      <ShieldAlert className="w-3 h-3" /> À réinstruire <span className="tracking-widest">●●○</span>
     </span>
   );
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls =
+    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
+    : tone === 'warn' ? 'text-black font-semibold'
+    : tone === 'ok'   ? 'text-neutral-700 font-medium'
+    : 'text-black font-bold';
   return (
     <Card><CardContent>
-      <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-      <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
+      <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
+      <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
     </CardContent></Card>
   );
 }

@@ -67,14 +67,14 @@ export default function AcompteIsPage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy">
+      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" />
         {t('nav.corporateTax')}
       </Link>
 
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" />
+          <Building2 className="w-6 h-6 text-black" />
           Acomptes mensuels IS
         </h1>
         <p className="text-sm text-slate-500 mt-1">
@@ -98,7 +98,7 @@ export default function AcompteIsPage() {
       {data?.note && (
         <Card><CardContent>
           <div className="flex items-start gap-3 py-2">
-            <FileWarning className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <FileWarning className="w-5 h-5 text-neutral-700 flex-shrink-0 mt-0.5" />
             <div className="text-sm text-slate-700">{data.note}</div>
           </div>
         </CardContent></Card>
@@ -219,24 +219,24 @@ export default function AcompteIsPage() {
                       </td>
                       <td className={cn(
                         'px-3 py-2 text-right font-mono',
-                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-rose-700 font-semibold' : 'text-slate-500',
+                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-black font-bold underline decoration-2' : 'text-slate-500',
                       )}>
                         {m.dmm_present ? formatXAF(m.variance_xaf) : '—'}
                       </td>
                       <td className={cn(
                         'px-3 py-2 text-right font-mono',
-                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-rose-700 font-semibold' : 'text-slate-500',
+                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-black font-bold underline decoration-2' : 'text-slate-500',
                       )}>
                         {m.variance_pct !== null ? `${m.variance_pct.toFixed(2)} %` : '—'}
                       </td>
                       <td className="px-3 py-2">
                         {m.dmm_present ? (
-                          <span className="inline-flex items-center gap-1 text-emerald-700 text-[11px]">
+                          <span className="inline-flex items-center gap-1 text-neutral-700 text-[11px]">
                             <CheckCircle2 className="w-3 h-3" />
                             {formatDate(m.dmm_filing_date) || 'déposée'}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-rose-700 text-[11px]">
+                          <span className="inline-flex items-center gap-1 text-black font-bold underline decoration-2 text-[11px]">
                             <XCircle className="w-3 h-3" />
                             manquante
                           </span>
@@ -256,11 +256,11 @@ export default function AcompteIsPage() {
             <Card>
               <CardContent>
                 <div className="flex items-start gap-3 py-2">
-                  <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 text-neutral-700 flex-shrink-0 mt-0.5" />
                   <div className="text-sm text-slate-700">
                     <b>Contrôle (a) — DMM manquantes :</b>{' '}
                     {data.annual.dmm_missing_months.map((m) => (
-                      <span key={m} className="inline-block px-1.5 py-0.5 mx-0.5 bg-rose-50 text-rose-700 rounded text-xs font-medium">
+                      <span key={m} className="inline-block px-1.5 py-0.5 mx-0.5 bg-white border-2 border-black text-black font-bold underline decoration-2 rounded text-xs">
                         {monthLabel(m)} {data.fiscal_year}
                       </span>
                     ))}
@@ -290,7 +290,7 @@ export default function AcompteIsPage() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function KPI({ label, value, sublabel, tone = 'neutral' }: { label: string; value: number | string; sublabel?: string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-black font-bold underline decoration-2' : tone === 'warn' ? 'text-neutral-700' : tone === 'ok' ? 'text-neutral-700' : 'text-slate-900';
   return (
     <Card>
       <CardContent>
@@ -303,7 +303,7 @@ function KPI({ label, value, sublabel, tone = 'neutral' }: { label: string; valu
 }
 
 function Field({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-700' : tone === 'warn' ? 'text-amber-700' : tone === 'ok' ? 'text-emerald-700' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-black font-extrabold underline decoration-2 underline-offset-4' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
   return (
     <div>
       <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>
@@ -313,17 +313,17 @@ function Field({ label, value, tone = 'neutral' }: { label: string; value: numbe
 }
 
 function DeadlineBadge({ s }: { s: 'ON_TIME' | 'LATE' | 'MISSING' | 'NO_FILING_DATE' }) {
-  if (s === 'ON_TIME') return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700"><Clock className="w-3 h-3" />Dans les délais</span>;
-  if (s === 'LATE')    return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700"><Clock className="w-3 h-3" />En retard</span>;
+  if (s === 'ON_TIME') return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-white text-neutral-700 border border-neutral-300"><Clock className="w-3 h-3" />Dans les délais</span>;
+  if (s === 'LATE')    return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-white text-black border-2 border-black font-semibold"><Clock className="w-3 h-3" />En retard</span>;
   if (s === 'MISSING') return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">—</span>;
-  return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">Date manquante</span>;
+  return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-neutral-100 text-black border border-neutral-400">Date manquante</span>;
 }
 
 function StatusPill({ s }: { s: 'OK' | 'VARIANCE_MINOR' | 'VARIANCE_MAJOR' | 'MISSING_DMM' | 'NO_CA' }) {
-  if (s === 'OK')              return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700 font-semibold">OK</span>;
-  if (s === 'VARIANCE_MINOR')  return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 font-semibold">Écart mineur</span>;
-  if (s === 'VARIANCE_MAJOR')  return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-100 text-rose-700 font-semibold">Écart majeur</span>;
-  if (s === 'MISSING_DMM')     return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 font-semibold">DMM manquante</span>;
+  if (s === 'OK')              return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-white text-neutral-700 border border-neutral-300 font-semibold">OK</span>;
+  if (s === 'VARIANCE_MINOR')  return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-neutral-100 text-black border border-neutral-400 font-semibold">Écart mineur</span>;
+  if (s === 'VARIANCE_MAJOR')  return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-white text-black border-2 border-black font-bold">Écart majeur</span>;
+  if (s === 'MISSING_DMM')     return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-white text-black border-2 border-black font-semibold">DMM manquante</span>;
   return <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">Pas de CA</span>;
 }
 

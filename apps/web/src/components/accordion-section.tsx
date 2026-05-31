@@ -34,7 +34,7 @@ export function AccordionSection({
           open ? 'bg-slate-50' : 'hover:bg-slate-50',
         )}
       >
-        {open ? <ChevronDown className="w-4 h-4 text-navy" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
+        {open ? <ChevronDown className="w-4 h-4 text-black" /> : <ChevronRight className="w-4 h-4 text-slate-500" />}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-slate-900 text-sm">{title}</div>
           {subtitle && <div className="text-xs text-slate-500 mt-0.5">{subtitle}</div>}

@@ -61,15 +61,15 @@ export default function LoginPage() {
       className="min-h-screen relative overflow-hidden"
       style={{
         background:
-          'radial-gradient(1200px 600px at 80% -100px, rgba(212,162,76,0.12), transparent),' +
-          'radial-gradient(800px 600px at 10% 110%, rgba(27,60,102,0.4), transparent),' +
-          'linear-gradient(135deg, #081A2F 0%, #0F2A4A 60%, #1B3C66 100%)',
+          'radial-gradient(1200px 600px at 80% -100px, rgba(255,255,255,0.04), transparent),' +
+          'radial-gradient(800px 600px at 10% 110%, rgba(255,255,255,0.06), transparent),' +
+          'linear-gradient(135deg, #000000 0%, #0A0A0A 60%, #171717 100%)',
       }}
     >
       <div className="relative max-w-7xl mx-auto px-6 py-10">
         <header className="flex items-center justify-between mb-16">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gold flex items-center justify-center text-navy-deep font-bold text-lg shadow-lg">
+            <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center text-white font-bold text-lg shadow-lg">
               FA
             </div>
             <div>
@@ -88,12 +88,12 @@ export default function LoginPage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-white">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs font-medium mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-gold" />
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
               {t('login.heroBadge')}
             </div>
             <h1 className="font-display text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6">
               {t('login.heroTitle1')}<br />
-              <span className="text-gold">{t('login.heroTitle2')}</span> {t('login.heroTitleAnd')} <span className="text-gold">{t('login.heroTitle3')}</span>
+              <span className="text-white">{t('login.heroTitle2')}</span> {t('login.heroTitleAnd')} <span className="text-white">{t('login.heroTitle3')}</span>
             </h1>
             <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
               {t('login.heroBlurb')}
@@ -106,7 +106,7 @@ export default function LoginPage() {
                 { Icon: FileCheck2,   label: t('login.feature4') },
               ].map(({ Icon, label }, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-gold flex-shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white flex-shrink-0">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="text-sm text-slate-200 leading-snug pt-1">{label}</div>
@@ -117,7 +117,7 @@ export default function LoginPage() {
 
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
             <div className="p-8">
-              <h2 className="font-display text-2xl font-bold text-navy mb-1">{t('login.cardTitle')}</h2>
+              <h2 className="font-display text-2xl font-bold text-black mb-1">{t('login.cardTitle')}</h2>
               <p className="text-sm text-slate-500 mb-6">{t('login.cardSubtitle')}</p>
 
               <form onSubmit={submit} className="space-y-4">
@@ -155,7 +155,7 @@ export default function LoginPage() {
                   </div>
                 </div>
                 {error && (
-                  <div className="text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2">
+                  <div className="text-sm text-black font-bold bg-white border-2 border-black rounded-lg px-3 py-2">
                     {error}
                   </div>
                 )}

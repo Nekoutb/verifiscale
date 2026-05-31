@@ -8,12 +8,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-navy text-white hover:bg-navy-soft',
-        gold: 'bg-gold text-navy-deep hover:bg-[#c4912e]',
-        outline: 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-50',
-        ghost: 'text-slate-700 hover:bg-slate-100',
-        destructive: 'bg-rose-600 text-white hover:bg-rose-700',
-        link: 'text-navy underline-offset-4 hover:underline',
+        // Primary — pure black bg + white text + 1px black border + hover ink-800
+        default: 'bg-black text-white border border-black hover:bg-[#171717]',
+        // Gold (legacy) — re-skinned to inverse black (kept for API compat)
+        gold: 'bg-black text-white border border-black hover:bg-[#171717]',
+        // Outline — transparent + black text + 1px ink-300 + hover border black
+        outline: 'border border-[#A3A3A3] bg-transparent text-black hover:border-black',
+        // Ghost — transparent + ink-700 text + hover ink-100 bg
+        ghost: 'text-[#404040] hover:bg-[#E5E5E5]',
+        // Destructive — typographic emphasis, no colour
+        destructive: 'bg-black text-white border border-black font-bold hover:bg-[#171717]',
+        link: 'text-black underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2',

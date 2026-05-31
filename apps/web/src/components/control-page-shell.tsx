@@ -28,7 +28,7 @@ export function ControlPageShell({
     <div className="space-y-6">
       <Link
         href={parentHref}
-        className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy"
+        className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black"
       >
         <ArrowLeft className="w-3.5 h-3.5" />
         {t(parentLabelKey)}
@@ -36,7 +36,7 @@ export function ControlPageShell({
 
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Icon className="w-6 h-6 text-navy" />
+          <Icon className="w-6 h-6 text-black" />
           {t(titleKey)}
         </h1>
         <p className="text-sm text-slate-500 mt-1">{t(subtitleKey)}</p>

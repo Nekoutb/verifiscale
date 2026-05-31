@@ -97,12 +97,12 @@ export default function PetitMaterielPage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-navy">
+      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" /> Impôts sur les sociétés
       </Link>
       <div>
-        <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <Building2 className="w-6 h-6 text-navy" /> Petit matériel et outillage
+        <h1 className="font-display text-2xl font-extrabold flex items-center gap-2 text-black tracking-tight">
+          <Building2 className="w-6 h-6 text-black" /> Petit matériel et outillage
         </h1>
         <p className="text-sm text-slate-500 mt-1">
           Seuil d'immobilisation obligatoire 500 000 FCFA. Au-delà, le bien doit être immobilisé
@@ -116,7 +116,7 @@ export default function PetitMaterielPage() {
       {data?.note && (
         <Card><CardContent>
           <div className="flex items-start gap-3 py-2">
-            <FileWarning className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <FileWarning className="w-5 h-5 text-black flex-shrink-0 mt-0.5" />
             <div className="text-sm text-slate-700">{data.note}</div>
           </div>
         </CardContent></Card>
@@ -190,10 +190,10 @@ export default function PetitMaterielPage() {
                 <tbody>
                   {data.lines.map((l) => (
                     <tr key={`${l.piece_number}-${l.line_number}`}
-                        className={cn('border-b border-slate-100 hover:bg-slate-50',
+                        className={cn('border-b border-neutral-100 hover:bg-neutral-50',
                           l.excluded && 'opacity-50',
-                          !l.excluded && l.qualification === 'HAND_TOOL' && 'bg-amber-50/30',
-                          !l.excluded && l.qualification !== 'HAND_TOOL' && 'bg-rose-50/30')}>
+                          !l.excluded && l.qualification === 'HAND_TOOL' && 'bg-neutral-50/40',
+                          !l.excluded && l.qualification !== 'HAND_TOOL' && 'bg-neutral-100/40')}>
                       <td className="px-3 py-2 font-mono">{l.piece_number}</td>
                       <td className="px-3 py-2">{formatDate(l.entry_date) || '—'}</td>
                       <td className="px-3 py-2">
@@ -218,9 +218,9 @@ export default function PetitMaterielPage() {
                         {l.qualification_source === 'AUTO' && <span className="ml-1 text-[9px] text-slate-400">auto</span>}
                       </td>
                       <td className="px-3 py-2 text-right font-mono">{l.depreciation_rate_pct}%</td>
-                      <td className="px-3 py-2 text-right font-mono text-amber-700">{l.excluded ? '—' : formatXAF(l.reint_differential_xaf)}</td>
-                      <td className="px-3 py-2 text-right font-mono text-orange-700">{l.excluded ? '—' : formatXAF(l.reint_third_xaf)}</td>
-                      <td className="px-3 py-2 text-right font-mono text-rose-700">{l.excluded ? '—' : formatXAF(l.reint_total_xaf)}</td>
+                      <td className="px-3 py-2 text-right font-mono tabular-nums text-neutral-700">{l.excluded ? '—' : formatXAF(l.reint_differential_xaf)}</td>
+                      <td className="px-3 py-2 text-right font-mono tabular-nums text-neutral-800">{l.excluded ? '—' : formatXAF(l.reint_third_xaf)}</td>
+                      <td className="px-3 py-2 text-right font-mono tabular-nums text-black font-semibold">{l.excluded ? '—' : formatXAF(l.reint_total_xaf)}</td>
                       <td className="px-3 py-2">
                         {l.excluded ? <span className="text-[10px] text-slate-400 italic">exclu</span> : (
                           <div className="flex gap-0.5">
@@ -228,7 +228,7 @@ export default function PetitMaterielPage() {
                               <button key={b}
                                 onClick={() => patchMut.mutate({ piece_number: l.piece_number, line_number: l.line_number, reintegration_basis: b })}
                                 className={cn('px-1.5 py-0.5 rounded text-[10px] border',
-                                  l.basis === b ? 'bg-navy text-white border-navy' : 'bg-white border-slate-300 hover:bg-slate-50')}>
+                                  l.basis === b ? 'bg-black text-white border-black' : 'bg-white border-neutral-300 hover:border-black')}>
                                 {b === 'DIFFERENTIAL' ? 'Diff.' : b === 'THIRD' ? '⅓–⅔' : 'Total'}
                               </button>
                             ))}
@@ -243,7 +243,7 @@ export default function PetitMaterielPage() {
                     </td></tr>
                   )}
                   {data.lines.length > 0 && (
-                    <tr className="bg-navy text-white font-semibold">
+                    <tr className="bg-black text-white font-semibold">
                       <td colSpan={6} className="px-3 py-2.5 text-right uppercase tracking-wider text-[10px]">Réintégration retenue</td>
                       <td className="px-3 py-2.5"></td>
                       <td className="px-3 py-2.5 text-right font-mono">{formatXAF(data.summary.total_reint_differential_xaf)}</td>
@@ -274,11 +274,15 @@ export default function PetitMaterielPage() {
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls =
+    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
+    : tone === 'warn' ? 'text-black font-semibold'
+    : tone === 'ok'   ? 'text-neutral-700 font-medium'
+    : 'text-black font-bold';
   return (
     <Card><CardContent>
-      <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-      <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
+      <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
+      <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
     </CardContent></Card>
   );
 }

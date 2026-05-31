@@ -252,11 +252,11 @@ export interface CatalogCategory {
 export type CatalogResponse = Record<string, CatalogCategory>;
 
 export const CATEGORY_LABELS: Record<string, { short: string; full: string; color: string }> = {
-  SYSCOHADA_A:  { short: 'A · Intégrité',  full: 'SYSCOHADA — Intégrité comptable',    color: 'bg-navy text-white' },
-  SYSCOHADA_B:  { short: 'B · Évaluation', full: 'SYSCOHADA — Évaluation & SIG',       color: 'bg-indigo-600 text-white' },
-  FISCAL_C:     { short: 'C · IS',         full: 'Fiscal — Impôt sur les Sociétés',    color: 'bg-gold text-navy-deep' },
-  FISCAL_D:     { short: 'D · TVA',        full: 'Fiscal — Taxe sur la Valeur Ajoutée', color: 'bg-emerald-700 text-white' },
-  PROCEDURAL_H: { short: 'H · Procédure',  full: 'Procédure LPF — Délais & pénalités', color: 'bg-rose-700 text-white' },
+  SYSCOHADA_A:  { short: 'A · Intégrité',  full: 'SYSCOHADA — Intégrité comptable',    color: 'bg-black text-white' },
+  SYSCOHADA_B:  { short: 'B · Évaluation', full: 'SYSCOHADA — Évaluation & SIG',       color: 'bg-neutral-700 text-white' },
+  FISCAL_C:     { short: 'C · IS',         full: 'Fiscal — Impôt sur les Sociétés',    color: 'bg-white text-black border border-black' },
+  FISCAL_D:     { short: 'D · TVA',        full: 'Fiscal — Taxe sur la Valeur Ajoutée', color: 'bg-neutral-200 text-black' },
+  PROCEDURAL_H: { short: 'H · Procédure',  full: 'Procédure LPF — Délais & pénalités', color: 'bg-black text-white border-2 border-black' },
 };
 
 // ── Monthly returns ──────────────────────────────────────────────────────────

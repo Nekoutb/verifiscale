@@ -13,10 +13,10 @@ import { formatDate, cn } from '@/lib/utils';
 import type { User } from '@/lib/types';
 
 const ROLE_LABELS: Record<string, { label: string; tone: string }> = {
-  ADMIN:        { label: 'Administrateur', tone: 'bg-rose-100 text-rose-800' },
-  SUPERVISEUR:  { label: 'Superviseur',    tone: 'bg-indigo-100 text-indigo-800' },
-  CHEF_BRIGADE: { label: 'Chef brigade',   tone: 'bg-amber-100 text-amber-800' },
-  AUDITEUR:     { label: 'Auditeur',       tone: 'bg-emerald-100 text-emerald-800' },
+  ADMIN:        { label: 'Administrateur', tone: 'bg-black text-white' },
+  SUPERVISEUR:  { label: 'Superviseur',    tone: 'bg-neutral-800 text-white' },
+  CHEF_BRIGADE: { label: 'Chef brigade',   tone: 'bg-neutral-200 text-black' },
+  AUDITEUR:     { label: 'Auditeur',       tone: 'bg-neutral-100 text-neutral-700' },
 };
 
 function toCsv(users: User[]): string {
@@ -104,7 +104,7 @@ export default function UtilisateursPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-            <Users className="w-6 h-6 text-rose-700" />
+            <Users className="w-6 h-6 text-black" />
             Utilisateurs & contacts
           </h1>
           <p className="text-sm text-slate-500 mt-1">
@@ -167,7 +167,7 @@ export default function UtilisateursPage() {
           {isLoading ? (
             <div className="text-center py-12 text-slate-500 text-sm">Chargement…</div>
           ) : error ? (
-            <div className="text-center py-12 text-rose-600 text-sm">
+            <div className="text-center py-12 text-black font-bold text-sm">
               Erreur de chargement : {(error as Error).message}
             </div>
           ) : filtered.length === 0 ? (
@@ -198,7 +198,7 @@ export default function UtilisateursPage() {
                     <tr key={u.id} className="border-b border-slate-100 hover:bg-slate-50">
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-navy/10 text-navy flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-black/10 text-black flex items-center justify-center text-xs font-semibold flex-shrink-0">
                             {initials}
                           </div>
                           <div>
@@ -211,12 +211,12 @@ export default function UtilisateursPage() {
                         <div className="space-y-1">
                           <div className="flex items-center gap-1.5 text-xs">
                             <Mail className="w-3 h-3 text-slate-400" />
-                            <a href={`mailto:${u.email}`} className="text-slate-700 hover:text-navy">{u.email}</a>
+                            <a href={`mailto:${u.email}`} className="text-slate-700 hover:text-black">{u.email}</a>
                           </div>
                           {u.phone_number ? (
                             <div className="flex items-center gap-1.5 text-xs">
                               <Phone className="w-3 h-3 text-slate-400" />
-                              <a href={`tel:${u.phone_number.replace(/\s/g, '')}`} className="font-mono text-slate-700 hover:text-navy">
+                              <a href={`tel:${u.phone_number.replace(/\s/g, '')}`} className="font-mono text-slate-700 hover:text-black">
                                 {u.phone_number}
                               </a>
                             </div>
@@ -267,9 +267,9 @@ function Stat({
   sub?: string;
 }) {
   const cls =
-    tone === 'err' ? 'text-rose-600'
-    : tone === 'warn' ? 'text-amber-600'
-    : tone === 'ok' ? 'text-emerald-600'
+    tone === 'err' ? 'text-black font-bold'
+    : tone === 'warn' ? 'text-neutral-700'
+    : tone === 'ok' ? 'text-neutral-700'
     : 'text-slate-900';
   return (
     <Card>

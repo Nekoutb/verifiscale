@@ -33,7 +33,7 @@ export default function ReportsPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-bold flex items-center gap-2">
-          <BarChart3 className="w-6 h-6 text-navy" />
+          <BarChart3 className="w-6 h-6 text-black" />
           {t('nav.rapports')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">
@@ -105,12 +105,12 @@ function FindingRow({ f }: { f: ControlFinding }) {
     <div className="p-4">
       <div className="flex items-start gap-3">
         {isInfo ? (
-          <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-sky-600" />
+          <Info className="w-5 h-5 flex-shrink-0 mt-0.5 text-neutral-500" />
         ) : (
           <AlertTriangle className={cn('w-5 h-5 flex-shrink-0 mt-0.5',
-            f.severity === 'BLOCKING' || f.severity === 'HIGH' ? 'text-rose-600'
-            : f.severity === 'MEDIUM' ? 'text-amber-600' : 'text-slate-400'
-          )} />
+            f.severity === 'BLOCKING' || f.severity === 'HIGH' ? 'text-black'
+            : f.severity === 'MEDIUM' ? 'text-neutral-600' : 'text-slate-400'
+          )} strokeWidth={f.severity === 'BLOCKING' || f.severity === 'HIGH' ? 2.5 : 2} />
         )}
         <div className="flex-1 min-w-0">
           <div className="font-semibold text-slate-900 text-sm">{f.title}</div>
@@ -125,7 +125,7 @@ function FindingRow({ f }: { f: ControlFinding }) {
         {f.estimated_impact_xaf ? (
           <div className="text-right text-sm flex-shrink-0">
             <div className="text-[10px] text-slate-500 uppercase">Impact</div>
-            <div className="font-bold text-rose-600">{formatXAF(f.estimated_impact_xaf)} FCFA</div>
+            <div className="font-bold text-black underline decoration-2 underline-offset-4">{formatXAF(f.estimated_impact_xaf)} FCFA</div>
           </div>
         ) : null}
       </div>
@@ -134,7 +134,7 @@ function FindingRow({ f }: { f: ControlFinding }) {
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-rose-600' : tone === 'warn' ? 'text-amber-600' : tone === 'ok' ? 'text-emerald-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-black font-extrabold underline decoration-2 underline-offset-4' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
   return (
     <Card>
       <CardContent>
