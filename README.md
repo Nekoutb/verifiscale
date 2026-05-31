@@ -268,3 +268,9 @@ docker compose exec api alembic upgrade head
 ## Licence
 
 Propriétaire — Direction Générale des Impôts du Cameroun.
+
+## Production
+- Live at: https://verifiscale.com
+- Hosted on Vultr Paris (45.32.150.96)
+- SSL by Let's Encrypt (renews 2026-08-29)
+
