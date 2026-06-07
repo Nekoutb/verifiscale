@@ -65,24 +65,13 @@ const config: Config = {
           DEFAULT: '#000000',
           soft: '#171717',
         },
-        // Tailwind's `amber-*` family is referenced directly in a few
-        // components (e.g. `hover:bg-[#c4912e]`, `bg-amber-100`). We can't
-        // override Tailwind's default `amber` from extend without a full
-        // colour reset, so callers that use bracket notation will be
-        // migrated in component pass. For the named-shade override path we
-        // expose a flattened `amber` alias that points to black/ink.
-        amber: {
-          50: '#FAFAFA',
-          100: '#E5E5E5',
-          200: '#D4D4D4',
-          300: '#A3A3A3',
-          400: '#737373',
-          500: '#000000',
-          600: '#000000',
-          700: '#171717',
-          800: '#171717',
-          900: '#0A0A0A',
-        },
+        // Monochrome base + colour accents (Proposal A — "Wayfinding").
+        // `amber` is NO LONGER collapsed — the default Tailwind amber palette
+        // is restored so module icon tiles and the MOYEN risk badge render in
+        // colour. indigo/blue/cyan/teal/violet/fuchsia/rose/emerald all use
+        // the Tailwind defaults (they were never overridden). Text, tables and
+        // financial figures stay monochrome; colour is reserved for icon tiles,
+        // risk badges, and the brand mark.
 
         // -----------------------------------------------------------------
         // Semantic risk aliases — semantics preserved, colour dropped.

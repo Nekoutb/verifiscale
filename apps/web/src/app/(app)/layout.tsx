@@ -27,6 +27,8 @@ interface NavItem {
   /** Translation key — looked up via useT() at render time. */
   labelKey: MessageKey;
   Icon: React.ComponentType<{ className?: string }>;
+  /** Tailwind classes for the coloured icon tile (Proposal A — Wayfinding). */
+  tint?: string;
   adminOnly?: boolean;
   /** Optional nested children — when present the item becomes expandable. */
   children?: NavChild[];
@@ -41,16 +43,16 @@ interface NavSection {
 
 const NAV: NavSection[] = [
   { sectionKey: 'sidebar.general', items: [
-    { href: '/dashboard', labelKey: 'nav.dashboard', Icon: LayoutDashboard },
+    { href: '/dashboard', labelKey: 'nav.dashboard', Icon: LayoutDashboard, tint: 'bg-indigo-50 text-indigo-600' },
   ]},
   { sectionKey: 'sidebar.dataIntegrity', items: [
-    { href: '/audit-data',     labelKey: 'nav.auditData',         Icon: Database },
-    { href: '/rapprochements', labelKey: 'nav.rapprochements',    Icon: GitCompare },
-    { href: '/factures',       labelKey: 'nav.supplierInvoices',  Icon: FileText },
+    { href: '/audit-data',     labelKey: 'nav.auditData',         Icon: Database,   tint: 'bg-blue-50 text-blue-600' },
+    { href: '/rapprochements', labelKey: 'nav.rapprochements',    Icon: GitCompare, tint: 'bg-cyan-50 text-cyan-600' },
+    { href: '/factures',       labelKey: 'nav.supplierInvoices',  Icon: FileText,   tint: 'bg-teal-50 text-teal-600' },
   ]},
   { sectionKey: 'sidebar.accountingControls', items: [
     {
-      href: '/impots-societes', labelKey: 'nav.corporateTax', Icon: Building2,
+      href: '/impots-societes', labelKey: 'nav.corporateTax', Icon: Building2, tint: 'bg-violet-50 text-violet-600',
       children: [
         { href: '/impots-societes/amortissements',           labelKey: 'is.amortissements.title' },
         { href: '/impots-societes/reglements-especes',       labelKey: 'is.cash.title' },
@@ -65,7 +67,7 @@ const NAV: NavSection[] = [
       ],
     },
     {
-      href: '/tva', labelKey: 'nav.vat', Icon: Receipt,
+      href: '/tva', labelKey: 'nav.vat', Icon: Receipt, tint: 'bg-fuchsia-50 text-fuchsia-600',
       children: [
         { href: '/tva/rapprochement', labelKey: 'vat.rapprochement.title' },
         { href: '/tva/deductible',    labelKey: 'vat.deductible.title' },
@@ -74,16 +76,16 @@ const NAV: NavSection[] = [
         { href: '/tva/synthese',      labelKey: 'vat.synthese.title' },
       ],
     },
-    { href: '/ircm', labelKey: 'nav.ircm', Icon: Coins },
+    { href: '/ircm', labelKey: 'nav.ircm', Icon: Coins, tint: 'bg-rose-50 text-rose-600' },
   ]},
   { sectionKey: 'sidebar.restitution', items: [
-    { href: '/rapports', labelKey: 'nav.rapports', Icon: BarChart3 },
+    { href: '/rapports', labelKey: 'nav.rapports', Icon: BarChart3, tint: 'bg-amber-50 text-amber-700' },
   ]},
   { sectionKey: 'sidebar.reference', items: [
-    { href: '/referentiel', labelKey: 'nav.referentiel', Icon: BookMarked },
+    { href: '/referentiel', labelKey: 'nav.referentiel', Icon: BookMarked, tint: 'bg-emerald-50 text-emerald-600' },
   ]},
   { sectionKey: 'sidebar.administration', adminOnly: true, items: [
-    { href: '/utilisateurs', labelKey: 'nav.utilisateurs', Icon: Users, adminOnly: true },
+    { href: '/utilisateurs', labelKey: 'nav.utilisateurs', Icon: Users, adminOnly: true, tint: 'bg-slate-100 text-slate-600' },
   ]},
 ];
 
@@ -117,7 +119,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <aside className="bg-white text-neutral-700 w-64 flex-shrink-0 flex flex-col border-r border-neutral-200">
         <div className="px-5 py-5 border-b border-neutral-200">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-black flex items-center justify-center text-white font-bold text-sm">FA</div>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-600 to-sky-500 flex items-center justify-center text-white font-bold text-sm shadow-sm">FA</div>
             <div>
               <div className="font-display font-extrabold text-black text-sm">{t('app.title')}</div>
               <div className="text-[10px] text-neutral-500 tracking-wider uppercase">{t('app.subtitle')}</div>
@@ -178,7 +180,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <LanguageToggle />
             <button className="relative p-2 rounded-none border border-neutral-300 hover:border-black text-neutral-700 hover:text-black transition">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-black" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500" />
             </button>
           </div>
         </header>
@@ -198,7 +200,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
  */
 function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
   const t = useT();
-  const { href, labelKey, Icon, children } = item;
+  const { href, labelKey, Icon, children, tint } = item;
   const hasChildren = !!children && children.length > 0;
   const childActive = hasChildren && children!.some(
     (c) => pathname === c.href || pathname.startsWith(c.href + '/'),
@@ -225,9 +227,14 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
       >
         <Link
           href={href}
-          className="flex items-center gap-3 flex-1 px-3 py-2.5 text-sm font-medium cursor-pointer min-w-0"
+          className="flex items-center gap-2.5 flex-1 px-2.5 py-2 text-sm font-medium cursor-pointer min-w-0"
         >
-          <Icon className="w-5 h-5 flex-shrink-0" />
+          <span className={cn(
+            'w-7 h-7 rounded-lg grid place-items-center flex-shrink-0',
+            tint ?? 'bg-neutral-100 text-neutral-600',
+          )}>
+            <Icon className="w-[17px] h-[17px]" />
+          </span>
           <span className="truncate">{t(labelKey)}</span>
         </Link>
         {hasChildren && (

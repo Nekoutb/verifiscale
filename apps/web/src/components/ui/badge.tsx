@@ -7,23 +7,21 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        // FAIBLE — weight 400 + pip ●○○ + 1px ink-300 outline
-        ok: 'font-normal text-[#404040] border border-[#A3A3A3]',
-        // MOYEN — weight 500 + pip ●●○ + 1px ink-300 outline
-        warn: 'font-medium text-[#404040] border border-[#A3A3A3]',
-        // ÉLEVÉ — weight 700 + pip ●●● + 1px pure-black outline + under-rule
-        err: 'font-bold text-black border border-black underline decoration-2 underline-offset-4',
-        info: 'font-normal text-[#404040] border border-[#A3A3A3]',
-        neutral: 'font-normal text-[#404040] border border-[#A3A3A3]',
-        // Status variants — outlined neutral
-        default: 'font-medium text-[#404040] border border-[#A3A3A3]',
-        secondary: 'font-normal text-[#737373] border border-[#D4D4D4]',
-        destructive: 'font-bold text-black border border-black',
-        outline: 'font-normal text-[#404040] border border-[#A3A3A3]',
-        // Risk-specific typographic variants
-        faible: 'font-normal text-[#404040] border border-[#A3A3A3]',
-        moyen: 'font-medium text-[#404040] border border-[#A3A3A3]',
-        eleve: 'font-bold text-black border border-black underline decoration-2 underline-offset-4',
+        // Risk / severity — tricolour (Proposal A): FAIBLE=emerald, MOYEN=amber, ÉLEVÉ=rose
+        ok: 'font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200',
+        warn: 'font-semibold text-amber-700 bg-amber-50 border border-amber-200',
+        err: 'font-bold text-rose-700 bg-rose-50 border border-rose-200',
+        info: 'font-medium text-blue-700 bg-blue-50 border border-blue-200',
+        neutral: 'font-normal text-neutral-600 border border-neutral-300',
+        // Status variants — outlined neutral (stay monochrome)
+        default: 'font-medium text-neutral-700 border border-neutral-300',
+        secondary: 'font-normal text-neutral-500 border border-neutral-200',
+        destructive: 'font-bold text-rose-700 bg-rose-50 border border-rose-200',
+        outline: 'font-normal text-neutral-600 border border-neutral-300',
+        // Risk-specific aliases
+        faible: 'font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200',
+        moyen: 'font-semibold text-amber-700 bg-amber-50 border border-amber-200',
+        eleve: 'font-bold text-rose-700 bg-rose-50 border border-rose-200',
       },
     },
     defaultVariants: { variant: 'neutral' },

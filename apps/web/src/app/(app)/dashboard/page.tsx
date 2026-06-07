@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowRight, Briefcase, Folder, CheckCircle2, Plus,
+  Layers, Activity, AlertTriangle, Clock,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,22 +54,25 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: t('dashboard.kpiTotal'),    value: cases.length, emphasize: false },
-          { label: t('dashboard.kpiActive'),   value: active, emphasize: false },
-          { label: t('dashboard.kpiHighRisk'), value: highRisk, emphasize: true },
-          { label: t('dashboard.kpiNotify'),   value: 0, emphasize: false },
+          { label: t('dashboard.kpiTotal'),    value: cases.length, emphasize: false, Icon: Layers,         tint: 'bg-indigo-50 text-indigo-600' },
+          { label: t('dashboard.kpiActive'),   value: active,       emphasize: false, Icon: Activity,       tint: 'bg-blue-50 text-blue-600' },
+          { label: t('dashboard.kpiHighRisk'), value: highRisk,     emphasize: true,  Icon: AlertTriangle,  tint: 'bg-rose-50 text-rose-600' },
+          { label: t('dashboard.kpiNotify'),   value: 0,            emphasize: false, Icon: Clock,          tint: 'bg-amber-50 text-amber-700' },
         ].map((k) => (
           <Card key={k.label}>
             <CardContent>
-              <div className="text-[11px] font-semibold text-neutral-700 uppercase tracking-[0.12em]">
-                {k.label}
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-[11px] font-semibold text-neutral-700 uppercase tracking-[0.12em]">
+                  {k.label}
+                </div>
+                <span className={cn('w-8 h-8 rounded-lg grid place-items-center flex-shrink-0', k.tint)}>
+                  <k.Icon className="w-[18px] h-[18px]" />
+                </span>
               </div>
               <div
                 className={cn(
-                  'mt-2 font-display tabular-nums text-3xl text-black leading-none',
-                  k.emphasize
-                    ? 'font-extrabold underline decoration-black decoration-[3px] underline-offset-[6px]'
-                    : 'font-bold',
+                  'mt-2 font-display tabular-nums text-3xl leading-none',
+                  k.emphasize ? 'font-extrabold text-rose-600' : 'font-bold text-black',
                 )}
                 style={{ fontFeatureSettings: '"tnum"' }}
               >
@@ -128,7 +132,9 @@ export default function DashboardPage() {
                   >
                     <div className={cn(
                       'w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 border',
-                      isActive ? 'bg-black text-white border-black' : 'bg-white text-neutral-700 border-neutral-200',
+                      c.risk_level === 'ELEVE' ? 'bg-rose-50 text-rose-600 border-rose-200'
+                        : c.risk_level === 'MOYEN' ? 'bg-amber-50 text-amber-700 border-amber-200'
+                        : 'bg-emerald-50 text-emerald-600 border-emerald-200',
                     )}>
                       <Folder className="w-4 h-4" />
                     </div>
