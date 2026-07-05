@@ -144,6 +144,7 @@ class SupplierAggregate:
     counter_supplier_name: str
     line_count: int
     total_amount_xaf: Decimal
+    reintegration_amount_xaf: Decimal = Decimal("0")
     pieces: set[str] = field(default_factory=set)
 
     def to_dict(self) -> dict[str, Any]:
@@ -154,7 +155,9 @@ class SupplierAggregate:
             "line_count": self.line_count,
             "piece_count": len(self.pieces),
             "total_amount_xaf": float(self.total_amount_xaf),
-            "estimated_reintegration_xaf": float(self.total_amount_xaf),
+            # Only the lines actually reintegrated (current-year & not excluded)
+            # — must reconcile with the sum of the per-line Réintégration column.
+            "estimated_reintegration_xaf": float(self.reintegration_amount_xaf),
         }
 
 
@@ -598,6 +601,8 @@ def analyze_cash_payments(
             agg[key2] = sa
         sa.line_count += 1
         sa.total_amount_xaf += cl.amount_xaf
+        if cl.current_year == "YES" and not cl.excluded:
+            sa.reintegration_amount_xaf += cl.amount_xaf
         sa.pieces.add(cl.pi_number)
 
     suppliers = sorted(agg.values(), key=lambda s: -float(s.total_amount_xaf))

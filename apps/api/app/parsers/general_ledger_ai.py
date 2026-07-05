@@ -122,12 +122,39 @@ Return STRICT JSON with this exact shape (no markdown, no prose):
 
 
 def _read_raw(data: bytes, filename: str) -> pd.DataFrame:
+    """Back-compat single-frame reader (first sheet only). Prefer _read_sheets."""
     name = filename.lower()
     if name.endswith((".xlsx", ".xls", ".xlsm")):
         return pd.read_excel(io.BytesIO(data), dtype=object, header=None)
     text = data.decode("utf-8-sig", errors="replace")
     sep = ";" if text.split("\n", 1)[0].count(";") > text.split("\n", 1)[0].count(",") else ","
     return pd.read_csv(io.StringIO(text), sep=sep, dtype=object, header=None, keep_default_na=False)
+
+
+def _read_sheets(data: bytes, filename: str) -> list[tuple[str, pd.DataFrame]]:
+    """Read EVERY sheet of an Excel workbook (GLs are often split by journal or
+    month across sheets — reading only the first silently drops the rest).
+    CSV has a single logical sheet."""
+    name = filename.lower()
+    if name.endswith((".xlsx", ".xls", ".xlsm")):
+        book = pd.read_excel(io.BytesIO(data), dtype=object, header=None, sheet_name=None)
+        return [(str(n), d) for n, d in book.items() if d is not None and not d.empty]
+    text = data.decode("utf-8-sig", errors="replace")
+    first_line = text.split("\n", 1)[0]
+    sep = ";" if first_line.count(";") > first_line.count(",") else ","
+    df = pd.read_csv(io.StringIO(text), sep=sep, dtype=object, header=None, keep_default_na=False)
+    return [("csv", df)]
+
+
+# Header labels that must never be mistaken for a real piece_number when a
+# repeated header row leaks into the data (happens when we apply one sheet's
+# mapping across every sheet of a multi-sheet workbook).
+_HEADER_TOKENS = {
+    "piece", "npiece", "numero", "number", "movename", "movenumber",
+    "ecriturenum", "pieceref", "reference", "ref", "voucher", "entryno",
+    "doc", "id", "compte", "comptenum", "account", "date", "ecrituredate",
+    "libelle", "ecriturelib", "debit", "credit", "journal", "journalcode",
+}
 
 
 def _preview(df: pd.DataFrame, rows: int) -> str:
@@ -239,6 +266,11 @@ def _walk(
         raw_piece = get(row, "piece_number")
         piece = str(raw_piece).strip() if raw_piece is not None else ""
 
+        # Skip a repeated header row that leaked into the data — happens when we
+        # apply the first sheet's column mapping to every sheet of a workbook.
+        if piece and _normalize(piece) in _HEADER_TOKENS:
+            continue
+
         # Skip account-header rows (no piece + no date + no amounts)
         if debit == 0 and credit == 0 and not edate and not piece:
             continue
@@ -280,16 +312,19 @@ def parse(data: bytes, filename: str) -> tuple[list[ParsedGLLine], dict]:
     """AI-first GL parsing. Falls back to the keyword parser ONLY when Claude
     is unavailable (no API key). When Claude is available but can't identify a
     piece_number column, raises a clear error — we never invent IDs."""
-    df = _read_raw(data, filename)
-    if df.empty:
+    sheets = _read_sheets(data, filename)
+    if not sheets:
         return [], {}
 
-    mapping = _ask_claude(_preview(df, _PREVIEW_ROWS))
+    # Derive the column mapping from the first non-empty sheet, then apply it to
+    # every sheet (GL workbooks split by journal/month share one template).
+    first_df = sheets[0][1]
+    mapping = _ask_claude(_preview(first_df, _PREVIEW_ROWS))
     if mapping is None:
         log.info("GL AI: no API key / Claude unavailable — falling back to keyword parser")
         return parse_keyword(data, filename)
 
-    ok, err = _validate_mapping(mapping, df.shape[1])
+    ok, err = _validate_mapping(mapping, first_df.shape[1])
     if not ok:
         raise ValueError(
             f"L'IA n'a pas pu cartographier votre grand-livre : {err} "
@@ -297,8 +332,18 @@ def parse(data: bytes, filename: str) -> tuple[list[ParsedGLLine], dict]:
             f"de pièce / écriture (ex : 'Number', 'Move Name', 'EcritureNum')."
         )
 
-    rows = _walk(df, int(mapping["header_row_index"]), mapping["columns"])
-    log.info("GL AI mapping used: %s", mapping.get("rationale", ""))
+    hdr = int(mapping["header_row_index"])
+    rows: list[ParsedGLLine] = []
+    per_sheet: list[dict] = []
+    for sheet_name, df in sheets:
+        # On sheets other than the first, a title/header block may sit at row 0
+        # even if the first sheet had it lower; the header-token guard in _walk
+        # drops any leaked header row, so applying the same hdr is safe.
+        sheet_rows = _walk(df, hdr, mapping["columns"])
+        rows.extend(sheet_rows)
+        per_sheet.append({"sheet": sheet_name, "rows": len(sheet_rows)})
+    log.info("GL AI mapping used across %d sheet(s): %s",
+             len(sheets), mapping.get("rationale", ""))
 
     # Build a human-readable detection report for the UI
     cols_used = mapping["columns"]
@@ -318,5 +363,7 @@ def parse(data: bytes, filename: str) -> tuple[list[ParsedGLLine], dict]:
         },
         "column_indices": cols_used,
         "header_row_index": mapping["header_row_index"],
+        "n_sheets": len(sheets),
+        "sheets": per_sheet,
     }
     return rows, report
