@@ -138,7 +138,7 @@ export default function ChargesFinancieresPage() {
             <KPI label="Σ intérêts cl.67 (GL)" value={formatXAF(data.summary.gl_interest_67_xaf)} />
             <KPI label="Intérêts associés" value={formatXAF(data.summary.gl_interest_assoc_xaf)} />
             <KPI label="Associés prêteurs" value={data.summary.associe_count} />
-            <KPI label="Non conformes" value={data.summary.non_eligible_count}
+            <KPI label="Non déductibles" value={data.summary.non_eligible_count}
                  tone={data.summary.non_eligible_count > 0 ? 'err' : 'ok'} />
             <KPI label="Réintégration estimée" value={formatXAF(data.summary.total_reintegration_xaf)}
                  tone={data.summary.total_reintegration_xaf > 0 ? 'err' : 'ok'} />
@@ -576,12 +576,12 @@ function ConventionUpload({ caseId, associeId, hasFile, onDone }: { caseId: stri
 function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' }) {
   if (v === 'ELIGIBLE') return (
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-normal">
-      <ShieldCheck className="w-3 h-3" /> Conforme <span className="tracking-widest">●○○</span>
+      <ShieldCheck className="w-3 h-3" /> Déductible <span className="tracking-widest">●○○</span>
     </span>
   );
   if (v === 'NON_ELIGIBLE') return (
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
-      <ShieldX className="w-3 h-3" /> Non conforme <span className="tracking-widest">●●●</span>
+      <ShieldX className="w-3 h-3" /> Non déductible <span className="tracking-widest">●●●</span>
     </span>
   );
   return (

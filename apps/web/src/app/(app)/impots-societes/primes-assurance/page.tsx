@@ -150,7 +150,7 @@ export default function PrimesAssurancePage() {
             <KPI label="Écart GL ↔ contrats"
                  value={`${formatXAF(data.summary.variance_xaf)} (${data.summary.variance_pct}%)`}
                  tone={data.summary.reconciliation_status === 'OK' ? 'ok' : 'warn'} />
-            <KPI label="Non éligibles" value={data.summary.non_eligible_count}
+            <KPI label="Non déductibles" value={data.summary.non_eligible_count}
                  tone={data.summary.non_eligible_count > 0 ? 'err' : 'ok'} />
             <KPI label="Réintégration estimée" value={formatXAF(data.summary.total_reintegration_xaf)}
                  tone={data.summary.total_reintegration_xaf > 0 ? 'err' : 'ok'} />
@@ -440,12 +440,12 @@ function ContractRow({
 function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' }) {
   if (v === 'ELIGIBLE') return (
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-normal">
-      <ShieldCheck className="w-3 h-3" /> Éligible <span className="tracking-widest">●○○</span>
+      <ShieldCheck className="w-3 h-3" /> Déductible <span className="tracking-widest">●○○</span>
     </span>
   );
   if (v === 'NON_ELIGIBLE') return (
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
-      <ShieldX className="w-3 h-3" /> Non éligible <span className="tracking-widest">●●●</span>
+      <ShieldX className="w-3 h-3" /> Non déductible <span className="tracking-widest">●●●</span>
     </span>
   );
   return (

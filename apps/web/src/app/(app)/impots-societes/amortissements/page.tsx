@@ -133,7 +133,6 @@ export default function AmortissementsPage() {
                     <th className="px-3 py-2.5 text-right">{t('amort.col.nbv')}</th>
                     <th className="px-3 py-2.5 text-right">{t('amort.col.regRate')}</th>
                     <th className="px-3 py-2.5 text-right">{t('amort.col.prescribedRate')}</th>
-                    <th className="px-3 py-2.5 text-center">{t('amort.col.match')}</th>
                     <th className="px-3 py-2.5 text-right">{t('amort.col.recomputed')}</th>
                     <th className="px-3 py-2.5 text-right">{t('amort.col.register')}</th>
                     <th className="px-3 py-2.5 text-right">{t('amort.col.variance')}</th>
@@ -165,17 +164,6 @@ export default function AmortissementsPage() {
                         {r.register_rate_pct != null ? `${r.register_rate_pct.toFixed(2)} %` : '—'}
                       </td>
                       <td className="px-3 py-2 text-right font-mono">{r.prescribed_rate_pct.toFixed(2)} %</td>
-                      <td className="px-3 py-2 text-center">
-                        {r.rate_match
-                          ? <CheckCircle2 className="w-4 h-4 text-neutral-700 inline" />
-                          : <span className="inline-flex items-center gap-1">
-                              <AlertTriangle className="w-4 h-4 text-black" />
-                              <span className="text-[10px] text-black font-bold">
-                                {r.rate_match_delta_pp > 0 ? '+' : ''}{r.rate_match_delta_pp.toFixed(2)} pp
-                              </span>
-                            </span>
-                        }
-                      </td>
                       <td className="px-3 py-2 text-right font-mono">{formatXAF(r.recomputed_year_depreciation_xaf)}</td>
                       <td className="px-3 py-2 text-right font-mono">
                         {r.register_year_depreciation_xaf != null ? formatXAF(r.register_year_depreciation_xaf) : '—'}
@@ -203,7 +191,7 @@ export default function AmortissementsPage() {
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(totalGross)}</td>
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(totalAccum)}</td>
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(totalNbv)}</td>
-                        <td colSpan={3} />
+                        <td colSpan={2} />
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(data.summary.total_recomputed_year_depreciation_xaf)}</td>
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(data.summary.total_register_year_depreciation_xaf)}</td>
                         <td className={cn(

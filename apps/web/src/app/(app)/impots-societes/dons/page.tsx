@@ -260,7 +260,7 @@ export default function DonsLiberalitesPage() {
                  value={formatXAF(data.summary.total_engage_xaf)} />
             <KPI label="Plafond légal (5‰ CA HT)"
                  value={formatXAF(data.summary.plafond_xaf)} tone="neutral" />
-            <KPI label="Non éligible"
+            <KPI label="Non déductible"
                  value={formatXAF(data.summary.total_non_eligible_xaf)}
                  tone={data.summary.total_non_eligible_xaf > 0 ? 'err' : 'ok'} />
             <KPI label="À réinstruire"
@@ -281,7 +281,7 @@ export default function DonsLiberalitesPage() {
                   <div className="text-[10px] text-slate-500 mt-0.5 italic">source : {data.summary.ca_ht_source}</div>
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase tracking-wider text-slate-500">Éligible avant plafond</div>
+                  <div className="text-[10px] uppercase tracking-wider text-slate-500">Déductible avant plafond</div>
                   <div className="font-mono tabular-nums text-base font-semibold text-neutral-700">{formatXAF(data.summary.total_eligible_avant_plafond_xaf)}</div>
                 </div>
                 <div>
@@ -308,8 +308,8 @@ export default function DonsLiberalitesPage() {
                       <th className="px-3 py-2.5">NIU</th>
                       <th className="px-3 py-2.5 text-right">Lignes</th>
                       <th className="px-3 py-2.5 text-right">Total</th>
-                      <th className="px-3 py-2.5 text-right">Éligible</th>
-                      <th className="px-3 py-2.5 text-right">Non éligible</th>
+                      <th className="px-3 py-2.5 text-right">Déductible</th>
+                      <th className="px-3 py-2.5 text-right">Non déductible</th>
                       <th className="px-3 py-2.5 text-right">À réinstruire</th>
                     </tr>
                   </thead>
@@ -363,7 +363,7 @@ export default function DonsLiberalitesPage() {
                                 if (reason !== null) groupSetVerdictMut.mutate({ groupId: g.id, verdict: v, reason });
                               }}
                               className="px-1.5 py-0.5 text-[10px] rounded border border-neutral-300 hover:border-black">
-                              {v === 'ELIGIBLE' ? '✓ Élig.' : v === 'A_REINSTRUIRE' ? '? Réinst.' : '✗ Non élig.'}
+                              {v === 'ELIGIBLE' ? '✓ Déd.' : v === 'A_REINSTRUIRE' ? '? Réinst.' : '✗ Non déd.'}
                             </button>
                           ))}
                           <button onClick={() => { if (confirm('Supprimer le groupe ?')) groupDeleteMut.mutate(g.id); }}
@@ -716,7 +716,7 @@ function AiBadge({ v, c }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE'; c
   return (
     <span className={`inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded border bg-transparent ${cls}`}>
       <span className="tracking-widest">{pip}</span>
-      <span>{v === 'ELIGIBLE' ? 'Élig.' : v === 'NON_ELIGIBLE' ? 'Non élig.' : 'Réinst.'}</span>
+      <span>{v === 'ELIGIBLE' ? 'Déd.' : v === 'NON_ELIGIBLE' ? 'Non déd.' : 'Réinst.'}</span>
       <span className="opacity-70">{c}</span>
     </span>
   );
@@ -743,12 +743,12 @@ function ConfidenceBadge({ c }: { c: 'VERT' | 'ORANGE' | 'ROUGE' }) {
 function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' }) {
   if (v === 'ELIGIBLE') return (
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-normal">
-      <ShieldCheck className="w-3 h-3" /> Éligible <span className="tracking-widest">●○○</span>
+      <ShieldCheck className="w-3 h-3" /> Déductible <span className="tracking-widest">●○○</span>
     </span>
   );
   if (v === 'NON_ELIGIBLE') return (
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-black bg-transparent text-black font-extrabold">
-      <ShieldX className="w-3 h-3" /> Non éligible <span className="tracking-widest">●●●</span>
+      <ShieldX className="w-3 h-3" /> Non déductible <span className="tracking-widest">●●●</span>
     </span>
   );
   return (
