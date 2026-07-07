@@ -286,6 +286,8 @@ def analyze_charges_financieres(
 
     manual_equity = Decimal(str(params.capitaux_propres_xaf)) if params and params.capitaux_propres_xaf else None
     manual_ebitda = Decimal(str(params.ebitda_fiscal_xaf)) if params and params.ebitda_fiscal_xaf else None
+    # T2 (Art. 7 B) : capital social entièrement libéré ? (défaut True → rétro-compat)
+    capital_libere = bool(params.capital_libere) if params is not None else True
 
     capitaux_propres = manual_equity if manual_equity is not None else auto_equity
     ebitda = manual_ebitda if manual_ebitda is not None else auto_ebitda
@@ -396,13 +398,25 @@ def analyze_charges_financieres(
                 f"(BEAC+2) → excédent {float(t1_excess):,.0f} FCFA.".replace(",", " ")
             )
 
-        # T2 — forme
-        t2_failed = not a.convention_enregistree
+        # T2 — forme : convention enregistrée ET capital entièrement libéré
+        no_convention = not a.convention_enregistree
+        t2_failed = no_convention or not capital_libere
         if t2_failed:
             findings.append("T2-NO-REGISTERED-AGREEMENT")
-            reasons.append(
-                "Absence de convention de prêt enregistrée → 100 % des intérêts non déductibles."
-            )
+            if no_convention and not capital_libere:
+                reasons.append(
+                    "Absence de convention de prêt enregistrée ET capital social non "
+                    "entièrement libéré → 100 % des intérêts non déductibles (Art. 7 B)."
+                )
+            elif no_convention:
+                reasons.append(
+                    "Absence de convention de prêt enregistrée → 100 % des intérêts non déductibles."
+                )
+            else:
+                reasons.append(
+                    "Capital social non entièrement libéré → 100 % des intérêts non "
+                    "déductibles (Art. 7 B, T2)."
+                )
 
         # T3 — sous-capitalisation (collectif, prorata)
         t3_excess = Decimal("0")

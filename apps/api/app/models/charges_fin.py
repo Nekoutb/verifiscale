@@ -48,6 +48,11 @@ class ChargesFinCaseParams(Base):
     ebitda_fiscal_xaf: Mapped[Decimal | None] = mapped_column(Numeric(20, 2))
     rate_basis: Mapped[str] = mapped_column(String(16), default="TIAO")
     taux_beac_pct: Mapped[Decimal | None] = mapped_column(Numeric(6, 3))
+    # Capital social entièrement libéré ? T2 (Art. 7 B) exige une convention
+    # enregistrée ET un capital entièrement libéré ; sinon intérêts non déductibles.
+    # Défaut True (rétro-compat) — le vérificateur le passe à False si le capital
+    # n'est pas intégralement appelé/versé.
+    capital_libere: Mapped[bool] = mapped_column(Boolean, default=True, server_default="true")
     notes: Mapped[str | None] = mapped_column(String(2048))
     updated_by: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL")
