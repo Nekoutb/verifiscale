@@ -52,7 +52,8 @@ def create_taxpayer(
         raise HTTPException(status_code=400, detail="Régime fiscal invalide")
     tp = Taxpayer(
         niu=niu, raison_sociale=payload.raison_sociale,
-        address=payload.address, sector=payload.sector, regime=regime,
+        address=payload.address, sector=payload.sector,
+        sector_code=payload.sector_code or "DROIT_COMMUN", regime=regime,
     )
     db.add(tp)
     db.commit()

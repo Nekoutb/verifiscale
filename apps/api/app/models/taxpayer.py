@@ -30,7 +30,15 @@ class Taxpayer(Base):
     niu: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
     raison_sociale: Mapped[str] = mapped_column(String(512), nullable=False)
     address: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    sector: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    sector: Mapped[str | None] = mapped_column(String(128), nullable=True)  # libellé libre (précision)
+    # Secteur d'activité structuré — régimes fiscaux spécifiques (Tier A).
+    # Pilote le branchement sectoriel des contrôles (provisions COBAC/CIMA,
+    # redevances forestières/minières, IS pétrolier, etc.). String (non-enum)
+    # pour ajouter les secteurs Tier B/C sans migration de type.
+    #   DROIT_COMMUN | PETROLE_AMONT | MINES | FORET_BOIS | BANQUE | ASSURANCES
+    sector_code: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="DROIT_COMMUN", server_default="DROIT_COMMUN"
+    )
     regime: Mapped[TaxRegime] = mapped_column(Enum(TaxRegime), nullable=False, default=TaxRegime.REEL)
     # Cached FCA status — refreshed via DGI integration
     fca_active: Mapped[bool | None] = mapped_column(default=None, nullable=True)

@@ -55,6 +55,7 @@ class TaxpayerCreate(BaseModel):
     raison_sociale: str
     address: str | None = None
     sector: str | None = None
+    sector_code: str = "DROIT_COMMUN"
     regime: str = "REEL"
     # Identification fiscale étendue (CGI Cameroun)
     tax_center: str | None = None
@@ -95,6 +96,7 @@ class AuditCaseQuickCreate(BaseModel):
     raison_sociale: str
     address: str | None = None
     sector: str | None = None
+    sector_code: str = "DROIT_COMMUN"
     regime: str = "REEL"
     # Extended taxpayer identification (CGI Cameroun)
     tax_center: str | None = None

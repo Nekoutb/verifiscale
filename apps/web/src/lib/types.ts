@@ -22,12 +22,27 @@ export interface Brigade {
   region: string | null;
 }
 
+/**
+ * Secteurs d'activité à régime fiscal spécifique (Tier A). Le `sector_code`
+ * pilotera le branchement sectoriel des contrôles (provisions COBAC/CIMA,
+ * redevances forêt/mines, IS pétrolier…). Tier B/C ajoutés plus tard.
+ */
+export const SECTORS = [
+  { code: 'DROIT_COMMUN',  fr: 'Droit commun (commerce / industrie / services)', en: 'General regime (trade / industry / services)' },
+  { code: 'PETROLE_AMONT', fr: 'Pétrole amont (exploration-production)',          en: 'Upstream petroleum (E&P)' },
+  { code: 'MINES',         fr: 'Mines',                                           en: 'Mining' },
+  { code: 'FORET_BOIS',    fr: 'Forêt-bois (exploitation forestière)',            en: 'Forestry & wood' },
+  { code: 'BANQUE',        fr: 'Banque / Établissement de crédit',                en: 'Banking / Credit institution' },
+  { code: 'ASSURANCES',    fr: 'Assurances',                                      en: 'Insurance' },
+] as const;
+
 export interface Taxpayer {
   id: string;
   niu: string;
   raison_sociale: string;
   address: string | null;
   sector: string | null;
+  sector_code: string;
   regime: 'REEL' | 'SIMPLIFIE' | 'LIBERATOIRE' | 'INCONNU';
   fca_active: boolean | null;
   tax_center?: string | null;

@@ -124,7 +124,8 @@ def quick_create_audit_case(
     if tp is None:
         tp = Taxpayer(
             niu=niu, raison_sociale=payload.raison_sociale,
-            address=payload.address, sector=payload.sector, regime=regime,
+            address=payload.address, sector=payload.sector,
+            sector_code=payload.sector_code or "DROIT_COMMUN", regime=regime,
             tax_center=payload.tax_center,
             legal_form=payload.legal_form,
             capital_social=payload.capital_social,
@@ -141,7 +142,7 @@ def quick_create_audit_case(
         if payload.raison_sociale and tp.raison_sociale != payload.raison_sociale:
             tp.raison_sociale = payload.raison_sociale
         for attr in (
-            "address", "sector", "tax_center", "legal_form", "capital_social",
+            "address", "sector", "sector_code", "tax_center", "legal_form", "capital_social",
             "activity_start_date", "rccm", "contact_name", "contact_phone", "contact_email",
         ):
             val = getattr(payload, attr)

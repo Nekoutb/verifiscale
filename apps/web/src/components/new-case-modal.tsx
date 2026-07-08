@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { api } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
-import { AUDIT_TYPE_LABELS, type AuditCase, type AuditType } from '@/lib/types';
+import { AUDIT_TYPE_LABELS, SECTORS, type AuditCase, type AuditType } from '@/lib/types';
 
 const AUDIT_TYPES: AuditType[] = ['VGC', 'VP', 'CSP', 'CI', 'CT', 'EF'];
 const REGIMES = ['REEL', 'SIMPLIFIE', 'LIBERATOIRE'] as const;
@@ -20,6 +20,7 @@ interface QuickCreatePayload {
   raison_sociale: string;
   address: string | null;
   sector: string | null;
+  sector_code: string;
   regime: string;
   tax_center: string | null;
   legal_form: string | null;
@@ -46,6 +47,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
   const [raisonSociale, setRaisonSociale] = useState('');
   const [address, setAddress] = useState('');
   const [sector, setSector] = useState('');
+  const [sectorCode, setSectorCode] = useState('DROIT_COMMUN');
   const [regime, setRegime] = useState<string>('REEL');
   const [taxCenter, setTaxCenter] = useState('');
   const [legalForm, setLegalForm] = useState('');
@@ -63,7 +65,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
   const [err, setErr] = useState<string | null>(null);
 
   const reset = () => {
-    setNiu(''); setRaisonSociale(''); setAddress(''); setSector('');
+    setNiu(''); setRaisonSociale(''); setAddress(''); setSector(''); setSectorCode('DROIT_COMMUN');
     setRegime('REEL'); setTaxCenter(''); setLegalForm(''); setCapitalSocial('');
     setActivityStartDate(''); setRccm(''); setContactName(''); setContactPhone('');
     setContactEmail(''); setAuditType('VGC'); setStartingYear(thisYear - 1);
@@ -92,6 +94,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
       raison_sociale: raisonSociale.trim(),
       address: address.trim() || null,
       sector: sector.trim() || null,
+      sector_code: sectorCode,
       regime,
       tax_center: taxCenter.trim() || null,
       legal_form: legalForm.trim() || null,
@@ -176,6 +179,19 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="BP 1234, Douala — Akwa"
                 />
+              </div>
+              <div>
+                <Label htmlFor="sectorCode">{t('newcase.sectorCode')}</Label>
+                <select
+                  id="sectorCode"
+                  value={sectorCode}
+                  onChange={(e) => setSectorCode(e.target.value)}
+                  className="flex h-9 w-full rounded-lg border border-[#A3A3A3] bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:border-black"
+                >
+                  {SECTORS.map((s) => (
+                    <option key={s.code} value={s.code}>{s.fr}</option>
+                  ))}
+                </select>
               </div>
               <div>
                 <Label htmlFor="sector">{t('newcase.sector')}</Label>
