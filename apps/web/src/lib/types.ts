@@ -113,7 +113,9 @@ export interface Dataset {
   kind: DatasetKind;
   original_filename: string;
   size_bytes: number;
-  status: 'UPLOADED' | 'PARSING' | 'PARSED' | 'PARSE_ERROR';
+  /** PENDING_MAPPING (Ingest-v2): stored but NOT ingested — the auditor must
+   *  confirm the column mapping before any line reaches the ledger tables. */
+  status: 'UPLOADED' | 'PENDING_MAPPING' | 'PARSING' | 'PARSED' | 'PARSE_ERROR';
   rows_count: number | null;
   parse_error: string | null;
   period_year: number | null;

@@ -50,6 +50,10 @@ class DatasetKind(str, enum.Enum):
 
 class DatasetStatus(str, enum.Enum):
     UPLOADED = "UPLOADED"
+    # Ingest-v2: the file is stored and a mapping has been proposed, but NOTHING
+    # has been ingested yet — the auditor must confirm (or correct) the column
+    # mapping first. Nothing enters the ledger tables until they approve.
+    PENDING_MAPPING = "PENDING_MAPPING"
     PARSING = "PARSING"
     PARSED = "PARSED"
     PARSE_ERROR = "PARSE_ERROR"

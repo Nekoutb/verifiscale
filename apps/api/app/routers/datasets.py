@@ -18,10 +18,18 @@ from app.parsers.bank_statement import parse_bank_statement_closing
 from app.parsers.fixed_assets_ai import parse_fixed_assets_ai as parse_fixed_assets
 from app.schemas import DatasetOut, DatasetPatch, TrialBalanceLineOut
 from app.security import get_current_user
-from app.storage import put_object
+from app.storage import put_object, get_object
+from app.services import ingest_preview
 
 
 router = APIRouter(prefix="/datasets", tags=["datasets"])
+
+# Ingest-v2: these kinds are NEVER auto-ingested. The auditor must confirm the
+# column mapping first (mandatory-field checklist + totals + balance verdict).
+_MAPPING_GATED_KINDS = {
+    DatasetKind.TRIAL_BALANCE,
+    DatasetKind.GENERAL_LEDGER,
+}
 
 
 _PARSEABLE_KINDS = {
@@ -73,6 +81,15 @@ async def upload_dataset(
     db.add(ds)
     db.commit()
     db.refresh(ds)
+
+    # Ingest-v2 — GL/TB stop here: stored, not ingested. The auditor confirms the
+    # column mapping via /mapping-preview -> /confirm-mapping before any line
+    # reaches the ledger tables.
+    if kind_enum in _MAPPING_GATED_KINDS:
+        ds.status = DatasetStatus.PENDING_MAPPING
+        db.commit()
+        db.refresh(ds)
+        return ds
 
     # Inline parse for small files; in production this is dispatched to Celery
     if kind_enum in _PARSEABLE_KINDS:
@@ -163,6 +180,101 @@ def _parse_and_persist(db: Session, ds: Dataset, data: bytes) -> None:
         ds.status = DatasetStatus.PARSE_ERROR
         ds.parse_error = str(e)[:2048]
         db.commit()
+
+
+@router.post("/{dataset_id}/mapping-preview")
+def mapping_preview(
+    dataset_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    _: Annotated[User, Depends(get_current_user)],
+    payload: dict | None = None,
+) -> dict:
+    """Propose (or re-evaluate) the column mapping for a GL/TB — WITHOUT ingesting.
+
+    Body is optional: `{"mapping": {...}}` re-previews live while the auditor
+    remaps a column in the UI. Returns the mandatory-field checklist, per-column
+    samples, column totals, the balance verdict, the rows that would be excluded
+    (with their balance impact) and a handful of rows rendered exactly as they
+    would be ingested.
+    """
+    ds = db.get(Dataset, dataset_id)
+    if not ds:
+        raise HTTPException(status_code=404, detail="Jeu de données introuvable")
+    if ds.kind not in _MAPPING_GATED_KINDS:
+        raise HTTPException(
+            status_code=400,
+            detail="Le mappage guidé ne s'applique qu'au grand livre et à la balance.",
+        )
+    try:
+        data = get_object(ds.storage_key)
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"Fichier illisible : {e}")
+
+    override = (payload or {}).get("mapping") or None
+    try:
+        return ingest_preview.build_preview(
+            data, ds.original_filename, ds.kind.value, override_mapping=override,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.post("/{dataset_id}/confirm-mapping", response_model=DatasetOut)
+def confirm_mapping(
+    dataset_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    _: Annotated[User, Depends(get_current_user)],
+    payload: dict = None,  # type: ignore[assignment]
+):
+    """Ingest a GL/TB using the auditor-approved mapping.
+
+    Body: `{"mapping": {...}, "acknowledge_unbalanced": bool}`.
+    An unbalanced import is permitted but only with an explicit acknowledgement.
+    Re-confirming replaces any previously ingested lines for this dataset.
+    """
+    ds = db.get(Dataset, dataset_id)
+    if not ds:
+        raise HTTPException(status_code=404, detail="Jeu de données introuvable")
+    if ds.kind not in _MAPPING_GATED_KINDS:
+        raise HTTPException(status_code=400, detail="Type non concerné par le mappage guidé.")
+
+    body = payload or {}
+    mapping = body.get("mapping")
+    if not isinstance(mapping, dict) or not mapping:
+        raise HTTPException(status_code=400, detail="Mappage manquant.")
+
+    try:
+        data = get_object(ds.storage_key)
+    except Exception as e:  # noqa: BLE001
+        raise HTTPException(status_code=500, detail=f"Fichier illisible : {e}")
+
+    # Idempotent: re-confirming wipes what a previous confirmation ingested.
+    if ds.kind == DatasetKind.TRIAL_BALANCE:
+        db.query(TrialBalanceLine).filter(TrialBalanceLine.dataset_id == ds.id).delete()
+    else:
+        old = db.query(JournalEntry).filter(JournalEntry.dataset_id == ds.id).all()
+        for e in old:
+            db.query(JournalEntryLine).filter(JournalEntryLine.entry_id == e.id).delete()
+        db.query(JournalEntry).filter(JournalEntry.dataset_id == ds.id).delete()
+    db.flush()
+
+    try:
+        ingest_preview.ingest_confirmed(
+            db, ds, data, mapping,
+            acknowledge_unbalanced=bool(body.get("acknowledge_unbalanced")),
+        )
+    except ValueError as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:  # noqa: BLE001
+        db.rollback()
+        ds.status = DatasetStatus.PARSE_ERROR
+        ds.parse_error = str(e)[:2048]
+        db.commit()
+        raise HTTPException(status_code=500, detail=f"Échec de l'ingestion : {e}")
+
+    db.refresh(ds)
+    return ds
 
 
 @router.get("/{dataset_id}", response_model=DatasetOut)

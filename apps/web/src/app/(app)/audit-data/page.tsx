@@ -4,11 +4,12 @@ import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Scale, BookOpen, FileDown, Building2, Banknote, FileText, Receipt, Users,
-  AlertCircle, CheckCircle2, Loader2, Upload, Boxes,
+  AlertCircle, CheckCircle2, Loader2, Upload, Boxes, ScanLine,
 } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { MappingConfirmModal } from '@/components/mapping-confirm-modal';
 import { api, apiUploadForm } from '@/lib/api';
 import { useApp, caseYearRange } from '@/lib/store';
 import { useT, type MessageKey } from '@/lib/i18n';
@@ -233,10 +234,21 @@ function YearGrid({
   uploading: boolean;
 }) {
   const t = useT();
+  // Ingest-v2 — the GL/TB awaiting the auditor's mapping confirmation.
+  const [mapDs, setMapDs] = useState<Dataset | null>(null);
   if (years.length === 0) {
     return <div className="text-xs text-slate-400 italic">{t('data.setPeriodToActivate')}</div>;
   }
   return (
+    <>
+    {mapDs && (
+      <MappingConfirmModal
+        datasetId={mapDs.id}
+        filename={mapDs.original_filename}
+        open={!!mapDs}
+        onClose={() => setMapDs(null)}
+      />
+    )}
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
       {years.map((year) => {
         const ds = findDs(kind, year, bankCode);
@@ -245,6 +257,7 @@ function YearGrid({
           <div key={year} className={cn(
             'border rounded-lg p-2.5 text-xs',
             ds?.status === 'PARSED' ? 'border-neutral-300 bg-white'
+            : ds?.status === 'PENDING_MAPPING' ? 'border-2 border-indigo-400 bg-indigo-50/50'
             : ds?.status === 'PARSE_ERROR' ? 'border-2 border-black bg-white'
             : ds?.status === 'PARSING' ? 'border-black bg-neutral-100'
             : ds ? 'border-slate-200 bg-slate-50'
@@ -253,6 +266,7 @@ function YearGrid({
             <div className="flex items-center justify-between mb-1.5">
               <span className="font-semibold text-slate-800">{t('app.year')} {year}</span>
               {ds?.status === 'PARSED' && <CheckCircle2 className="w-3.5 h-3.5 text-neutral-700" />}
+              {ds?.status === 'PENDING_MAPPING' && <ScanLine className="w-3.5 h-3.5 text-indigo-600" />}
               {ds?.status === 'PARSE_ERROR' && <AlertCircle className="w-3.5 h-3.5 text-black" />}
               {ds?.status === 'PARSING' && <Loader2 className="w-3.5 h-3.5 text-black animate-spin" />}
             </div>
@@ -266,12 +280,23 @@ function YearGrid({
                     ds.status === 'PARSED' ? 'ok'
                     : ds.status === 'PARSE_ERROR' ? 'err'
                     : ds.status === 'PARSING' ? 'info'
+                    : ds.status === 'PENDING_MAPPING' ? 'warn'
                     : 'neutral'
-                  }>{ds.status}</Badge>
+                  }>{ds.status === 'PENDING_MAPPING' ? 'À CONFIRMER' : ds.status}</Badge>
                   {ds.rows_count != null && (
                     <span className="text-[10px] text-slate-500">{ds.rows_count} {t('data.rows')}</span>
                   )}
                 </div>
+                {ds.status === 'PENDING_MAPPING' && (
+                  <button
+                    type="button"
+                    onClick={() => setMapDs(ds)}
+                    className="mt-1 w-full inline-flex items-center justify-center gap-1 rounded-md bg-indigo-600 px-2 py-1.5 text-[11px] font-semibold text-white hover:bg-indigo-700 transition"
+                  >
+                    <ScanLine className="w-3 h-3" />
+                    Vérifier le mappage
+                  </button>
+                )}
                 <div className="text-[10px] text-slate-400">{formatDate(ds.uploaded_at)}</div>
                 {ds.parse_error && (
                   <div className="text-[10px] text-black font-bold line-clamp-2">{ds.parse_error}</div>
@@ -305,6 +330,7 @@ function YearGrid({
         );
       })}
     </div>
+    </>
   );
 }
 
