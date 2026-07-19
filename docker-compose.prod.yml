@@ -63,6 +63,15 @@ services:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     expose:
       - "3000"
+    # --- hardening (post-incident 2026-07): a miner previously executed from
+    # /tmp inside this container. Block that class of attack outright. ---
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      # writable but NON-EXECUTABLE /tmp: a dropped binary cannot be run
+      - /tmp:rw,noexec,nosuid,size=128m
 
   nginx:
     image: nginx:1.27-alpine
