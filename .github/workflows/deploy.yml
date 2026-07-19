@@ -23,10 +23,12 @@ jobs:
           username: root
           key: ${{ secrets.VULTR_SSH_KEY }}
           port: 22
-          command_timeout: 10m
+          command_timeout: 20m
           script: |
             set -euo pipefail
             cd /srv/cmimpot
+
+            DC="docker compose -f docker-compose.prod.yml --env-file .env.prod"
 
             BEFORE=$(git rev-parse HEAD)
             echo "==> Before pull: $BEFORE"
@@ -37,8 +39,49 @@ jobs:
             AFTER=$(git rev-parse HEAD)
             echo "==> After pull:  $AFTER"
 
+            # --- Cold-start detection ------------------------------------
+            # The old "smart restart" path assumed the stack was already
+            # running (it exec'd migrations into a live api container). After
+            # an outage/incident the stack can be fully down, so first check
+            # whether every expected service is up; if not, do a full boot.
+            RUNNING=$($DC ps --services --filter status=running 2>/dev/null | sort | tr '\n' ' ' || true)
+            echo "==> Running services: ${RUNNING:-<none>}"
+            COLD_START=0
+            for s in api nginx postgres web; do
+              case " $RUNNING " in *" $s "*) : ;; *) COLD_START=1 ;; esac
+            done
+
+            run_migrations() {
+              echo "==> Waiting for Postgres..."
+              for i in $(seq 1 30); do
+                if $DC exec -T postgres pg_isready >/dev/null 2>&1; then echo "  postgres ready"; break; fi
+                sleep 2
+              done
+              echo "==> Applying migrations (alembic upgrade head)..."
+              MIGRATED=0
+              for i in $(seq 1 20); do
+                if $DC exec -T api alembic upgrade head; then MIGRATED=1; echo "  migrations applied"; break; fi
+                echo "  api not ready for migrations (attempt $i)"; sleep 3
+              done
+              if [ "$MIGRATED" = "0" ]; then echo "!! migrations FAILED after 20 attempts"; $DC ps; exit 1; fi
+            }
+
+            if [ "$COLD_START" = "1" ]; then
+              echo "=================================================================="
+              echo "==> COLD START — stack not fully up: full build + up + migrate"
+              echo "=================================================================="
+              sync; echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+              $DC build
+              $DC up -d
+              run_migrations
+              echo "==> Final container status:"
+              $DC ps
+              echo "==> Cold-start deploy complete."
+              exit 0
+            fi
+
             if [ "$BEFORE" = "$AFTER" ]; then
-              echo "==> Already up to date — no restart needed."
+              echo "==> Already up to date and stack healthy — nothing to do."
               exit 0
             fi
 
@@ -56,38 +99,28 @@ jobs:
 
             ACTED=0
 
-            if [ -n "$MIGRATION_CHANGED" ]; then
-              echo "==> Migrations changed — running alembic upgrade head"
-              docker compose -f docker-compose.prod.yml --env-file .env.prod \
-                exec -T api alembic upgrade head
+            if [ -n "$API_CHANGED" ] || [ -n "$MIGRATION_CHANGED" ] || [ -n "$COMPOSE_CHANGED" ]; then
+              echo "==> Rebuilding + restarting API container..."
+              $DC up -d --build api
               ACTED=1
             fi
 
-            if [ -n "$API_CHANGED" ] || [ -n "$MIGRATION_CHANGED" ] || [ -n "$COMPOSE_CHANGED" ]; then
-              echo "==> Restarting API container..."
-              docker compose -f docker-compose.prod.yml --env-file .env.prod \
-                up -d --build api
+            if [ -n "$MIGRATION_CHANGED" ]; then
+              run_migrations
+              ACTED=1
+            fi
+
+            if [ -n "$WEB_CHANGED" ]; then
+              echo "==> WEB (Next.js) changed — rebuilding web image..."
+              sync; echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+              $DC up -d --build web
               ACTED=1
             fi
 
             if [ -n "$NGINX_CHANGED" ]; then
               echo "==> Nginx config changed — reloading inner nginx..."
-              docker compose -f docker-compose.prod.yml --env-file .env.prod \
-                exec -T nginx nginx -t
-              docker compose -f docker-compose.prod.yml --env-file .env.prod \
-                exec -T nginx nginx -s reload
-              ACTED=1
-            fi
-
-            if [ -n "$WEB_CHANGED" ]; then
-              echo "=================================================================="
-              echo "==> ⚠️  WEB (Next.js) changed — NOT auto-rebuilt (1 GB RAM safety)"
-              echo "==> Run this MANUALLY on the server when ready:"
-              echo "    docker compose -f docker-compose.prod.yml stop web"
-              echo "    echo 3 | tee /proc/sys/vm/drop_caches"
-              echo "    docker compose -f docker-compose.prod.yml \\"
-              echo "      --env-file .env.prod up -d --build web"
-              echo "=================================================================="
+              $DC exec -T nginx nginx -t
+              $DC exec -T nginx nginx -s reload
               ACTED=1
             fi
 
@@ -96,5 +129,5 @@ jobs:
             fi
 
             echo "==> Final container status:"
-            docker compose -f docker-compose.prod.yml ps
+            $DC ps
             echo "==> Deploy complete."
