@@ -236,6 +236,7 @@ def recompute_year_depreciation(
 @dataclass
 class AmortissementRow:
     reference: str
+    account_number: str
     name: str
     acquisition_date: date | None
     disposal_date: date | None
@@ -258,6 +259,7 @@ class AmortissementRow:
     def to_dict(self) -> dict[str, Any]:
         return {
             "reference": self.reference,
+            "account_number": self.account_number,
             "name": self.name,
             "acquisition_date": self.acquisition_date.isoformat() if self.acquisition_date else None,
             "disposal_date": self.disposal_date.isoformat() if self.disposal_date else None,
@@ -323,6 +325,7 @@ def analyze_assets(
 
         rows.append(AmortissementRow(
             reference=a.get("reference", "") or "",
+            account_number=a.get("account_number", "") or "",
             name=a.get("name", "") or "",
             acquisition_date=a.get("acquisition_date"),
             disposal_date=a.get("disposal_date"),

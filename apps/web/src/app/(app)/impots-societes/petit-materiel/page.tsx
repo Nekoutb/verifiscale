@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, Building2, Info, FileWarning } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ControlHeader } from '@/components/control-header';
 import { api } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -124,16 +125,29 @@ export default function PetitMaterielPage() {
 
       {data?.summary && (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <KPI label="Lignes > 500K" value={data.summary.line_count} />
-            <KPI label="Outillage main (100%)" value={data.summary.hand_tool_count}
-                 tone={data.summary.hand_tool_count ? 'warn' : 'neutral'} />
-            <KPI label="Autre matériel" value={data.summary.other_count}
-                 tone={data.summary.other_count ? 'err' : 'ok'} />
-            <KPI label="Réint. différentiel" value={formatXAF(data.summary.total_reint_differential_xaf)} tone="warn" />
-            <KPI label="Réint. retenue" value={formatXAF(data.summary.total_reintegration_selected_xaf)}
-                 tone={data.summary.total_reintegration_selected_xaf > 0 ? 'err' : 'ok'} />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.summary.total_amount_xaf - data.summary.total_reintegration_selected_xaf}
+            actual={data.summary.total_amount_xaf}
+            variance={data.summary.total_reintegration_selected_xaf}
+            exposure={data.summary.total_reintegration_selected_xaf}
+            sublabels={{
+              expected: 'Charges déductibles après contrôle',
+              actual: `Σ charges > ${formatXAF(data.summary.threshold_xaf)} testées`,
+              variance: 'À immobiliser (non déductible en charge)',
+              exposure: 'Réintégration retenue',
+            }}
+            stats={[
+              { label: 'Lignes > 500K', value: data.summary.line_count },
+              { label: 'Outillage main (100%)', value: data.summary.hand_tool_count,
+                tone: data.summary.hand_tool_count ? 'warn' : 'neutral' },
+              { label: 'Autre matériel', value: data.summary.other_count,
+                tone: data.summary.other_count ? 'err' : 'ok' },
+              { label: 'Exclues', value: data.summary.excluded_count },
+              { label: 'Réint. différentiel', value: formatXAF(data.summary.total_reint_differential_xaf),
+                tone: 'warn' },
+            ]}
+          />
 
           <div className="text-[11px] text-slate-500">
             Source : <span className="font-mono">{data.source_filename}</span> ·
@@ -273,16 +287,3 @@ export default function PetitMaterielPage() {
   );
 }
 
-function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls =
-    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
-    : tone === 'warn' ? 'text-black font-semibold'
-    : tone === 'ok'   ? 'text-neutral-700 font-medium'
-    : 'text-black font-bold';
-  return (
-    <Card><CardContent>
-      <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
-      <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
-    </CardContent></Card>
-  );
-}

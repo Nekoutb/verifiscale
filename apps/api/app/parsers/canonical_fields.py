@@ -180,6 +180,84 @@ TB_FIELDS: tuple[CanonicalField, ...] = (
 )
 
 
+# ── FIXED ASSET REGISTER ────────────────────────────────────────────────────
+# Key columns agreed with the auditor. Truly blocking: description + gross
+# value. The other "key" fields are displayed as required in the checklist but
+# an absence only warns — real registers routinely lack an explicit GL account
+# or rate column (the rate is then implied from dotation ÷ valeur brute).
+# Opening/closing pairs are tolerated as a single column (same rule as the TB).
+
+FAR_FIELDS: tuple[CanonicalField, ...] = (
+    CanonicalField(
+        "account_number", "N° de compte (immobilisation)", "Account number", False, Shape.SINGLE,
+        hints=("compte", "ncompte", "numerocompte", "comptegeneral", "codecompte",
+               "account", "accountcode", "accountnumber", "glaccount"),
+    ),
+    CanonicalField(
+        "reference", "N° d'immobilisation", "Fixed asset number", False, Shape.SINGLE,
+        hints=("reference", "ref", "nimmobilisation", "immobilisation", "code",
+               "assetnumber", "assetcode", "assetid", "tag", "fiche"),
+    ),
+    CanonicalField(
+        "name", "Désignation de l'immobilisation", "Fixed asset description", True, Shape.SINGLE,
+        hints=("designation", "libelle", "description", "nature", "intitule",
+               "assetname", "assetdescription", "immobilisation"),
+    ),
+    CanonicalField(
+        "acquisition_date", "Date d'acquisition", "Acquisition date", False, Shape.SINGLE,
+        hints=("dateacquisition", "dacquisition", "acquisition", "datemiseenservice",
+               "miseenservice", "dateentree", "purchasedate", "acquisitiondate"),
+    ),
+    CanonicalField(
+        "disposal_date", "Date de cession / sortie", "Disposal date", False, Shape.SINGLE,
+        hints=("datecession", "cession", "datesortie", "sortie", "rebut",
+               "disposaldate", "disposal", "retirement"),
+    ),
+    CanonicalField(
+        "gross_value", "Valeur brute (base amortissable)", "Gross book value", True, Shape.PAIR,
+        members=("gross_value", "opening_gross_value", "closing_gross_value"),
+        hints=("valeurbrute", "valeurorigine", "valeuracquisition", "vab", "vb",
+               "brute", "cout", "cost", "grossvalue", "grossbookvalue", "prixacquisition"),
+    ),
+    CanonicalField(
+        "accumulated_depreciation", "Amortissements cumulés", "Accumulated depreciation", False, Shape.PAIR,
+        members=("accumulated_depreciation", "opening_accumulated_depreciation",
+                 "closing_accumulated_depreciation"),
+        hints=("amortissementscumules", "cumulamortissement", "cumulamort", "amortcumules",
+               "accumulateddepreciation", "accumdep", "cumul"),
+    ),
+    CanonicalField(
+        "year_depreciation", "Dotation de l'exercice", "Depreciation for the year", False, Shape.SINGLE,
+        hints=("dotation", "dotationexercice", "dotationannuelle", "amortissementexercice",
+               "depreciationfortheyear", "yeardepreciation", "annualdepreciation", "charge"),
+    ),
+    CanonicalField(
+        "depreciation_on_disposals", "Amort. repris sur cessions", "Depreciation written off on disposals",
+        False, Shape.SINGLE,
+        hints=("reprisecession", "amortissementcession", "reprises", "writtenoff",
+               "depreciationondisposal", "sortieamortissement"),
+    ),
+    CanonicalField(
+        "nbv", "Valeur nette comptable", "Net book value", False, Shape.PAIR,
+        members=("nbv", "opening_nbv", "closing_nbv"),
+        hints=("vnc", "valeurnette", "valeurnettecomptable", "netbookvalue", "nbv", "netvalue"),
+    ),
+    CanonicalField(
+        "rate", "Taux d'amortissement", "Depreciation rate", False, Shape.SINGLE,
+        hints=("taux", "tauxamortissement", "rate", "depreciationrate", "duree",
+               "dureevie", "vieutile", "usefullife", "periodes", "nbmois"),
+    ),
+)
+
+#: FAR fields displayed as REQUIRED in the checklist. Missing ⇒ warning, not a
+#: block (except the truly mandatory ones above). Keep in sync with the
+#: auditor's key-column list.
+FAR_KEY_FIELDS: frozenset[str] = frozenset({
+    "account_number", "reference", "name", "gross_value",
+    "accumulated_depreciation", "year_depreciation", "rate",
+})
+
+
 # ── Rows that are never transactions / never accounts ───────────────────────
 # Normalised label prefixes marking a subtotal, an opening balance, or a
 # grand total. These rows are EXCLUDED from ingestion but surfaced to the
@@ -241,9 +319,13 @@ def evaluate(mapping: dict, kind: str) -> tuple[list[FieldStatus], list[str]]:
     """Return (per-field status, list of blocking errors).
 
     `mapping` maps canonical keys (or PAIR member keys) -> column index.
-    `kind` is "GL" or "TB". Only mandatory fields can produce blocking errors.
+    `kind` is "GL", "TB" or "FAR". Only mandatory fields can produce blocking
+    errors. For the FAR, the auditor's key columns are DISPLAYED as required
+    but a gap only warns (detail explains it) — except name + gross value,
+    which truly block: without them nothing meaningful can be computed.
     """
-    fields = GL_FIELDS if kind.upper() == "GL" else TB_FIELDS
+    k = kind.upper()
+    fields = GL_FIELDS if k == "GL" else TB_FIELDS if k == "TB" else FAR_FIELDS
     statuses: list[FieldStatus] = []
     errors: list[str] = []
 
@@ -255,7 +337,17 @@ def evaluate(mapping: dict, kind: str) -> tuple[list[FieldStatus], list[str]]:
             ok = True
             shape_used = "EXTRACTED"
             detail = f"Extrait depuis la colonne {mapping[f'{f.key}__extract_from']}"
-        statuses.append(FieldStatus(f.key, f.label_fr, f.mandatory, ok, shape_used, detail))
+
+        if k == "FAR":
+            display_required = f.mandatory or f.key in FAR_KEY_FIELDS
+            if not ok and display_required and not f.mandatory:
+                detail = ("Colonne clé absente du fichier — l'analyse reste possible "
+                          "mais sera moins précise"
+                          + (" (taux déduit de dotation ÷ valeur brute)" if f.key == "rate" else ""))
+            statuses.append(FieldStatus(f.key, f.label_fr, display_required, ok, shape_used, detail))
+        else:
+            statuses.append(FieldStatus(f.key, f.label_fr, f.mandatory, ok, shape_used, detail))
+
         if f.mandatory and not ok:
             errors.append(f"Champ obligatoire non mappé : « {f.label_fr} »")
 

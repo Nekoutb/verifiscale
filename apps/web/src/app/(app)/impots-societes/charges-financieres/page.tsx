@@ -8,6 +8,7 @@ import {
   ShieldCheck, ShieldX, ShieldAlert, RefreshCw, Landmark, MapPin, Globe,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ControlHeader } from '@/components/control-header';
 import { api, apiUploadForm, getToken } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -132,17 +133,28 @@ export default function ChargesFinancieresPage() {
         <>
           <BeacBanner caseId={currentCase.id} beac={data.beac} onChange={() => { void refetch(); }} />
 
-          {/* KPIs */}
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-            <KPI label="Plafond taux (BEAC+2)" value={`${data.summary.beac_cap_pct}%`} />
-            <KPI label="Σ intérêts cl.67 (GL)" value={formatXAF(data.summary.gl_interest_67_xaf)} />
-            <KPI label="Intérêts associés" value={formatXAF(data.summary.gl_interest_assoc_xaf)} />
-            <KPI label="Associés prêteurs" value={data.summary.associe_count} />
-            <KPI label="Non déductibles" value={data.summary.non_eligible_count}
-                 tone={data.summary.non_eligible_count > 0 ? 'err' : 'ok'} />
-            <KPI label="Réintégration estimée" value={formatXAF(data.summary.total_reintegration_xaf)}
-                 tone={data.summary.total_reintegration_xaf > 0 ? 'err' : 'ok'} />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.summary.gl_interest_assoc_xaf - data.summary.total_reintegration_xaf}
+            actual={data.summary.gl_interest_assoc_xaf}
+            variance={data.summary.total_reintegration_xaf}
+            exposure={data.summary.total_reintegration_xaf}
+            sublabels={{
+              expected: 'Intérêts déductibles (plafonds Art. 7 B)',
+              actual: 'Intérêts associés comptabilisés',
+              variance: 'Intérêts non déductibles',
+              exposure: 'Réintégration estimée',
+            }}
+            stats={[
+              { label: 'Plafond taux (BEAC+2)', value: `${data.summary.beac_cap_pct}%` },
+              { label: 'Σ intérêts cl.67 (GL)', value: formatXAF(data.summary.gl_interest_67_xaf) },
+              { label: 'Associés prêteurs', value: data.summary.associe_count },
+              { label: 'Non déductibles', value: data.summary.non_eligible_count,
+                tone: data.summary.non_eligible_count > 0 ? 'err' : 'ok' },
+              { label: `IRCM (${data.summary.ircm_rate_pct}%) base`, value: formatXAF(data.summary.ircm_base_xaf),
+                tone: data.summary.ircm_base_xaf > 0 ? 'warn' : 'neutral' },
+            ]}
+          />
 
           <ParamsCard caseId={currentCase.id} data={data} onSaved={() => { void refetch(); }} />
 
@@ -591,16 +603,3 @@ function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' 
   );
 }
 
-function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls =
-    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
-    : tone === 'warn' ? 'text-black font-semibold'
-    : tone === 'ok'   ? 'text-neutral-700 font-medium'
-    : 'text-black font-bold';
-  return (
-    <Card><CardContent>
-      <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
-      <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
-    </CardContent></Card>
-  );
-}

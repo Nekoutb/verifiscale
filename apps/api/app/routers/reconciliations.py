@@ -31,7 +31,7 @@ from app.controls.rec_items import categorize_variance
 from app.parsers.aging import sum_aging_total, sum_inventory_value
 from app.parsers.aging_ai import sum_aging_total_ai, sum_inventory_value_ai
 from app.parsers.bank_statement import parse_bank_statement_closing
-from app.parsers.fixed_assets_ai import parse_fixed_assets_ai as parse_fixed_assets
+from app.services.far_assets import load_far_assets
 from app.security import get_current_user
 from app.storage import get_object
 from sqlalchemy.orm import joinedload
@@ -136,7 +136,7 @@ def _auto_total_far_aggregates(ds: Dataset | None) -> tuple[Decimal, Decimal, De
         data = get_object(ds.storage_key)
     except FileNotFoundError:
         return None
-    assets = parse_fixed_assets(data, ds.original_filename)
+    assets = load_far_assets(ds, data)
     if not assets:
         return None
     g = sum((a.get("gross_value_xaf") or Decimal("0")) for a in assets)

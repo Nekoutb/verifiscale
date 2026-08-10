@@ -158,6 +158,9 @@ class DatasetOut(BaseModel):
     # Auto-detection report — what columns the AI parser identified, used by
     # the /audit-data page to show a green check-list per uploaded file.
     column_mapping: dict | None = None
+    # Control totals — file rows/cols vs read rows/cols (+ excluded/structural)
+    # proving nothing was silently dropped at ingestion.
+    control_totals: dict | None = None
     uploaded_at: datetime
     parsed_at: datetime | None
 

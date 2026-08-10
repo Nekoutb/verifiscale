@@ -290,7 +290,7 @@ function VendorCard({ v, isActive, onToggle }: { v: VendorRow; isActive: boolean
             <span>{v.total_invoices} {t('inv.totalInvoices').toLowerCase()}</span>
             <span className="text-neutral-700">{v.compliant_invoices} {t('inv.compliant').toLowerCase()}</span>
             {v.failed_invoices > 0 && (
-              <span className="text-black font-bold underline decoration-2">
+              <span className="text-rose-700 font-bold">
                 {v.failed_invoices} {t('inv.failed').toLowerCase()} ({failureRate}%)
               </span>
             )}

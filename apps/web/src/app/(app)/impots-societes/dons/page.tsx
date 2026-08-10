@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ControlHeader } from '@/components/control-header';
 import { api, apiUploadForm, getToken } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -253,23 +254,28 @@ export default function DonsLiberalitesPage() {
 
       {data?.summary && (
         <>
-          {/* KPIs */}
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-            <KPI label="Lignes 658X / 6713 / 838X" value={data.summary.line_count} />
-            <KPI label="Engagé total"
-                 value={formatXAF(data.summary.total_engage_xaf)} />
-            <KPI label="Plafond légal (5‰ CA HT)"
-                 value={formatXAF(data.summary.plafond_xaf)} tone="neutral" />
-            <KPI label="Non déductible"
-                 value={formatXAF(data.summary.total_non_eligible_xaf)}
-                 tone={data.summary.total_non_eligible_xaf > 0 ? 'err' : 'ok'} />
-            <KPI label="À réinstruire"
-                 value={formatXAF(data.summary.total_a_reinstruire_xaf)}
-                 tone={data.summary.total_a_reinstruire_xaf > 0 ? 'warn' : 'ok'} />
-            <KPI label="Réintégration estimée"
-                 value={formatXAF(data.summary.reintegration_xaf)}
-                 tone={data.summary.reintegration_xaf > 0 ? 'err' : 'ok'} />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.summary.plafond_xaf}
+            actual={data.summary.total_engage_xaf}
+            variance={data.summary.excedent_plafond_xaf}
+            exposure={data.summary.reintegration_xaf}
+            sublabels={{
+              expected: 'Plafond légal (5‰ CA HT)',
+              actual: 'Dons & libéralités engagés',
+              variance: 'Excédent plafond',
+              exposure: 'Réintégration estimée',
+            }}
+            stats={[
+              { label: 'Lignes 658X / 6713 / 838X', value: data.summary.line_count },
+              { label: 'Bénéficiaires', value: data.summary.beneficiary_count },
+              { label: 'Non déductible', value: formatXAF(data.summary.total_non_eligible_xaf),
+                tone: data.summary.total_non_eligible_xaf > 0 ? 'err' : 'ok' },
+              { label: 'À réinstruire', value: formatXAF(data.summary.total_a_reinstruire_xaf),
+                tone: data.summary.total_a_reinstruire_xaf > 0 ? 'warn' : 'ok' },
+              { label: 'Pièces uploadées', value: data.summary.evidence_uploaded_count },
+            ]}
+          />
 
           {/* Plafond detail strip */}
           <Card>
@@ -286,7 +292,7 @@ export default function DonsLiberalitesPage() {
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Excédent plafond</div>
-                  <div className="font-mono tabular-nums text-base font-extrabold text-black border-b-2 border-black inline-block">{formatXAF(data.summary.excedent_plafond_xaf)}</div>
+                  <div className="font-mono tabular-nums text-base font-extrabold text-rose-700">{formatXAF(data.summary.excedent_plafond_xaf)}</div>
                 </div>
                 <div>
                   <div className="text-[10px] uppercase tracking-wider text-slate-500">Pièces justificatives uploadées</div>
@@ -758,18 +764,3 @@ function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' 
   );
 }
 
-function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls =
-    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
-    : tone === 'warn' ? 'text-black font-semibold'
-    : tone === 'ok'   ? 'text-neutral-700 font-medium'
-    : 'text-black font-bold';
-  return (
-    <Card>
-      <CardContent>
-        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
-      </CardContent>
-    </Card>
-  );
-}

@@ -15,6 +15,7 @@ from app.models import (
 from app.parsers import general_ledger_ai as gl_parser, trial_balance_ai as tb_parser
 from app.parsers.aging_ai import sum_aging_total_ai, sum_inventory_value_ai
 from app.parsers.bank_statement import parse_bank_statement_closing
+from app.parsers.file_dims import file_dims
 from app.parsers.fixed_assets_ai import parse_fixed_assets_ai as parse_fixed_assets
 from app.schemas import DatasetOut, DatasetPatch, TrialBalanceLineOut
 from app.security import get_current_user
@@ -29,6 +30,7 @@ router = APIRouter(prefix="/datasets", tags=["datasets"])
 _MAPPING_GATED_KINDS = {
     DatasetKind.TRIAL_BALANCE,
     DatasetKind.GENERAL_LEDGER,
+    DatasetKind.FIXED_ASSETS_REGISTER,
 }
 
 
@@ -87,6 +89,17 @@ async def upload_dataset(
     # reaches the ledger tables.
     if kind_enum in _MAPPING_GATED_KINDS:
         ds.status = DatasetStatus.PENDING_MAPPING
+        # Control totals part 1: what the FILE contains. read_* stays null
+        # until the auditor confirms the mapping and ingestion runs.
+        dims = file_dims(data, ds.original_filename)
+        if dims:
+            ds.control_totals = {
+                "file_rows": dims["rows"], "file_cols": dims["cols"],
+                "sheets": dims["sheets"],
+                "read_rows": None, "read_cols": None,
+                "excluded_rows": None, "structural_rows": None,
+                "complete": None,
+            }
         db.commit()
         db.refresh(ds)
         return ds
@@ -171,6 +184,26 @@ def _parse_and_persist(db: Session, ds: Dataset, data: bytes) -> None:
 
         ds.column_mapping = mapping
         ds.rows_count = len(rows)
+
+        # Control totals: file dims vs what the parser actually read. For
+        # AI-extracted kinds (aging/inventory totals, bank closing) `rows` is a
+        # placeholder, so only claim read counts where they are meaningful.
+        dims = file_dims(data, ds.original_filename)
+        if dims:
+            read_rows = len(rows)
+            meaningful = ds.kind == DatasetKind.FIXED_ASSETS_REGISTER
+            ds.control_totals = {
+                "file_rows": dims["rows"], "file_cols": dims["cols"],
+                "sheets": dims["sheets"],
+                "read_rows": read_rows if meaningful else None,
+                "read_cols": None,
+                "excluded_rows": None, "structural_rows": None,
+                # FAR: every file row is either a parsed asset or a
+                # header/total/blank line — flag incomplete only when the
+                # parser returned nothing from a non-empty file.
+                "complete": (read_rows > 0 or dims["rows"] == 0) if meaningful else None,
+            }
+
         ds.status = DatasetStatus.PARSED
         from sqlalchemy.sql import func
         ds.parsed_at = func.now()
@@ -203,7 +236,8 @@ def mapping_preview(
     if ds.kind not in _MAPPING_GATED_KINDS:
         raise HTTPException(
             status_code=400,
-            detail="Le mappage guidé ne s'applique qu'au grand livre et à la balance.",
+            detail=("Le mappage guidé ne s'applique qu'au grand livre, à la "
+                    "balance et au registre des immobilisations."),
         )
     try:
         data = get_object(ds.storage_key)
@@ -249,7 +283,9 @@ def confirm_mapping(
         raise HTTPException(status_code=500, detail=f"Fichier illisible : {e}")
 
     # Idempotent: re-confirming wipes what a previous confirmation ingested.
-    if ds.kind == DatasetKind.TRIAL_BALANCE:
+    if ds.kind == DatasetKind.FIXED_ASSETS_REGISTER:
+        pass  # no ledger table — the confirmed mapping itself is the ingestion
+    elif ds.kind == DatasetKind.TRIAL_BALANCE:
         db.query(TrialBalanceLine).filter(TrialBalanceLine.dataset_id == ds.id).delete()
     else:
         old = db.query(JournalEntry).filter(JournalEntry.dataset_id == ds.id).all()

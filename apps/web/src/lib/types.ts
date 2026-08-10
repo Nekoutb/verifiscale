@@ -122,6 +122,14 @@ export interface Dataset {
   bank_account_code: string | null;
   summary_amount: number | null;
   column_mapping: DatasetColumnMapping | null;
+  /** Control totals: file rows/cols vs read rows/cols — proves nothing was
+   *  silently dropped. read_* null until ingestion (PENDING_MAPPING). */
+  control_totals: {
+    file_rows: number; file_cols: number; sheets?: number | null;
+    read_rows: number | null; read_cols: number | null;
+    excluded_rows: number | null; structural_rows: number | null;
+    complete: boolean | null;
+  } | null;
   uploaded_at: string;
   parsed_at: string | null;
 }

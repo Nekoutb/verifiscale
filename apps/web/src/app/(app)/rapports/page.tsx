@@ -125,7 +125,7 @@ function FindingRow({ f }: { f: ControlFinding }) {
         {f.estimated_impact_xaf ? (
           <div className="text-right text-sm flex-shrink-0">
             <div className="text-[10px] text-slate-500 uppercase">Impact</div>
-            <div className="font-bold text-black underline decoration-2 underline-offset-4">{formatXAF(f.estimated_impact_xaf)} FCFA</div>
+            <div className="font-bold text-rose-700">{formatXAF(f.estimated_impact_xaf)} FCFA</div>
           </div>
         ) : null}
       </div>
@@ -134,7 +134,7 @@ function FindingRow({ f }: { f: ControlFinding }) {
 }
 
 function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-black font-extrabold underline decoration-2 underline-offset-4' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-rose-700 font-extrabold' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
   return (
     <Card>
       <CardContent>

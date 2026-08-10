@@ -129,7 +129,7 @@ export function ReintegrationTable({
                     'px-3 py-3',
                     alignClass(c.align),
                     (c.kind === 'xaf' || c.kind === 'pct') && 'font-mono tabular-nums',
-                    c.reinteg && 'text-black underline decoration-2 underline-offset-2',
+                    c.reinteg && 'text-rose-700',
                   )}
                   style={c.kind === 'xaf' || c.kind === 'pct' ? { fontFeatureSettings: '"tnum"' } : undefined}
                 >

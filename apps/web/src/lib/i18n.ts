@@ -114,7 +114,14 @@ const MESSAGES = {
   'amort.kpiRecomputedDep':     { fr: 'Σ Dotation fiscale',                       en: 'Σ Recomputed depreciation' },
   'amort.kpiVariance':          { fr: 'Σ Écart',                                     en: 'Σ Variance' },
   'amort.source':               { fr: 'Source',                                      en: 'Source' },
+  'amort.col.accountNumber':    { fr: 'N° de compte',                                en: 'Account number' },
   'amort.col.reference':        { fr: 'Réf.',                                        en: 'Ref.' },
+
+  // ── Harmonized control header (same 4 boxes on every audited-aspect page) ──
+  'ctl.expected':               { fr: 'Attendu',                                     en: 'Expected' },
+  'ctl.actual':                 { fr: 'Réel',                                        en: 'Actual' },
+  'ctl.variance':               { fr: 'Écart',                                       en: 'Variance' },
+  'ctl.exposure':               { fr: 'Exposition au risque',                        en: 'Risk exposure' },
   'amort.col.acqDate':          { fr: "Date d'acquisition",                          en: 'Acquisition date' },
   'amort.col.dispDate':         { fr: 'Date de cession',                             en: 'Disposal date' },
   'amort.col.name':             { fr: 'Désignation (registre)',                      en: 'Name (register)' },
@@ -194,7 +201,7 @@ const MESSAGES = {
   'auditee.selectPlaceholder':  { fr: '— Sélectionner un contribuable —',           en: '— Select an auditee —' },
   'auditee.niuLabel':           { fr: 'NIU',                                        en: 'TIN' },
   'auditee.controlNature':      { fr: 'Nature du contrôle',                         en: 'Type of audit' },
-  'auditee.startYear':          { fr: 'Année début',                                en: 'Starting year' },
+  'auditee.startYear':          { fr: 'Exercice contrôlé',                          en: 'Audited fiscal year' },
   'auditee.numberOfYears':      { fr: 'Nb années (1-10)',                           en: 'No. years (1-10)' },
   'auditee.updating':           { fr: 'Mise à jour…',                               en: 'Updating…' },
 

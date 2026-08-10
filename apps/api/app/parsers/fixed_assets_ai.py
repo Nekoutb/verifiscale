@@ -44,6 +44,7 @@ log = logging.getLogger("fiscaudit.parser.far_ai")
 
 # Canonical field set Claude must map to.
 _FIELDS = (
+    "account_number",
     "reference",
     "name",
     "acquisition_date",
@@ -114,6 +115,13 @@ You will receive the first rows of an asset register as a 2-D table. Identify:
      if absent.
 
 Canonical fields:
+  - account_number                  — GL account number of the asset
+                                      (« N° de compte », « Compte », « Compte
+                                      général », « Account », « GL account »,
+                                      « Code compte »). SYSCOHADA class-2
+                                      accounts: 21xx-24xx (e.g. 2441, 2451).
+                                      NOT the asset tag/reference — a register
+                                      may have BOTH; map each to its own field.
   - reference                       — Unique asset code / tag / N° / Réf
   - name                            — Description, libellé, désignation, nature
   - acquisition_date                — Date d'acquisition / mise en service /
@@ -192,6 +200,7 @@ Return STRICT JSON with this exact shape:
 {
   "header_row_index": 0,
   "columns": {
+    "account_number": null,
     "reference": 0,
     "name": 1,
     "acquisition_date": 2,
@@ -398,7 +407,9 @@ def _apply_mapping(
         acq = get(row, "acquisition_date")
         disp = get(row, "disposal_date")
 
+        acct = get(row, "account_number")
         out.append({
+            "account_number":          str(acct).strip() if acct is not None else "",
             "reference":               str(ref).strip() if ref is not None else "",
             "name":                    str(name).strip(),
             "acquisition_date":        to_date(acq) if acq is not None else None,

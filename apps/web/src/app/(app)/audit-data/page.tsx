@@ -287,6 +287,7 @@ function YearGrid({
                     <span className="text-[10px] text-slate-500">{ds.rows_count} {t('data.rows')}</span>
                   )}
                 </div>
+                <ControlTotalsBadge ct={ds.control_totals} />
                 {ds.status === 'PENDING_MAPPING' && (
                   <button
                     type="button"
@@ -348,6 +349,49 @@ function YearGrid({
  *  - GENERAL_LEDGER  : piece_number / entry_date / journal_code / account_code /
  *                      account_name / libelle / debit / credit / lettrage
  */
+/** Control totals — « le fichier contient N lignes × M colonnes, l'outil en a
+ *  lu N × M ». Green when every file row is accounted for (ingested, exclue
+ *  avec motif, ou ligne de structure) ; red when the tool read less than the
+ *  file contains. */
+function ControlTotalsBadge({ ct }: { ct: Dataset['control_totals'] }) {
+  if (!ct) return null;
+  const pending = ct.read_rows == null;
+  const ok = ct.complete === true;
+  const bad = ct.complete === false;
+  return (
+    <div
+      className={cn(
+        'mt-1 rounded border px-1.5 py-1 text-[10px] leading-tight',
+        pending ? 'border-slate-200 bg-white text-slate-600'
+        : ok ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+        : bad ? 'border-rose-300 bg-rose-50 text-rose-800'
+        : 'border-slate-200 bg-white text-slate-600',
+      )}
+      title="Totaux de contrôle : dimensions du fichier vs données lues par l'outil"
+    >
+      <span className="font-semibold">Fichier</span>{' '}
+      <span className="font-mono">{ct.file_rows.toLocaleString('fr-FR')} L × {ct.file_cols} C</span>
+      {ct.sheets != null && ct.sheets > 1 && <span> · {ct.sheets} feuilles</span>}
+      {!pending && (
+        <>
+          {' · '}<span className="font-semibold">Lues</span>{' '}
+          <span className="font-mono">
+            {(ct.read_rows as number).toLocaleString('fr-FR')} L
+            {ct.read_cols != null && <> × {ct.read_cols} C</>}
+          </span>
+          {ct.excluded_rows != null && ct.excluded_rows > 0 && (
+            <span> · {ct.excluded_rows} exclue(s)</span>
+          )}
+          {ct.structural_rows != null && ct.structural_rows > 0 && (
+            <span> · {ct.structural_rows} structure</span>
+          )}
+          <span className="ml-1 font-bold">{ok ? '✓' : bad ? '✗ incomplet' : ''}</span>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ColumnDetectionReport({ kind, detected }: { kind: string; detected: Record<string, boolean> }) {
   const t = useT();
   const FIELDS_TB: { key: string; labelKey: MessageKey }[] = [

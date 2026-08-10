@@ -122,9 +122,19 @@ def _score_row_as_header(row: list[Any], fields: tuple[CanonicalField, ...]) -> 
     return hits
 
 
+def _fields_for(kind: str):
+    k = kind.upper()
+    if k == "GL":
+        return GL_FIELDS
+    if k == "TB":
+        return TB_FIELDS
+    from app.parsers.canonical_fields import FAR_FIELDS
+    return FAR_FIELDS
+
+
 def detect_header(rows: list[list[Any]], kind: str) -> HeaderInfo | None:
     """Find the header row and compose it with a banner row when present."""
-    fields = GL_FIELDS if kind.upper() == "GL" else TB_FIELDS
+    fields = _fields_for(kind)
     best_idx, best_score = None, 0
     for i, row in enumerate(rows[:MAX_HEADER_SCAN]):
         s = _score_row_as_header(row, fields)
@@ -166,7 +176,7 @@ def propose_mapping(hdr: HeaderInfo, rows: list[list[Any]], kind: str) -> dict[s
     Deliberately conservative: only maps what it can justify. Whatever it
     cannot resolve is left unmapped for the auditor to fix in the preview UI.
     """
-    fields = GL_FIELDS if kind.upper() == "GL" else TB_FIELDS
+    fields = _fields_for(kind)
     eff = [normalize(h) for h in hdr.effective]
     mapping: dict[str, int] = {}
     taken: set[int] = set()
@@ -175,7 +185,29 @@ def propose_mapping(hdr: HeaderInfo, rows: list[list[Any]], kind: str) -> dict[s
         mapping[key] = idx
         taken.add(idx)
 
-    if kind.upper() == "TB":
+    if kind.upper() == "FAR":
+        # PAIR-style FAR groups (gross / accum dep / NBV): a header carrying an
+        # opening/closing token maps to that member, otherwise to the plain
+        # single column ("Where two columns are needed, if only one column is
+        # present, it should be fine" — auditor rule).
+        _OPEN = ("ouverture", "opening", "initial", "debut", "au0101")
+        _CLOSE = ("cloture", "closing", "fin", "end", "au3112")
+        for f in fields:
+            if f.shape.name != "PAIR":
+                continue
+            base = f.key  # gross_value / accumulated_depreciation / nbv
+            for i, h in enumerate(eff):
+                if i in taken or not h:
+                    continue
+                if any(x in h for x in f.hints):
+                    if any(t in h for t in _OPEN):
+                        claim(f"opening_{base}", i)
+                    elif any(t in h for t in _CLOSE):
+                        claim(f"closing_{base}", i)
+                    elif base not in mapping:
+                        claim(base, i)
+
+    elif kind.upper() == "TB":
         # Resolve the three balance groups using the composed header, so
         # "Initial Balance Balance" != "End Balance Balance".
         groups = {

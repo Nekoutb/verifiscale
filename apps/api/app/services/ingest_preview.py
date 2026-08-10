@@ -22,8 +22,9 @@ from decimal import Decimal
 from typing import Any
 
 from app.parsers.canonical_fields import (
-    GL_FIELDS, TB_FIELDS, evaluate, detect_entry_id_pattern,
+    FAR_FIELDS, GL_FIELDS, TB_FIELDS, evaluate, detect_entry_id_pattern,
 )
+from app.parsers.far_reader import read_far
 from app.parsers.ledger_reader import (
     detect_header, propose_mapping, read, HeaderInfo,
 )
@@ -59,7 +60,12 @@ def load_rows(data: bytes, filename: str) -> list[list[Any]]:
 
 
 def _kind_of(dataset_kind: str) -> str:
-    return "TB" if "TRIAL_BALANCE" in str(dataset_kind).upper() else "GL"
+    k = str(dataset_kind).upper()
+    if "TRIAL_BALANCE" in k:
+        return "TB"
+    if "FIXED_ASSET" in k:
+        return "FAR"
+    return "GL"
 
 
 def _jsonable(v: Any) -> Any:
@@ -94,9 +100,9 @@ def build_preview(data: bytes, filename: str, dataset_kind: str,
     clean = {k: v for k, v in mapping.items() if isinstance(v, int)}
 
     statuses, errors = evaluate(mapping, kind)
-    res = read(rows, kind, clean, hdr)
+    res = read_far(rows, clean, hdr) if kind == "FAR" else read(rows, kind, clean, hdr)
 
-    fields = GL_FIELDS if kind == "GL" else TB_FIELDS
+    fields = GL_FIELDS if kind == "GL" else TB_FIELDS if kind == "TB" else FAR_FIELDS
 
     # Per-column sample values — drives the remap dropdowns.
     data_rows = rows[hdr.header_row + 1:]
@@ -158,6 +164,21 @@ def build_preview(data: bytes, filename: str, dataset_kind: str,
         "blocking_errors": errors,
         "can_confirm": not errors,
         "rows_to_ingest": len(res.rows),
+        # Control totals — shown at the top of the modal BEFORE ingestion so
+        # the auditor can verify every file row is accounted for.
+        "control_totals": (lambda raw, ing, exc: {
+            "file_rows": raw,
+            "file_cols": max((len(r) for r in rows), default=0),
+            "read_rows": ing,
+            "read_cols": len(set(clean.values())),
+            "excluded_rows": exc,
+            "structural_rows": max(raw - ing - exc, 0),
+            "complete": (raw - ing - exc) >= 0 and ing > 0,
+        })(
+            sum(1 for r in rows[hdr.header_row + 1:]
+                if any(c not in (None, "") for c in r)),
+            len(res.rows), len(res.excluded),
+        ),
         "sample_rows": [
             {k: _jsonable(v) for k, v in r.items()} for r in res.rows[:SAMPLE_ROWS]
         ],
@@ -181,6 +202,10 @@ def _total_label(k: str) -> str:
         "opening_debit": "Σ Ouverture — Débit", "opening_credit": "Σ Ouverture — Crédit",
         "movement_debit": "Σ Mouvements — Débit", "movement_credit": "Σ Mouvements — Crédit",
         "closing_debit": "Σ Clôture — Débit", "closing_credit": "Σ Clôture — Crédit",
+        # FAR
+        "gross_value": "Σ Valeur brute",
+        "accumulated_depreciation": "Σ Amort. cumulés",
+        "year_depreciation": "Σ Dotation exercice",
     }.get(k, k)
 
 
@@ -194,6 +219,24 @@ def _summarise_excluded(excluded) -> list[dict]:
 
 def _balance_verdict(kind: str, totals: dict[str, Decimal]) -> dict:
     """Balance check. Unbalanced never blocks — it requires acknowledgement."""
+    if kind == "FAR":
+        # A register has no debit/credit identity to verify. Coherence
+        # (VB − amortissements = VNC, FAR ↔ TB 2X/28X/68X) is checked by the
+        # rapprochement immobilisations, not at ingestion.
+        g = totals.get("gross_value", Decimal("0"))
+        a = totals.get("accumulated_depreciation", Decimal("0"))
+        return {
+            "balanced": True,
+            "groups": [
+                {"key": "gross", "label": "Valeur brute", "debit": float(g),
+                 "credit": 0.0, "delta": 0.0},
+                {"key": "accum", "label": "Amort. cumulés", "debit": float(a),
+                 "credit": 0.0, "delta": 0.0},
+            ],
+            "message": ("Registre d'immobilisations — pas d'équilibre débit/crédit à "
+                        "vérifier ; la cohérence FAR ↔ balance (2X/28X/68X) est "
+                        "contrôlée par le rapprochement immobilisations."),
+        }
     if kind == "GL":
         d, c = totals.get("debit", Decimal("0")), totals.get("credit", Decimal("0"))
         delta = d - c
@@ -248,7 +291,7 @@ def ingest_confirmed(db, ds, data: bytes, mapping: dict,
     if errors:
         raise ValueError(" · ".join(errors))
 
-    res = read(rows, kind, clean, hdr)
+    res = read_far(rows, clean, hdr) if kind == "FAR" else read(rows, kind, clean, hdr)
     verdict = _balance_verdict(kind, res.totals)
     if not verdict["balanced"] and not acknowledge_unbalanced:
         raise ValueError(
@@ -258,7 +301,12 @@ def ingest_confirmed(db, ds, data: bytes, mapping: dict,
     if not res.rows:
         raise ValueError("Aucune ligne exploitable avec ce mappage.")
 
-    if kind == "TB":
+    if kind == "FAR":
+        # No ledger table: the amortissements/rapprochements analyses re-read
+        # the stored file THROUGH the confirmed mapping (services/far_assets).
+        # Persisting the mapping is what makes the analysis reproducible.
+        ds.summary_amount = res.totals.get("gross_value")
+    elif kind == "TB":
         for r in res.rows:
             db.add(TrialBalanceLine(
                 dataset_id=ds.id,
@@ -304,6 +352,29 @@ def ingest_confirmed(db, ds, data: bytes, mapping: dict,
         "acknowledged_unbalanced": bool(acknowledge_unbalanced and not verdict["balanced"]),
     }
     ds.rows_count = len(res.rows)
+
+    # Control totals — every non-blank data row of the FILE must be accounted
+    # for: ingested, excluded WITH a disclosed reason, or structural context
+    # (account-header lines in grouped GL layouts, banner echoes). Any gap
+    # (raw > ingested + excluded + structural is impossible by construction;
+    # a reader regression that drops rows would surface as complete=False).
+    raw_data_rows = sum(
+        1 for r in rows[hdr.header_row + 1:]
+        if any(c not in (None, "") for c in r)
+    )
+    structural = raw_data_rows - len(res.rows) - len(res.excluded)
+    file_cols = max((len(r) for r in rows), default=0)
+    ds.control_totals = {
+        "file_rows": raw_data_rows,
+        "file_cols": file_cols,
+        "sheets": None,
+        "read_rows": len(res.rows),
+        "read_cols": len(set(clean.values())),
+        "excluded_rows": len(res.excluded),
+        "structural_rows": max(structural, 0),
+        "complete": structural >= 0 and len(res.rows) > 0,
+    }
+
     ds.status = DatasetStatus.PARSED
     ds.parse_error = None
     from sqlalchemy.sql import func

@@ -195,7 +195,7 @@ function ReportPanel({ report, loading }: { report?: ReportSummary; loading: boo
   const verdictWeight = report.verdict === 'FAVORABLE'
     ? 'font-normal'
     : report.verdict === 'RÉSERVÉE'
-      ? 'font-extrabold underline decoration-black decoration-2 underline-offset-4'
+      ? 'text-rose-700 font-extrabold'
       : 'font-semibold';
   const verdictPip = report.verdict === 'FAVORABLE'
     ? '●○○'
@@ -339,7 +339,7 @@ function KPI({ label, value, cls, emphasize }: { label: string; value: number | 
         className={cn(
           'text-lg tabular-nums text-black',
           emphasize
-            ? 'font-extrabold underline decoration-black decoration-[3px] underline-offset-[5px]'
+            ? 'text-rose-700 font-extrabold'
             : 'font-bold',
           cls,
         )}
@@ -490,7 +490,7 @@ function ReconciliationCard({
                       'col-span-2 text-right font-mono tabular-nums',
                       sub.diff == null ? 'text-neutral-300'
                       : Math.abs(sub.diff) < 100 ? 'text-neutral-700'
-                      : 'text-black font-bold underline decoration-black decoration-2 underline-offset-[3px]',
+                      : 'text-rose-700 font-bold',
                     )} style={{ fontFeatureSettings: '"tnum"' }}>
                       {sub.diff == null ? '—' : formatXAF(sub.diff)}
                     </div>
@@ -518,7 +518,7 @@ function ReconciliationCard({
                 'col-span-2 text-right font-mono tabular-nums',
                 rec.diff == null ? 'text-neutral-400'
                 : Math.abs(rec.diff) < 100 ? 'text-neutral-700'
-                : 'text-black font-extrabold underline decoration-black decoration-2 underline-offset-[3px]',
+                : 'text-rose-700 font-extrabold',
               )} style={{ fontFeatureSettings: '"tnum"' }}>
                 {rec.diff == null ? '—' : formatXAF(rec.diff)}
               </div>
@@ -557,7 +557,7 @@ function RecRow({
             className={cn(
               'text-xl font-display mt-1 tabular-nums text-black',
               isCount && counterAmount !== 0
-                ? 'font-extrabold underline decoration-black decoration-2 underline-offset-[5px]'
+                ? 'text-rose-700 font-extrabold'
                 : 'font-bold',
             )}
             style={{ fontFeatureSettings: '"tnum"' }}
@@ -578,7 +578,7 @@ function RecRow({
             'text-xl font-display mt-1 tabular-nums',
             diff == null ? 'text-neutral-300 font-bold'
             : Math.abs(diff) < 100 ? 'text-neutral-700 font-bold'
-            : 'text-black font-extrabold underline decoration-black decoration-[3px] underline-offset-[5px]',
+            : 'text-rose-700 font-extrabold',
           )}
           style={{ fontFeatureSettings: '"tnum"' }}
         >
@@ -725,7 +725,7 @@ function TbGlRollforward({ rec }: { rec: ReconciliationResult }) {
                   'px-3 py-1.5 text-right font-mono tabular-nums',
                   s.diff == null ? 'text-neutral-300 font-semibold'
                   : Math.abs(s.diff) < 1 ? 'text-neutral-700 font-semibold'
-                  : 'text-black font-extrabold underline decoration-black decoration-2 underline-offset-[3px]',
+                  : 'text-rose-700 font-extrabold',
                 )} style={{ fontFeatureSettings: '"tnum"' }}>
                   {s.diff == null ? '—' : formatXAF(s.diff)}
                 </td>
@@ -781,7 +781,7 @@ function SummaryStat({
         className={cn(
           'text-base mt-0.5 tabular-nums text-black',
           emphasize
-            ? 'font-extrabold underline decoration-black decoration-[3px] underline-offset-[5px]'
+            ? 'text-rose-700 font-extrabold'
             : 'font-bold',
           mono && 'font-mono text-sm',
         )}

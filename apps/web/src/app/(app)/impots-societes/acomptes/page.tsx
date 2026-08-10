@@ -7,6 +7,7 @@ import {
   XCircle, Clock,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ControlHeader } from '@/components/control-header';
 import { api } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -106,22 +107,28 @@ export default function AcompteIsPage() {
 
       {data && data.months && (
         <>
-          {/* ── KPIs ───────────────────────────────────────────────── */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <KPI label="Régime"
-                 value={data.regime === 'REEL' ? 'Réel' : 'Simplifié'}
-                 sublabel={`taux ${data.rate_pct.toFixed(1)} %`} />
-            <KPI label="Exercice"
-                 value={String(data.fiscal_year)} />
-            <KPI label="DMM chargées"
-                 value={`${data.annual.dmm_count} / 12`}
-                 tone={data.annual.dmm_count === 12 ? 'ok' : data.annual.dmm_count >= 9 ? 'warn' : 'err'} />
-            <KPI label="CA HT GL annuel"
-                 value={formatXAF(data.annual.ca_gl_xaf)} />
-            <KPI label="Statut global"
-                 value={statusLabel(data.summary_status)}
-                 tone={statusTone(data.summary_status)} />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.annual.expected_total_acompte_xaf}
+            actual={data.annual.declared_total_acompte_xaf}
+            variance={data.annual.acompte_variance_xaf}
+            exposure={Math.max(data.annual.expected_total_acompte_xaf - data.annual.declared_total_acompte_xaf, 0)}
+            sublabels={{
+              expected: `Acomptes dus (${data.rate_pct.toFixed(1)} % × CA)`,
+              actual: 'Acomptes déclarés (DMM)',
+              variance: 'Écart déclaré − dû',
+              exposure: 'Rappel d’acomptes estimé',
+            }}
+            stats={[
+              { label: 'Régime', value: data.regime === 'REEL' ? `Réel · ${data.rate_pct.toFixed(1)} %` : `Simplifié · ${data.rate_pct.toFixed(1)} %` },
+              { label: 'Exercice', value: String(data.fiscal_year) },
+              { label: 'DMM chargées', value: `${data.annual.dmm_count} / 12`,
+                tone: data.annual.dmm_count === 12 ? 'ok' : data.annual.dmm_count >= 9 ? 'warn' : 'err' },
+              { label: 'CA HT GL annuel', value: formatXAF(data.annual.ca_gl_xaf) },
+              { label: 'Statut global', value: statusLabel(data.summary_status),
+                tone: statusTone(data.summary_status) },
+            ]}
+          />
 
           {/* ── Contrôle (c) — recoupement annuel CA GL vs CA DMM ──── */}
           <Card>
@@ -219,13 +226,13 @@ export default function AcompteIsPage() {
                       </td>
                       <td className={cn(
                         'px-3 py-2 text-right font-mono',
-                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-black font-bold underline decoration-2' : 'text-slate-500',
+                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-rose-700 font-bold' : 'text-slate-500',
                       )}>
                         {m.dmm_present ? formatXAF(m.variance_xaf) : '—'}
                       </td>
                       <td className={cn(
                         'px-3 py-2 text-right font-mono',
-                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-black font-bold underline decoration-2' : 'text-slate-500',
+                        m.dmm_present && Math.abs(m.variance_pct ?? 0) > 1 ? 'text-rose-700 font-bold' : 'text-slate-500',
                       )}>
                         {m.variance_pct !== null ? `${m.variance_pct.toFixed(2)} %` : '—'}
                       </td>
@@ -236,7 +243,7 @@ export default function AcompteIsPage() {
                             {formatDate(m.dmm_filing_date) || 'déposée'}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 text-black font-bold underline decoration-2 text-[11px]">
+                          <span className="inline-flex items-center gap-1 text-rose-700 font-bold text-[11px]">
                             <XCircle className="w-3 h-3" />
                             manquante
                           </span>
@@ -289,21 +296,8 @@ export default function AcompteIsPage() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-function KPI({ label, value, sublabel, tone = 'neutral' }: { label: string; value: number | string; sublabel?: string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-black font-bold underline decoration-2' : tone === 'warn' ? 'text-neutral-700' : tone === 'ok' ? 'text-neutral-700' : 'text-slate-900';
-  return (
-    <Card>
-      <CardContent>
-        <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base font-bold mt-1 font-display ${cls}`}>{value}</div>
-        {sublabel && <div className="text-[10px] text-slate-500 mt-0.5">{sublabel}</div>}
-      </CardContent>
-    </Card>
-  );
-}
-
 function Field({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls = tone === 'err' ? 'text-black font-extrabold underline decoration-2 underline-offset-4' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-rose-700 font-extrabold' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
   return (
     <div>
       <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>

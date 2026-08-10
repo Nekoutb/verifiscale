@@ -194,7 +194,7 @@ export default function ReferentielPage() {
 }
 
 function Stat({ label, value, tone = 'neutral', sub }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral'; sub?: string }) {
-  const cls = tone === 'err' ? 'text-black font-extrabold underline decoration-2 underline-offset-4' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
+  const cls = tone === 'err' ? 'text-rose-700 font-extrabold' : tone === 'warn' ? 'text-neutral-700 font-semibold' : tone === 'ok' ? 'text-neutral-600' : 'text-slate-900';
   return (
     <Card>
       <CardContent>

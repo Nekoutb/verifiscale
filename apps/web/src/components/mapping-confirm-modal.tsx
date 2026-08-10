@@ -55,6 +55,12 @@ type Preview = {
   blocking_errors: string[];
   can_confirm: boolean;
   rows_to_ingest: number;
+  control_totals?: {
+    file_rows: number; file_cols: number;
+    read_rows: number; read_cols: number;
+    excluded_rows: number; structural_rows: number;
+    complete: boolean;
+  } | null;
   sample_rows: Record<string, string | null>[];
   excluded_count: number;
   excluded: { row: number; reason: string; label: string; impact: Record<string, string> | null }[];
@@ -156,7 +162,7 @@ export function MappingConfirmModal({
               </h2>
               {view && (
                 <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
-                  {view.kind === 'GL' ? 'Grand livre' : 'Balance'}
+                  {view.kind === 'GL' ? 'Grand livre' : view.kind === 'TB' ? 'Balance' : 'Registre immobilisations'}
                 </span>
               )}
             </div>
@@ -189,6 +195,31 @@ export function MappingConfirmModal({
 
         {view?.detected && (
           <div className="px-6 py-5 space-y-6">
+
+            {/* ── 0. CONTROL TOTALS — file dims vs what will be read ── */}
+            {view.control_totals && (
+              <div className={cn(
+                'rounded-lg border px-4 py-2.5 text-xs flex flex-wrap items-center gap-x-4 gap-y-1',
+                view.control_totals.complete
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                  : 'bg-rose-50 border-rose-300 text-rose-900',
+              )}>
+                <span className="font-bold uppercase tracking-wider text-[10px]">Totaux de contrôle</span>
+                <span>Fichier : <b className="font-mono">{view.control_totals.file_rows.toLocaleString('fr-FR')}</b> lignes × <b className="font-mono">{view.control_totals.file_cols}</b> colonnes</span>
+                <span>Lues : <b className="font-mono">{view.control_totals.read_rows.toLocaleString('fr-FR')}</b> lignes × <b className="font-mono">{view.control_totals.read_cols}</b> colonnes mappées</span>
+                {view.control_totals.excluded_rows > 0 && (
+                  <span>{view.control_totals.excluded_rows} exclue(s) avec motif</span>
+                )}
+                {view.control_totals.structural_rows > 0 && (
+                  <span>{view.control_totals.structural_rows} ligne(s) de structure</span>
+                )}
+                <span className="font-bold">
+                  {view.control_totals.complete
+                    ? '✓ toutes les lignes du fichier sont prises en compte'
+                    : '✗ des lignes du fichier ne sont pas prises en compte'}
+                </span>
+              </div>
+            )}
 
             {/* ── 1. TOTALS + BALANCE (pinned at top, per spec) ───── */}
             <section>

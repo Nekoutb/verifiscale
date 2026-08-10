@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ControlHeader } from '@/components/control-header';
 import { api } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -164,30 +165,34 @@ export default function CashPaymentsPage() {
 
       {data?.summary && (
         <>
-          {/* KPIs : 2 lignes — la 1ʳᵉ classique, la 2ᵈ avec la bifurcation Lettre 2011 */}
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-            <KPI label={t('cash.kpi.linesTested')}     value={data.summary.lines_tested_count} />
-            <KPI label="Exclues (lettre 2011)"          value={data.summary.excluded_count}
-                 tone={data.summary.excluded_count ? 'warn' : 'neutral'} />
-            <KPI label="Rattachées exercice (oui)"      value={data.summary.current_year_yes_count}
-                 tone={data.summary.current_year_yes_count ? 'err' : 'ok'} />
-            <KPI label="Non rattachées"                 value={data.summary.current_year_no_count}
-                 tone={data.summary.current_year_no_count ? 'warn' : 'ok'} />
-            <KPI label="Σ rattachées (réintég.)"        value={formatXAF(data.summary.reintegration_xaf)}
-                 tone={data.summary.reintegration_xaf > 0 ? 'err' : 'ok'} />
-            <KPI label="Σ pénalité totale"               value={formatXAF(data.summary.total_penalty_xaf)}
-                 tone={data.summary.total_penalty_xaf > 0 ? 'err' : 'ok'} />
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <KPI label={`IS additionnel (${data.summary.is_rate_pct}%)`}
-                 value={formatXAF(data.summary.is_supplement_xaf)} tone="warn" />
-            <KPI label={`IRCM (${data.summary.ircm_rate_pct}%)`}
-                 value={formatXAF(data.summary.ircm_xaf)} tone="warn" />
-            <KPI label="Pièces avec crédit-caisse > 100K"
-                 value={data.summary.cash_credit_breach_piece_count}
-                 tone={data.summary.cash_credit_breach_piece_count ? 'warn' : 'ok'} />
-            <KPI label="Σ montant brut testé"           value={formatXAF(data.summary.total_amount_xaf)} />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.summary.total_amount_xaf - data.summary.reintegration_xaf}
+            actual={data.summary.total_amount_xaf}
+            variance={data.summary.reintegration_xaf}
+            exposure={data.summary.total_penalty_xaf}
+            sublabels={{
+              expected: 'Charges déductibles après contrôle',
+              actual: `Σ règlements espèces ≥ ${formatXAF(data.summary.threshold_xaf)} testés`,
+              variance: 'Réintégration (rattachées exercice)',
+              exposure: 'IS suppl. + IRCM + pénalités',
+            }}
+            stats={[
+              { label: t('cash.kpi.linesTested'), value: data.summary.lines_tested_count },
+              { label: 'Exclues (lettre 2011)', value: data.summary.excluded_count,
+                tone: data.summary.excluded_count ? 'warn' : 'neutral' },
+              { label: 'Rattachées exercice', value: data.summary.current_year_yes_count,
+                tone: data.summary.current_year_yes_count ? 'err' : 'ok' },
+              { label: 'Non rattachées', value: data.summary.current_year_no_count,
+                tone: data.summary.current_year_no_count ? 'warn' : 'ok' },
+              { label: `IS additionnel (${data.summary.is_rate_pct}%)`,
+                value: formatXAF(data.summary.is_supplement_xaf), tone: 'warn' },
+              { label: `IRCM (${data.summary.ircm_rate_pct}%)`,
+                value: formatXAF(data.summary.ircm_xaf), tone: 'warn' },
+              { label: 'Crédit-caisse > 100K', value: data.summary.cash_credit_breach_piece_count,
+                tone: data.summary.cash_credit_breach_piece_count ? 'warn' : 'ok' },
+            ]}
+          />
 
           {/* Bandeau exceptions Lettre DGI 2011 */}
           {data.summary.excluded_count > 0 && (
@@ -286,7 +291,7 @@ export default function CashPaymentsPage() {
                       <td className="px-3 py-3 text-right font-mono tabular-nums text-black">
                         {formatXAF(data.by_supplier.reduce((s, r) => s + r.total_amount_xaf, 0))}
                       </td>
-                      <td className="px-3 py-3 text-right font-mono tabular-nums text-black font-extrabold underline decoration-2 underline-offset-2">
+                      <td className="px-3 py-3 text-right font-mono tabular-nums text-rose-700 font-extrabold">
                         {formatXAF(data.summary.estimated_reintegration_xaf)}
                       </td>
                     </tr>
@@ -415,21 +420,6 @@ function TagBadge({ tag }: { tag: 'CONFIRMED' | 'LIKELY' | 'REVIEW' }) {
   return <Badge variant="neutral">{t('cash.tag.review')}</Badge>;
 }
 
-function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls =
-    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
-    : tone === 'warn' ? 'text-black font-semibold'
-    : tone === 'ok'   ? 'text-neutral-700 font-medium'
-    : 'text-black font-bold';
-  return (
-    <Card>
-      <CardContent>
-        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
-      </CardContent>
-    </Card>
-  );
-}
 
 function CurrentYearBadge({ cy, confidence, source, reason }: {
   cy: 'YES' | 'NO' | 'UNKNOWN'; confidence: string; source: string; reason: string;

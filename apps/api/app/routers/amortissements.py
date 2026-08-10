@@ -10,8 +10,8 @@ from sqlalchemy.orm import Session
 from app.controls.amortissements import analyze_assets
 from app.database import get_db
 from app.models import AuditCase, Dataset, DatasetKind, User
-from app.parsers.fixed_assets_ai import parse_fixed_assets_ai as parse_fixed_assets
 from app.security import get_current_user
+from app.services.far_assets import load_far_assets
 from app.storage import get_object
 
 
@@ -59,7 +59,7 @@ def get_amortissements_analysis(
     except FileNotFoundError:
         raise HTTPException(404, "Fichier source introuvable en stockage")
 
-    assets = parse_fixed_assets(data, far_ds.original_filename)
+    assets = load_far_assets(far_ds, data)
     rows, summary = analyze_assets(assets, fiscal_year=case.fiscal_year)
 
     # Sort: variances first (largest absolute), then by reference

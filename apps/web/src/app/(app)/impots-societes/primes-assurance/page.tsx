@@ -8,6 +8,7 @@ import {
   ShieldCheck, ShieldAlert, ShieldX, Globe, MapPin,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ControlHeader } from '@/components/control-header';
 import { api, apiUploadForm, getToken } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -143,18 +144,30 @@ export default function PrimesAssurancePage() {
 
       {data && (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
-            <KPI label="Contrats chargés" value={data.summary.contract_count} />
-            <KPI label="Σ contrats (exercice)" value={formatXAF(data.summary.contracts_total_exercice_xaf)} />
-            <KPI label="Σ GL 625+6685+6686" value={formatXAF(data.summary.gl_total_xaf)} />
-            <KPI label="Écart GL ↔ contrats"
-                 value={`${formatXAF(data.summary.variance_xaf)} (${data.summary.variance_pct}%)`}
-                 tone={data.summary.reconciliation_status === 'OK' ? 'ok' : 'warn'} />
-            <KPI label="Non déductibles" value={data.summary.non_eligible_count}
-                 tone={data.summary.non_eligible_count > 0 ? 'err' : 'ok'} />
-            <KPI label="Réintégration estimée" value={formatXAF(data.summary.total_reintegration_xaf)}
-                 tone={data.summary.total_reintegration_xaf > 0 ? 'err' : 'ok'} />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.summary.contracts_total_exercice_xaf}
+            actual={data.summary.gl_total_xaf}
+            variance={data.summary.variance_xaf}
+            exposure={data.summary.total_reintegration_xaf}
+            sublabels={{
+              expected: 'Σ contrats justifiés (exercice)',
+              actual: 'Σ GL 625 + 6685 + 6686',
+              variance: `Écart GL ↔ contrats (${data.summary.variance_pct}%)`,
+              exposure: 'Réintégration estimée',
+            }}
+            stats={[
+              { label: 'Contrats chargés', value: data.summary.contract_count },
+              { label: 'Rapprochement', value: data.summary.reconciliation_status,
+                tone: data.summary.reconciliation_status === 'OK' ? 'ok' : 'warn' },
+              { label: 'Non déductibles', value: data.summary.non_eligible_count,
+                tone: data.summary.non_eligible_count > 0 ? 'err' : 'ok' },
+              { label: 'À réinstruire', value: data.summary.reinstruire_count,
+                tone: data.summary.reinstruire_count > 0 ? 'warn' : 'ok' },
+              { label: 'Charges sans contrat', value: formatXAF(data.summary.charges_sans_contrat_xaf),
+                tone: data.summary.charges_sans_contrat_xaf > 0 ? 'warn' : 'ok' },
+            ]}
+          />
 
           <Card>
             <CardHeader><CardTitle>Rapprochement Σ contrats ↔ comptes 625X + 6685 + 6686</CardTitle></CardHeader>
@@ -452,22 +465,6 @@ function VerdictBadge({ v }: { v: 'ELIGIBLE' | 'NON_ELIGIBLE' | 'A_REINSTRUIRE' 
     <span className="inline-flex items-center gap-1 text-[11px] px-1.5 py-0.5 rounded border border-neutral-300 bg-transparent text-neutral-700 font-medium">
       <ShieldAlert className="w-3 h-3" /> À réinstruire <span className="tracking-widest">●●○</span>
     </span>
-  );
-}
-
-function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls =
-    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
-    : tone === 'warn' ? 'text-black font-semibold'
-    : tone === 'ok'   ? 'text-neutral-700 font-medium'
-    : 'text-black font-bold';
-  return (
-    <Card>
-      <CardContent>
-        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
-      </CardContent>
-    </Card>
   );
 }
 

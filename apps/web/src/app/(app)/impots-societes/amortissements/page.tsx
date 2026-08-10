@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Building2, AlertTriangle, CheckCircle2, FileWarning } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ControlHeader } from '@/components/control-header';
 import { api } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { useT } from '@/lib/i18n';
@@ -12,6 +13,7 @@ import { cn, formatXAF, formatDate } from '@/lib/utils';
 
 interface AmortRow {
   reference: string;
+  account_number?: string | null;
   name: string;
   acquisition_date: string | null;
   disposal_date: string | null;
@@ -95,22 +97,26 @@ export default function AmortissementsPage() {
 
       {data?.summary && (
         <>
-          {/* KPI strip */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <KPI label={t('amort.kpiAssets')} value={data.summary.asset_count} />
-            <KPI
-              label={t('amort.kpiRateMismatch')}
-              value={data.summary.rate_mismatch_count}
-              tone={data.summary.rate_mismatch_count ? 'err' : 'ok'}
-            />
-            <KPI label={t('amort.kpiRegisterDep')} value={`${formatXAF(data.summary.total_register_year_depreciation_xaf)}`} />
-            <KPI label={t('amort.kpiRecomputedDep')} value={`${formatXAF(data.summary.total_recomputed_year_depreciation_xaf)}`} />
-            <KPI
-              label={t('amort.kpiVariance')}
-              value={formatXAF(data.summary.total_variance_xaf)}
-              tone={Math.abs(data.summary.total_variance_xaf) > 1000 ? 'warn' : 'ok'}
-            />
-          </div>
+          {/* Harmonized control header: Attendu | Réel | Écart | Exposition */}
+          <ControlHeader
+            expected={data.summary.total_recomputed_year_depreciation_xaf}
+            actual={data.summary.total_register_year_depreciation_xaf}
+            variance={data.summary.total_variance_xaf}
+            exposure={data.rows.reduce((s, r) => s + Math.max(r.variance_xaf, 0), 0)}
+            sublabels={{
+              expected: t('amort.kpiRecomputedDep'),
+              actual: t('amort.kpiRegisterDep'),
+              exposure: 'Sur-dotation à réintégrer',
+            }}
+            stats={[
+              { label: t('amort.kpiAssets'), value: data.summary.asset_count },
+              {
+                label: t('amort.kpiRateMismatch'),
+                value: data.summary.rate_mismatch_count,
+                tone: data.summary.rate_mismatch_count ? 'err' : 'ok',
+              },
+            ]}
+          />
 
           {/* Source dataset */}
           <div className="text-xs text-slate-500">
@@ -123,7 +129,7 @@ export default function AmortissementsPage() {
               <table className="w-full text-xs">
                 <thead>
                   <tr className="text-left text-[10px] uppercase tracking-wider text-slate-500 bg-slate-50 border-b border-slate-200">
-                    <th className="px-3 py-2.5">{t('amort.col.reference')}</th>
+                    <th className="px-3 py-2.5">{t('amort.col.accountNumber')}</th>
                     <th className="px-3 py-2.5">{t('amort.col.acqDate')}</th>
                     <th className="px-3 py-2.5">{t('amort.col.dispDate')}</th>
                     <th className="px-3 py-2.5">{t('amort.col.name')}</th>
@@ -141,10 +147,15 @@ export default function AmortissementsPage() {
                 <tbody>
                   {data.rows.map((r, i) => (
                     <tr key={`${r.reference}-${i}`} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="px-3 py-2 font-mono">{r.reference || '—'}</td>
+                      <td className="px-3 py-2 font-mono">{r.account_number || r.reference || '—'}</td>
                       <td className="px-3 py-2">{formatDate(r.acquisition_date) || '—'}</td>
                       <td className="px-3 py-2">{formatDate(r.disposal_date) || '—'}</td>
-                      <td className="px-3 py-2 font-medium text-slate-800">{r.name}</td>
+                      <td className="px-3 py-2 font-medium text-slate-800">
+                        {r.name}
+                        {r.account_number && r.reference && (
+                          <div className="text-[9px] font-mono text-slate-400">{t('amort.col.reference')} {r.reference}</div>
+                        )}
+                      </td>
                       <td className="px-3 py-2">
                         <div className="text-[11px]">{locale === 'fr' ? r.fiscal_category_label_fr : r.fiscal_category_label_en}</div>
                         <div className="text-[9px] font-mono text-slate-400">{r.fiscal_category_code}</div>
@@ -171,7 +182,7 @@ export default function AmortissementsPage() {
                       <td className={cn(
                         'px-3 py-2 text-right font-mono tabular-nums',
                         Math.abs(r.variance_xaf) < 100 ? 'text-neutral-700'
-                        : r.variance_xaf > 0 ? 'text-black font-extrabold underline decoration-2 underline-offset-2'
+                        : r.variance_xaf > 0 ? 'text-rose-700 font-extrabold'
                         : 'text-black font-semibold',
                       )}>
                         {formatXAF(r.variance_xaf)}
@@ -196,7 +207,7 @@ export default function AmortissementsPage() {
                         <td className="px-3 py-3 text-right font-mono">{formatXAF(data.summary.total_register_year_depreciation_xaf)}</td>
                         <td className={cn(
                           'px-3 py-3 text-right font-mono tabular-nums',
-                          Math.abs(data.summary.total_variance_xaf) < 1000 ? 'text-neutral-700' : 'text-black font-extrabold underline decoration-2 underline-offset-2',
+                          Math.abs(data.summary.total_variance_xaf) < 1000 ? 'text-neutral-700' : 'text-rose-700 font-extrabold',
                         )}>
                           {formatXAF(data.summary.total_variance_xaf)}
                         </td>
@@ -222,21 +233,5 @@ export default function AmortissementsPage() {
         </Card>
       )}
     </div>
-  );
-}
-
-function KPI({ label, value, tone = 'neutral' }: { label: string; value: number | string; tone?: 'ok' | 'warn' | 'err' | 'neutral' }) {
-  const cls =
-    tone === 'err'  ? 'text-black font-extrabold border-b-[3px] border-black inline-block pb-0.5'
-    : tone === 'warn' ? 'text-black font-semibold'
-    : tone === 'ok'   ? 'text-neutral-700 font-medium'
-    : 'text-black font-bold';
-  return (
-    <Card>
-      <CardContent>
-        <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">{label}</div>
-        <div className={`text-base mt-1 font-display tabular-nums ${cls}`}>{value}</div>
-      </CardContent>
-    </Card>
   );
 }

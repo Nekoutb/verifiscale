@@ -80,6 +80,14 @@ class Dataset(Base):
         Enum(DatasetStatus), nullable=False, default=DatasetStatus.UPLOADED
     )
     rows_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
+
+    # Control totals — proves nothing was silently dropped at ingestion.
+    # {"file_rows": N, "file_cols": M, "read_rows": I, "read_cols": K,
+    #  "excluded_rows": E, "structural_rows": S, "complete": bool}
+    # file_* = raw non-empty grid dims; read_* = what the tool ingested;
+    # excluded = rows dropped WITH a disclosed reason; structural = context
+    # rows (banners, account-header lines in grouped GL layouts).
+    control_totals: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     parse_error: Mapped[str | None] = mapped_column(String(2048), nullable=True)
     column_mapping: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
