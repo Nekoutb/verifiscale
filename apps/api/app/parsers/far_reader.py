@@ -28,9 +28,11 @@ from app.parsers.ledger_reader import (
     ExcludedRow, HeaderInfo, ReadResult, to_date, to_decimal,
 )
 
-#: PAIR-style FAR members: pick the closing value first (état « à ce jour »
-#: per the auditor), else the plain column, else opening.
-_GROSS_PRIORITY = ("closing_gross_value", "gross_value", "opening_gross_value")
+#: Rollforward members — which one carries the value the analysis uses.
+#: Gross: the auditor wants the OPENING gross book value presented as the
+#: base amortissable (falls back to the plain/closing column on simple
+#: registers). Accumulated dep: life-to-date = closing first.
+_GROSS_PRIORITY = ("opening_gross_value", "gross_value", "closing_gross_value")
 _ACCUM_PRIORITY = ("closing_accumulated_depreciation", "accumulated_depreciation",
                    "opening_accumulated_depreciation")
 _NBV_PRIORITY = ("closing_nbv", "nbv", "opening_nbv")
@@ -113,6 +115,10 @@ def read_far(rows: list[list[Any]], mapping: dict[str, int],
         dod = _get(row, mapping, "depreciation_on_disposals")
         nbv_raw = _first(row, mapping, _NBV_PRIORITY)
 
+        def _dec(key: str):
+            v = _get(row, mapping, key)
+            return to_decimal(v) if v is not None else None
+
         out.append({
             "account_number": str(acct).strip() if acct is not None else "",
             "reference": str(ref).strip() if ref is not None else "",
@@ -127,6 +133,17 @@ def read_far(rows: list[list[Any]], mapping: dict[str, int],
                 to_decimal(dod) if dod is not None else None
             ),
             "nbv_xaf": to_decimal(nbv_raw) if nbv_raw is not None else None,
+            # Full rollforward, when the register carries it
+            "opening_gross_value_xaf": _dec("opening_gross_value"),
+            "gross_additions_xaf": _dec("gross_additions"),
+            "gross_disposals_xaf": _dec("gross_disposals"),
+            "gross_transfers_xaf": _dec("gross_transfers"),
+            "closing_gross_value_xaf": _dec("closing_gross_value"),
+            "opening_accumulated_depreciation_xaf": _dec("opening_accumulated_depreciation"),
+            "depreciation_transfers_xaf": _dec("depreciation_transfers"),
+            "closing_accumulated_depreciation_xaf": _dec("closing_accumulated_depreciation"),
+            "opening_nbv_xaf": _dec("opening_nbv"),
+            "closing_nbv_xaf": _dec("closing_nbv"),
         })
         totals["gross_value"] += gross
         if accum is not None:
@@ -135,6 +152,6 @@ def read_far(rows: list[list[Any]], mapping: dict[str, int],
             totals["year_depreciation"] += year_dep
 
     if not out:
-        warnings.append("Aucune immobilisation exploitable — vérifiez le mappage des colonnes.")
+        warnings.append("Aucune immobilisation exploitable — vérifiez le mapping des colonnes.")
 
     return ReadResult("FAR", hdr, mapping, out, excluded, totals, stated, warnings)

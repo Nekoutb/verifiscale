@@ -295,7 +295,7 @@ function YearGrid({
                     className="mt-1 w-full inline-flex items-center justify-center gap-1 rounded-md bg-indigo-600 px-2 py-1.5 text-[11px] font-semibold text-white hover:bg-indigo-700 transition"
                   >
                     <ScanLine className="w-3 h-3" />
-                    Vérifier le mappage
+                    Vérifiez le mapping
                   </button>
                 )}
                 <div className="text-[10px] text-slate-400">{formatDate(ds.uploaded_at)}</div>

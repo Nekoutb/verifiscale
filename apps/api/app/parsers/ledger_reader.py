@@ -170,6 +170,105 @@ def detect_header(rows: list[list[Any]], kind: str) -> HeaderInfo | None:
                       list(banner) if banner else None)
 
 
+def _propose_far_rollforward(eff: list[str], claim, taken: set[int],
+                             mapping: dict[str, int] | None = None) -> None:
+    """Classify FAR value columns into the rollforward structure:
+
+        Valeur brute :   ouverture → acquisitions → cessions → transferts → clôture
+        Amortissements : ouverture → dotation → repris/cessions → transférés → fin
+        VNC :            ouverture → clôture
+
+    Date columns are left for the generic hint pass (acquisition/disposal
+    dates), as are n° de compte / réf / désignation / taux. A simple register
+    with a single « Valeur brute » maps it to the OPENING member — the base
+    amortissable the auditor asked to see first.
+    """
+    if mapping is None:
+        mapping = {}
+    _OPEN = ("ouverture", "opening", "initial", "debut", "au0101")
+    _CLOSE = ("cloture", "closing", "findeperiode", "finperiode", "endofperiod",
+              "end", "au3112")
+    _GROSS = ("valeurbrute", "vab", "vb", "brute", "grossvalue", "grossbook",
+              "valeurorigine", "cout", "cost", "prixacquisition", "valeur")
+    _AMORT = ("amort", "dotation", "depreciation", "cumul")
+    _VNC = ("vnc", "valeurnette", "netbook", "nbv")
+
+    # Rollforward-style register? (an explicit opening gross column exists)
+    has_open_gross = any(
+        h and any(g in h for g in _GROSS) and any(t in h for t in _OPEN)
+        for h in eff
+    )
+
+    for i, h in enumerate(eff):
+        if i in taken or not h or "date" in h:
+            continue
+
+        # ── VNC ───────────────────────────────────────────────────────
+        if any(t in h for t in _VNC):
+            if any(t in h for t in _OPEN):
+                claim("opening_nbv", i)
+            else:
+                claim("closing_nbv", i)
+            continue
+
+        # ── Amortissements ────────────────────────────────────────────
+        if any(t in h for t in _AMORT):
+            if "dotation" in h:
+                claim("year_depreciation", i)
+            elif "repris" in h or "reprise" in h or "cession" in h:
+                claim("depreciation_on_disposals", i)
+            elif "transfer" in h or "transfert" in h:
+                claim("depreciation_transfers", i)
+            elif any(t in h for t in _OPEN):
+                claim("opening_accumulated_depreciation", i)
+            elif any(t in h for t in _CLOSE) or "fin" in h:
+                claim("closing_accumulated_depreciation", i)
+            elif "exercice" in h or "annuel" in h or "periode" in h:
+                claim("year_depreciation", i)
+            else:
+                # plain « Amortissements cumulés » — life-to-date = closing
+                claim("closing_accumulated_depreciation", i)
+            continue
+
+        # ── Valeur brute ──────────────────────────────────────────────
+        if any(t in h for t in _GROSS):
+            if any(t in h for t in _OPEN):
+                claim("opening_gross_value", i)
+            elif "cession" in h:
+                claim("gross_disposals", i)
+            elif "transfer" in h or "transfert" in h:
+                claim("gross_transfers", i)
+            elif "acquisition" in h and has_open_gross:
+                # rollforward register: « Acquisitions » = additions column
+                claim("gross_additions", i)
+            elif any(t in h for t in _CLOSE):
+                claim("closing_gross_value", i)
+            else:
+                # simple register: single « Valeur brute » (or « Valeur
+                # d'acquisition ») = the base amortissable → opening; a second
+                # plain gross column falls to closing.
+                if "opening_gross_value" not in mapping:
+                    claim("opening_gross_value", i)
+                else:
+                    claim("closing_gross_value", i)
+            continue
+
+        # ── Bare movement columns of a rollforward register ───────────
+        # « Acquisitions » / « Cessions » / « Transferts » with no « valeur »
+        # token — they belong to the gross block when an explicit opening
+        # gross column exists.
+        if has_open_gross:
+            if "acquisition" in h or "augmentation" in h:
+                claim("gross_additions", i)
+                continue
+            if "cession" in h or "diminution" in h:
+                claim("gross_disposals", i)
+                continue
+            if "transfert" in h or "transfer" in h:
+                claim("gross_transfers", i)
+                continue
+
+
 def propose_mapping(hdr: HeaderInfo, rows: list[list[Any]], kind: str) -> dict[str, int]:
     """Heuristic column mapping from the composed header.
 
@@ -186,26 +285,7 @@ def propose_mapping(hdr: HeaderInfo, rows: list[list[Any]], kind: str) -> dict[s
         taken.add(idx)
 
     if kind.upper() == "FAR":
-        # PAIR-style FAR groups (gross / accum dep / NBV): a header carrying an
-        # opening/closing token maps to that member, otherwise to the plain
-        # single column ("Where two columns are needed, if only one column is
-        # present, it should be fine" — auditor rule).
-        _OPEN = ("ouverture", "opening", "initial", "debut", "au0101")
-        _CLOSE = ("cloture", "closing", "fin", "end", "au3112")
-        for f in fields:
-            if f.shape.name != "PAIR":
-                continue
-            base = f.key  # gross_value / accumulated_depreciation / nbv
-            for i, h in enumerate(eff):
-                if i in taken or not h:
-                    continue
-                if any(x in h for x in f.hints):
-                    if any(t in h for t in _OPEN):
-                        claim(f"opening_{base}", i)
-                    elif any(t in h for t in _CLOSE):
-                        claim(f"closing_{base}", i)
-                    elif base not in mapping:
-                        claim(base, i)
+        _propose_far_rollforward(eff, claim, taken, mapping)
 
     elif kind.upper() == "TB":
         # Resolve the three balance groups using the composed header, so
@@ -444,6 +524,6 @@ def read(rows: list[list[Any]], kind: str, mapping: dict[str, int],
             totals[f"{grp}_credit"] = sum((r[f"{grp}_credit"] for r in out), Decimal("0"))
 
     if not out:
-        warnings.append("Aucune ligne exploitable — vérifiez le mappage des colonnes.")
+        warnings.append("Aucune ligne exploitable — vérifiez le mapping des colonnes.")
 
     return ReadResult(kind.upper(), hdr, mapping, out, excluded, totals, stated, warnings)

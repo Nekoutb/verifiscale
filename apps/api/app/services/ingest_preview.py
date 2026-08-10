@@ -153,6 +153,7 @@ def build_preview(data: bytes, filename: str, dataset_kind: str,
             {
                 "key": f.key, "label_fr": f.label_fr, "mandatory": f.mandatory,
                 "shape": f.shape.value, "members": list(f.members),
+                "member_labels": dict(f.member_labels),
                 "allow_pattern_extraction": f.allow_pattern_extraction,
             } for f in fields
         ],
@@ -299,7 +300,7 @@ def ingest_confirmed(db, ds, data: bytes, mapping: dict,
             "explicitement le risque avant l'ingestion."
         )
     if not res.rows:
-        raise ValueError("Aucune ligne exploitable avec ce mappage.")
+        raise ValueError("Aucune ligne exploitable avec ce mapping.")
 
     if kind == "FAR":
         # No ledger table: the amortissements/rapprochements analyses re-read

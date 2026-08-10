@@ -236,7 +236,7 @@ def mapping_preview(
     if ds.kind not in _MAPPING_GATED_KINDS:
         raise HTTPException(
             status_code=400,
-            detail=("Le mappage guidé ne s'applique qu'au grand livre, à la "
+            detail=("Le mapping guidé ne s'applique qu'au grand livre, à la "
                     "balance et au registre des immobilisations."),
         )
     try:
@@ -270,12 +270,12 @@ def confirm_mapping(
     if not ds:
         raise HTTPException(status_code=404, detail="Jeu de données introuvable")
     if ds.kind not in _MAPPING_GATED_KINDS:
-        raise HTTPException(status_code=400, detail="Type non concerné par le mappage guidé.")
+        raise HTTPException(status_code=400, detail="Type non concerné par le mapping guidé.")
 
     body = payload or {}
     mapping = body.get("mapping")
     if not isinstance(mapping, dict) or not mapping:
-        raise HTTPException(status_code=400, detail="Mappage manquant.")
+        raise HTTPException(status_code=400, detail="Mapping manquant.")
 
     try:
         data = get_object(ds.storage_key)

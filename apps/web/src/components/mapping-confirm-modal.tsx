@@ -34,6 +34,9 @@ type Column = {
 type FieldDef = {
   key: string; label_fr: string; mandatory: boolean;
   shape: 'SINGLE' | 'SIGNED' | 'PAIR'; members: string[];
+  /** Distinct human label per member (e.g. « Valeur brute à l'ouverture »,
+   *  « Dotation de la période ») — no more three identical entries. */
+  member_labels?: Record<string, string>;
   allow_pattern_extraction: boolean;
 };
 type Check = {
@@ -78,9 +81,10 @@ function assignableKeys(fields: FieldDef[]): { key: string; label: string; manda
     if (f.shape === 'PAIR') {
       for (const m of f.members) {
         const isSigned = m.endsWith('_signed');
+        const fallback = `${f.label_fr} — ${isSigned ? 'colonne unique signée' : m.endsWith('_debit') ? 'Débit' : 'Crédit'}`;
         out.push({
           key: m,
-          label: `${f.label_fr} — ${isSigned ? 'colonne unique signée' : m.endsWith('_debit') ? 'Débit' : 'Crédit'}`,
+          label: f.member_labels?.[m] ?? fallback,
           mandatory: f.mandatory,
         });
       }
@@ -158,7 +162,7 @@ export function MappingConfirmModal({
             <div className="flex items-center gap-2">
               <ScanLine className="w-5 h-5 text-indigo-600" />
               <h2 className="font-display text-lg font-extrabold text-black">
-                Confirmer le mappage avant import
+                Confirmer le mapping avant import
               </h2>
               {view && (
                 <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">
@@ -324,7 +328,7 @@ export function MappingConfirmModal({
             {/* ── 3. MAPPING TABLE ───────────────────────────────── */}
             <section>
               <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-500 mb-2">
-                Mappage des colonnes — corrigez si nécessaire
+                Mapping des colonnes — corrigez si nécessaire
               </div>
               <div className="overflow-x-auto border border-neutral-200 rounded-lg">
                 <table className="w-full text-xs">
@@ -438,7 +442,7 @@ export function MappingConfirmModal({
               </div>
               {view.sample_rows.length === 0 && (
                 <p className="text-xs text-rose-700 mt-1">
-                  Aucune ligne exploitable avec ce mappage — corrigez les champs ci-dessus.
+                  Aucune ligne exploitable avec ce mapping — corrigez les champs ci-dessus.
                 </p>
               )}
             </section>

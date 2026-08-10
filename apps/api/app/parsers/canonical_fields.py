@@ -44,6 +44,10 @@ class CanonicalField:
     #: True when the field may be satisfied by extracting a pattern from
     #: another column instead of having a dedicated column.
     allow_pattern_extraction: bool = False
+    #: Human label for EACH member, keyed by member key — shown in the remap
+    #: dropdown so variants of a group are distinguishable (the FAR rollforward
+    #: taught us: three entries all labelled « Valeur brute » are unusable).
+    member_labels: dict = field(default_factory=dict)
 
 
 # ── Journal-entry reference patterns ────────────────────────────────────────
@@ -119,6 +123,8 @@ GL_FIELDS: tuple[CanonicalField, ...] = (
         "amount", "Montant", "Journal entry amount", True, Shape.PAIR,
         members=("debit", "credit", "amount_signed"),
         hints=("debit", "credit", "montant", "amount", "debitcredit"),
+        member_labels={"debit": "Montant — Débit", "credit": "Montant — Crédit",
+                       "amount_signed": "Montant — colonne unique signée"},
     ),
     CanonicalField(
         "transaction_description", "Libellé de l'écriture", "Transaction description", True, Shape.SINGLE,
@@ -159,18 +165,27 @@ TB_FIELDS: tuple[CanonicalField, ...] = (
         members=("opening_debit", "opening_credit", "opening_signed"),
         hints=("aouverture", "ouverture", "initial", "initialbalance", "soldeinitial",
                "anouveau", "opening", "openingbalance", "balanceinitiale"),
+        member_labels={"opening_debit": "Ouverture — Débit",
+                       "opening_credit": "Ouverture — Crédit",
+                       "opening_signed": "Ouverture — colonne unique signée"},
     ),
     CanonicalField(
         "movements", "Mouvements de la période", "Movements", True, Shape.PAIR,
         members=("movement_debit", "movement_credit", "movement_signed"),
         hints=("mouvement", "mouvements", "periode", "debit", "credit", "movement",
                "activity", "period"),
+        member_labels={"movement_debit": "Mouvements — Débit",
+                       "movement_credit": "Mouvements — Crédit",
+                       "movement_signed": "Mouvements — colonne unique signée"},
     ),
     CanonicalField(
         "closing", "Solde de clôture", "Closing balance", True, Shape.PAIR,
         members=("closing_debit", "closing_credit", "closing_signed"),
         hints=("cloture", "final", "endbalance", "soldefinal", "closing",
                "closingbalance", "soldecloture", "end"),
+        member_labels={"closing_debit": "Clôture — Débit",
+                       "closing_credit": "Clôture — Crédit",
+                       "closing_signed": "Clôture — colonne unique signée"},
     ),
     # ── optional ──
     CanonicalField("annotations", "Annotations", "Annotations", False, Shape.SINGLE,
@@ -181,15 +196,18 @@ TB_FIELDS: tuple[CanonicalField, ...] = (
 
 
 # ── FIXED ASSET REGISTER ────────────────────────────────────────────────────
-# Key columns agreed with the auditor. Truly blocking: description + gross
-# value. The other "key" fields are displayed as required in the checklist but
-# an absence only warns — real registers routinely lack an explicit GL account
-# or rate column (the rate is then implied from dotation ÷ valeur brute).
-# Opening/closing pairs are tolerated as a single column (same rule as the TB).
+# Rollforward structure agreed with the auditor (2026-08-10):
+#   Valeur brute :   ouverture → acquisitions → cessions → transferts → clôture
+#   Amortissements : ouverture → dotation → repris/cessions → transférés → fin
+#   VNC :            ouverture → clôture
+# One column present out of a block is acceptable (simple registers carry a
+# single « Valeur brute »). Truly blocking: n° de compte, désignation, date
+# d'acquisition, valeur brute (any variant). Rate is displayed required but
+# only warns — it can be implied (dotation ÷ valeur brute).
 
 FAR_FIELDS: tuple[CanonicalField, ...] = (
     CanonicalField(
-        "account_number", "N° de compte (immobilisation)", "Account number", False, Shape.SINGLE,
+        "account_number", "N° de compte (immobilisation)", "Account number", True, Shape.SINGLE,
         hints=("compte", "ncompte", "numerocompte", "comptegeneral", "codecompte",
                "account", "accountcode", "accountnumber", "glaccount"),
     ),
@@ -204,43 +222,52 @@ FAR_FIELDS: tuple[CanonicalField, ...] = (
                "assetname", "assetdescription", "immobilisation"),
     ),
     CanonicalField(
-        "acquisition_date", "Date d'acquisition", "Acquisition date", False, Shape.SINGLE,
+        "acquisition_date", "Date d'acquisition", "Acquisition date", True, Shape.SINGLE,
         hints=("dateacquisition", "dacquisition", "acquisition", "datemiseenservice",
                "miseenservice", "dateentree", "purchasedate", "acquisitiondate"),
     ),
     CanonicalField(
         "disposal_date", "Date de cession / sortie", "Disposal date", False, Shape.SINGLE,
-        hints=("datecession", "cession", "datesortie", "sortie", "rebut",
-               "disposaldate", "disposal", "retirement"),
+        hints=("datecession", "datedecession", "datesortie", "datedesortie",
+               "rebut", "disposaldate", "retirement"),
     ),
     CanonicalField(
-        "gross_value", "Valeur brute (base amortissable)", "Gross book value", True, Shape.PAIR,
-        members=("gross_value", "opening_gross_value", "closing_gross_value"),
+        "gross_value", "Valeur brute", "Gross book value", True, Shape.PAIR,
+        members=("opening_gross_value", "gross_additions", "gross_disposals",
+                 "gross_transfers", "closing_gross_value"),
         hints=("valeurbrute", "valeurorigine", "valeuracquisition", "vab", "vb",
                "brute", "cout", "cost", "grossvalue", "grossbookvalue", "prixacquisition"),
+        member_labels={
+            "opening_gross_value": "Valeur brute à l'ouverture",
+            "gross_additions": "Acquisitions de la période (valeur brute)",
+            "gross_disposals": "Cessions de la période (valeur brute)",
+            "gross_transfers": "Transferts de la période (valeur brute)",
+            "closing_gross_value": "Valeur brute à la clôture",
+        },
     ),
     CanonicalField(
-        "accumulated_depreciation", "Amortissements cumulés", "Accumulated depreciation", False, Shape.PAIR,
-        members=("accumulated_depreciation", "opening_accumulated_depreciation",
+        "accumulated_depreciation", "Amortissements", "Depreciation", False, Shape.PAIR,
+        members=("opening_accumulated_depreciation", "year_depreciation",
+                 "depreciation_on_disposals", "depreciation_transfers",
                  "closing_accumulated_depreciation"),
         hints=("amortissementscumules", "cumulamortissement", "cumulamort", "amortcumules",
-               "accumulateddepreciation", "accumdep", "cumul"),
-    ),
-    CanonicalField(
-        "year_depreciation", "Dotation de l'exercice", "Depreciation for the year", False, Shape.SINGLE,
-        hints=("dotation", "dotationexercice", "dotationannuelle", "amortissementexercice",
-               "depreciationfortheyear", "yeardepreciation", "annualdepreciation", "charge"),
-    ),
-    CanonicalField(
-        "depreciation_on_disposals", "Amort. repris sur cessions", "Depreciation written off on disposals",
-        False, Shape.SINGLE,
-        hints=("reprisecession", "amortissementcession", "reprises", "writtenoff",
-               "depreciationondisposal", "sortieamortissement"),
+               "accumulateddepreciation", "accumdep", "cumul", "dotation", "amortissement"),
+        member_labels={
+            "opening_accumulated_depreciation": "Amort. cumulés à l'ouverture",
+            "year_depreciation": "Dotation de la période",
+            "depreciation_on_disposals": "Amort. repris sur cessions",
+            "depreciation_transfers": "Amort. transférés",
+            "closing_accumulated_depreciation": "Amort. cumulés en fin de période",
+        },
     ),
     CanonicalField(
         "nbv", "Valeur nette comptable", "Net book value", False, Shape.PAIR,
-        members=("nbv", "opening_nbv", "closing_nbv"),
+        members=("opening_nbv", "closing_nbv"),
         hints=("vnc", "valeurnette", "valeurnettecomptable", "netbookvalue", "nbv", "netvalue"),
+        member_labels={
+            "opening_nbv": "VNC à l'ouverture",
+            "closing_nbv": "VNC à la clôture",
+        },
     ),
     CanonicalField(
         "rate", "Taux d'amortissement", "Depreciation rate", False, Shape.SINGLE,
@@ -253,8 +280,8 @@ FAR_FIELDS: tuple[CanonicalField, ...] = (
 #: block (except the truly mandatory ones above). Keep in sync with the
 #: auditor's key-column list.
 FAR_KEY_FIELDS: frozenset[str] = frozenset({
-    "account_number", "reference", "name", "gross_value",
-    "accumulated_depreciation", "year_depreciation", "rate",
+    "account_number", "reference", "name", "acquisition_date", "gross_value",
+    "accumulated_depreciation", "rate",
 })
 
 
