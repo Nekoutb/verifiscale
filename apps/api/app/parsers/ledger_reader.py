@@ -291,10 +291,15 @@ def propose_mapping(hdr: HeaderInfo, rows: list[list[Any]], kind: str) -> dict[s
         # Resolve the three balance groups using the composed header, so
         # "Initial Balance Balance" != "End Balance Balance".
         groups = {
+            # "prior year" style exports (SAP & co.): a signed balance per
+            # period — prior = opening, current = closing; movements derive.
             "opening": ("aouverture", "ouverture", "initial", "initialbalance",
-                        "soldeinitial", "anouveau", "opening", "balanceinitiale"),
+                        "soldeinitial", "anouveau", "opening", "balanceinitiale",
+                        "prioryear", "previousyear", "priorbalance",
+                        "previousbalance", "exerciceprecedent", "anterieur"),
             "closing": ("cloture", "final", "endbalance", "soldefinal", "closing",
-                        "soldecloture", "end"),
+                        "soldecloture", "end", "currentyear", "currentbalance",
+                        "currentperiod", "soldeactuel", "exercicecourant"),
         }
         for gkey, toks in groups.items():
             for i, h in enumerate(eff):
@@ -511,6 +516,14 @@ def read(rows: list[list[Any]], kind: str, mapping: dict[str, int],
                     c = to_decimal(_get(row, mapping, f"{grp}_credit"))
                     rec[f"{grp}_debit"], rec[f"{grp}_credit"] = d, c
                     rec[f"{grp}_signed"] = d - c
+            # Two-balance exports (prior / current year) carry NO movement
+            # column: derive it, mouvement = clôture − ouverture.
+            if not any(mapping.get(k) is not None for k in
+                       ("movement_signed", "movement_debit", "movement_credit")):
+                mv = rec["closing_signed"] - rec["opening_signed"]
+                rec["movement_debit"] = mv if mv >= 0 else Decimal("0")
+                rec["movement_credit"] = -mv if mv < 0 else Decimal("0")
+                rec["movement_signed"] = mv
             out.append(rec)
 
     # Column totals (computed from what will ACTUALLY be ingested).

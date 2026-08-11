@@ -38,7 +38,7 @@ export default function ReportsPage() {
         </h1>
         <p className="text-sm text-slate-500 mt-1">
           {currentCase
-            ? `${currentCase.taxpayer.raison_sociale} · ${t('app.year')} ${currentCase.fiscal_year}`
+            ? `${currentCase.taxpayer?.raison_sociale ?? '—'} · ${t('app.year')} ${currentCase.fiscal_year}`
             : t('data.noCaseTitle')}
         </p>
       </div>

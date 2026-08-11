@@ -157,7 +157,7 @@ export default function SupplierInvoicesPage() {
         </h1>
         <p className="text-sm text-slate-500 mt-1">{t('inv.subtitle')}</p>
         <p className="text-xs text-slate-400 mt-0.5">
-          {currentCase.taxpayer.raison_sociale} · {t('app.year')} {currentCase.fiscal_year}
+          {currentCase.taxpayer?.raison_sociale ?? '—'} · {t('app.year')} {currentCase.fiscal_year}
         </p>
       </div>
 

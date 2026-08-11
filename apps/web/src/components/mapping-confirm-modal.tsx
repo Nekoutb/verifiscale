@@ -45,9 +45,10 @@ type Check = {
 };
 type BalanceGroup = { key: string; label: string; debit: number; credit: number; delta: number };
 type Preview = {
-  kind: 'GL' | 'TB';
+  kind: 'GL' | 'TB' | 'FAR';
   detected: boolean;
   error?: string;
+  raw_preview?: (string | null)[][];
   header_row: number;
   banner_row: number | null;
   columns: Column[];
@@ -148,7 +149,10 @@ export function MappingConfirmModal({
   };
 
   const blocked = !view?.can_confirm;
-  const needsAck = !!view && !view.balance.balanced;
+  // A « detected: false » payload has NO balance/totals/columns — guard every
+  // access (an unguarded read here white-paged the whole app on KPDC-style
+  // files whose header the reader could not find).
+  const needsAck = !!view?.detected && !!view.balance && !view.balance.balanced;
   const canSubmit = !blocked && (!needsAck || ack) && !confirm.isPending;
 
   if (!open) return null;
@@ -191,9 +195,33 @@ export function MappingConfirmModal({
         )}
 
         {view && !view.detected && (
-          <div className="px-6 py-10 text-center">
-            <XCircle className="w-8 h-8 text-rose-600 mx-auto mb-2" />
-            <div className="text-sm font-semibold text-black">{view.error}</div>
+          <div className="px-6 py-8">
+            <div className="text-center mb-4">
+              <XCircle className="w-8 h-8 text-rose-600 mx-auto mb-2" />
+              <div className="text-sm font-semibold text-black">{view.error}</div>
+              <div className="text-xs text-neutral-600 mt-1">
+                Voici les premières lignes telles que lues — vérifiez que le fichier
+                contient bien une ligne d'en-tête avec les intitulés de colonnes.
+              </div>
+            </div>
+            {view.raw_preview && view.raw_preview.length > 0 && (
+              <div className="overflow-x-auto border border-neutral-200 rounded-lg">
+                <table className="w-full text-[11px]">
+                  <tbody className="divide-y divide-neutral-100">
+                    {view.raw_preview.map((r, i) => (
+                      <tr key={i} className={i === 0 ? 'bg-neutral-50 font-semibold' : ''}>
+                        <td className="px-2 py-1 text-neutral-400 font-mono">{i + 1}</td>
+                        {r.map((cell, j) => (
+                          <td key={j} className="px-2 py-1 font-mono whitespace-nowrap text-neutral-800">
+                            {cell ?? ''}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
 

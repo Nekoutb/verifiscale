@@ -300,7 +300,7 @@ function ActiveAuditeeBadge() {
           {t('header.activeAuditee')}
         </div>
         <div className="text-xs font-semibold text-black truncate leading-tight mt-0.5">
-          {currentCase.taxpayer.raison_sociale}
+          {currentCase.taxpayer?.raison_sociale ?? '—'}
         </div>
         <div className="text-[10px] font-mono text-neutral-500 truncate leading-none mt-0.5">
           {currentCase.reference} · {t('app.year')} {currentCase.fiscal_year}

@@ -97,7 +97,7 @@ export default function RapprochementsPage() {
             {t('rec.pageTitle')}
           </h1>
           <p className="text-sm text-neutral-700 mt-1">
-            <strong>{currentCase.taxpayer.raison_sociale}</strong> · {t('app.year')} {currentCase.fiscal_year}
+            <strong>{currentCase.taxpayer?.raison_sociale ?? '—'}</strong> · {t('app.year')} {currentCase.fiscal_year}
             {data?.tb_filename && <span className="ml-1 text-neutral-500">· {t('rec.tbSource')}&nbsp;: {data.tb_filename}</span>}
             {data?.tolerance_fcfa != null && <span className="ml-1 text-neutral-500">· {t('rec.tolerance')}&nbsp;: ±{data.tolerance_fcfa} FCFA</span>}
           </p>

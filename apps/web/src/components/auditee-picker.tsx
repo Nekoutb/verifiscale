@@ -166,9 +166,9 @@ export function AuditeePicker({ variant = 'dark' }: { variant?: Variant } = {}) 
         <>
           {/* NIU + brigade summary */}
           <div className={th.niu}>
-            {t('auditee.niuLabel')} <span className={th.niuValue}>{currentCase.taxpayer.niu}</span>
+            {t('auditee.niuLabel')} <span className={th.niuValue}>{currentCase.taxpayer?.niu ?? '—'}</span>
             <br />
-            <span className={th.niuSub}>{currentCase.taxpayer.sector ?? '—'}</span>
+            <span className={th.niuSub}>{currentCase.taxpayer?.sector ?? '—'}</span>
           </div>
 
           {/* Audit type */}

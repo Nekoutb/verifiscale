@@ -110,8 +110,8 @@ export default function AuditDataPage() {
           {t('data.pageTitle')}
         </h1>
         <p className="text-sm text-slate-500 mt-1">
-          <strong>{currentCase.taxpayer.raison_sociale}</strong> —
-          <span className="font-mono ml-1">{currentCase.taxpayer.niu}</span> ·
+          <strong>{currentCase.taxpayer?.raison_sociale ?? '—'}</strong> —
+          <span className="font-mono ml-1">{currentCase.taxpayer?.niu ?? '—'}</span> ·
           <span className="ml-1">{currentCase.audit_type}</span> ·
           <span className="ml-1">{years.length} {t('data.exercises')} : {years.join(', ')}</span>
         </p>

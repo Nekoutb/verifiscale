@@ -158,13 +158,15 @@ TB_FIELDS: tuple[CanonicalField, ...] = (
     ),
     CanonicalField(
         "account_description", "Libellé du compte", "Account description", True, Shape.SINGLE,
-        hints=("libelle", "intitule", "accountname", "designation", "nomcompte"),
+        hints=("libelle", "intitule", "accountname", "designation", "nomcompte", "name"),
     ),
     CanonicalField(
         "opening", "Solde d'ouverture", "Opening balance", True, Shape.PAIR,
         members=("opening_debit", "opening_credit", "opening_signed"),
         hints=("aouverture", "ouverture", "initial", "initialbalance", "soldeinitial",
-               "anouveau", "opening", "openingbalance", "balanceinitiale"),
+               "anouveau", "opening", "openingbalance", "balanceinitiale",
+               "prioryear", "previousyear", "priorbalance", "previousbalance",
+               "exerciceprecedent"),
         member_labels={"opening_debit": "Ouverture — Débit",
                        "opening_credit": "Ouverture — Crédit",
                        "opening_signed": "Ouverture — colonne unique signée"},
@@ -182,7 +184,8 @@ TB_FIELDS: tuple[CanonicalField, ...] = (
         "closing", "Solde de clôture", "Closing balance", True, Shape.PAIR,
         members=("closing_debit", "closing_credit", "closing_signed"),
         hints=("cloture", "final", "endbalance", "soldefinal", "closing",
-               "closingbalance", "soldecloture", "end"),
+               "closingbalance", "soldecloture", "end", "currentyear",
+               "currentbalance", "currentperiod", "exercicecourant"),
         member_labels={"closing_debit": "Clôture — Débit",
                        "closing_credit": "Clôture — Crédit",
                        "closing_signed": "Clôture — colonne unique signée"},
@@ -356,9 +359,24 @@ def evaluate(mapping: dict, kind: str) -> tuple[list[FieldStatus], list[str]]:
     statuses: list[FieldStatus] = []
     errors: list[str] = []
 
+    # TB: a two-balance export (prior year / current year) has no movement
+    # column — movements are DERIVED as clôture − ouverture. Precompute the
+    # opening/closing satisfaction so the movements line can say so.
+    tb_can_derive_movements = False
+    if k == "TB":
+        _open_ok = any(mapping.get(m) is not None
+                       for m in ("opening_signed", "opening_debit", "opening_credit"))
+        _close_ok = any(mapping.get(m) is not None
+                        for m in ("closing_signed", "closing_debit", "closing_credit"))
+        tb_can_derive_movements = _open_ok and _close_ok
+
     for f in fields:
         ok, shape_used = _group_satisfied(mapping, f)
         detail = None
+        if not ok and k == "TB" and f.key == "movements" and tb_can_derive_movements:
+            ok = True
+            shape_used = "DERIVED"
+            detail = "dérivé : clôture − ouverture (export à deux soldes)"
         # entry_id may be satisfied by pattern extraction
         if not ok and f.allow_pattern_extraction and mapping.get(f"{f.key}__extract_from") is not None:
             ok = True
