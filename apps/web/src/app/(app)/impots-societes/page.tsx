@@ -15,7 +15,6 @@ const LINKS: SubLink[] = [
   { href: '/impots-societes/amortissements',            titleKey: 'is.amortissements.title',           subtitleKey: 'is.amortissements.subtitle' },
   { href: '/impots-societes/reglements-especes',        titleKey: 'is.cash.title',                     subtitleKey: 'is.cash.subtitle' },
   { href: '/impots-societes/dons',                      titleKey: 'is.dons.title',                     subtitleKey: 'is.dons.subtitle' },
-  { href: '/impots-societes/acomptes',                  titleKey: 'is.acomptes.title',                 subtitleKey: 'is.acomptes.subtitle' },
   { href: '/impots-societes/primes-assurance',          titleKey: 'is.assurance.title',                subtitleKey: 'is.assurance.subtitle' },
   { href: '/impots-societes/charges-financieres',       titleKey: 'is.financieres.title',              subtitleKey: 'is.financieres.subtitle' },
   { href: '/impots-societes/petit-materiel',            titleKey: 'is.petitMateriel.title',            subtitleKey: 'is.petitMateriel.subtitle' },

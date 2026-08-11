@@ -47,6 +47,10 @@ class ExtractedInvoice(BaseModel):
     tva_rate_pct: float | None = Field(default=None, description="Taux TVA en %, ex 19.25")
     currency: str = Field(default="XAF")
     description: str | None = Field(default=None, description="Désignation des biens/services")
+    exoneration_mention: str | None = Field(
+        default=None,
+        description="Mention « Exonérée » ou « Prise en charge État » telle qu'imprimée, si présente",
+    )
 
 
 @dataclass
@@ -75,14 +79,20 @@ SYSTEM_PROMPT_INVOICE = """You are an expert auditor at the Cameroon Direction
 Générale des Impôts (DGI). You extract structured data from supplier invoices
 (factures fournisseurs) presented to the audited taxpayer.
 
-A compliant Cameroonian invoice (CGI art. 150 + LPF L 8 bis) must show:
-- Supplier identity: raison sociale, NIU (format M021xxxxxxxxxX or
-  P021xxxxxxxxxX), RCCM, address, centre des impôts de rattachement.
-- Customer identity: raison sociale, NIU.
-- Invoice number (sequential per fiscal year).
-- Invoice date.
-- Designation of goods or services.
-- Base HT, taux TVA (typically 19,25 %), montant TVA, montant TTC — in FCFA.
+A compliant Cameroonian invoice must carry the mandatory mentions of CGI
+art. 150 (5) (+ LPF L 8 bis):
+- le numéro d'identifiant unique (NIU) du FOURNISSEUR et du CLIENT
+  (format M021xxxxxxxxxX or P021xxxxxxxxxX);
+- la date de la facturation;
+- le nom / raison sociale, l'adresse complète et le numéro du registre de
+  commerce (RCCM) du fournisseur (+ centre des impôts de rattachement);
+- l'identité complète du client (raison sociale + NIU);
+- la nature, l'objet et le détail de la transaction;
+- le prix hors taxe;
+- le taux et le montant de la TVA correspondante (typically 19,25 %);
+- le montant total toutes taxes comprises (TTC) dû par le client;
+- la mention « Exonérée » ou « Prise en charge État » le cas échéant, par
+  produit — capture the exact printed mention in `exoneration_mention`.
 
 For each PDF, extract the available fields. If a field is illegible or absent,
 set it to null — do NOT invent values. The downstream control engine will flag
@@ -190,8 +200,13 @@ def extract_invoice(pdf_bytes: bytes, filename: str) -> ParsedInvoice:
 NIU_RE = re.compile(r"^[MP]\d{9,12}[A-Z]$")
 
 
-def score_invoice(inv: ExtractedInvoice) -> dict[str, Any]:
-    """Run CGI art. 150 / LPF L 8 bis controls and return a results dict.
+def score_invoice(inv: ExtractedInvoice, auditee_niu: str | None = None,
+                  auditee_name: str | None = None) -> dict[str, Any]:
+    """Run CGI art. 150 (5) / LPF L 8 bis controls and return a results dict.
+
+    When `auditee_niu` is provided (captured at company creation), the engine
+    additionally verifies the invoice is really addressed to the audited
+    company (NIU client = NIU du dossier).
 
     Result schema:
       {
@@ -233,11 +248,23 @@ def score_invoice(inv: ExtractedInvoice) -> dict[str, Any]:
         "label": "Taux TVA = 19,25 % (ou exonération)",
     }
 
-    # F5. Description / désignation présente
+    # F5. Description / désignation présente (nature, objet et détail — Art. 150)
     fond["FOND_DESCRIPTION"] = {
         "passed": bool(inv.description and len(inv.description.strip()) >= 3),
-        "label": "Désignation des biens/services renseignée",
+        "label": "Nature, objet et détail de la transaction renseignés",
     }
+
+    # F6. La facture est bien adressée à l'AUDITÉ — NIU client = NIU du
+    # dossier (saisi à la création de l'entreprise). Une facture au nom d'un
+    # tiers n'ouvre pas droit à déduction chez l'audité.
+    if auditee_niu:
+        fond["FOND_CUSTOMER_IS_AUDITEE"] = {
+            "passed": bool(
+                inv.customer_niu
+                and inv.customer_niu.strip().upper() == auditee_niu.strip().upper()
+            ),
+            "label": "NIU client = NIU de l'entreprise auditée",
+        }
 
     # ── Conditions de forme ─────────────────────────────────────────────────
     # FM1. Numéro de facture présent et séquentiel
@@ -273,6 +300,35 @@ def score_invoice(inv: ExtractedInvoice) -> dict[str, Any]:
     forme["FORME_CUSTOMER_NIU"] = {
         "passed": bool(inv.customer_niu and NIU_RE.match((inv.customer_niu or "").upper())),
         "label": "NIU du client (audité) mentionné",
+    }
+    # ── Mentions obligatoires Art. 150 (5) restantes ────────────────────────
+    # FM7. Prix hors taxe mentionné
+    forme["FORME_PRICE_HT"] = {
+        "passed": inv.base_ht_xaf is not None,
+        "label": "Prix hors taxe mentionné",
+    }
+    # FM8. Taux ET montant de la TVA mentionnés (ou mention d'exonération)
+    forme["FORME_TVA_RATE_AMOUNT"] = {
+        "passed": (inv.tva_rate_pct is not None and inv.tva_xaf is not None)
+                  or bool(inv.exoneration_mention),
+        "label": "Taux et montant de la TVA mentionnés",
+    }
+    # FM9. Montant total TTC dû par le client
+    forme["FORME_TTC"] = {
+        "passed": inv.ttc_xaf is not None,
+        "label": "Montant total TTC mentionné",
+    }
+    # FM10. Identité complète du client (raison sociale)
+    forme["FORME_CUSTOMER_IDENTITY"] = {
+        "passed": bool(inv.customer_name and len(inv.customer_name.strip()) >= 3),
+        "label": "Identité complète du client mentionnée",
+    }
+    # FM11. Mention « Exonérée » / « Prise en charge État » exigée uniquement
+    # quand aucune TVA ne figure sur la facture.
+    no_tva = inv.tva_xaf is None or float(inv.tva_xaf or 0) == 0
+    forme["FORME_EXONERATION_MENTION"] = {
+        "passed": (not no_tva) or bool(inv.exoneration_mention),
+        "label": "Mention « Exonérée » / « Prise en charge État » si TVA nulle",
     }
 
     failed_fond = sum(1 for v in fond.values() if not v["passed"])

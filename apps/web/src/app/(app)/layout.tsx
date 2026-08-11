@@ -47,7 +47,12 @@ const NAV: NavSection[] = [
   ]},
   { sectionKey: 'sidebar.dataIntegrity', items: [
     { href: '/audit-data',     labelKey: 'nav.auditData',         Icon: Database,   tint: 'bg-blue-50 text-blue-600' },
-    { href: '/rapprochements', labelKey: 'nav.rapprochements',    Icon: GitCompare, tint: 'bg-cyan-50 text-cyan-600' },
+    {
+      href: '/rapprochements', labelKey: 'nav.rapprochements',    Icon: GitCompare, tint: 'bg-cyan-50 text-cyan-600',
+      children: [
+        { href: '/rapprochements/acomptes', labelKey: 'is.acomptes.title' },
+      ],
+    },
     { href: '/factures',       labelKey: 'nav.supplierInvoices',  Icon: FileText,   tint: 'bg-teal-50 text-teal-600' },
   ]},
   { sectionKey: 'sidebar.accountingControls', items: [
@@ -57,7 +62,6 @@ const NAV: NavSection[] = [
         { href: '/impots-societes/amortissements',           labelKey: 'is.amortissements.title' },
         { href: '/impots-societes/reglements-especes',       labelKey: 'is.cash.title' },
         { href: '/impots-societes/dons',                     labelKey: 'is.dons.title' },
-        { href: '/impots-societes/acomptes',                 labelKey: 'is.acomptes.title' },
         { href: '/impots-societes/primes-assurance',         labelKey: 'is.assurance.title' },
         { href: '/impots-societes/charges-financieres',      labelKey: 'is.financieres.title' },
         { href: '/impots-societes/petit-materiel',           labelKey: 'is.petitMateriel.title' },

@@ -394,6 +394,9 @@ function ReconciliationCard({
   saving: boolean;
 }) {
   const t = useT();
+  // Rolled up to ONE line by default — the auditor sees the total
+  // reconciliation at a glance and clicks to reveal the detail.
+  const [open, setOpen] = useState(false);
 
   // The TB↔GL rollforward has a translated title + dynamic subtitle.
   // Backend sends a French default; override with the i18n key here.
@@ -405,17 +408,39 @@ function ReconciliationCard({
         : t('rec.tbgl.subNoGL'))
     : rec.subtitle;
 
+  const fmt = (v: number | null | undefined) =>
+    v == null ? '—' : rec.is_count ? String(v) : formatXAF(v);
+
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-3 text-base">
-          {statusIcon(rec.status)}
-          <span className="flex-1">{displayTitle}</span>
-          <StatusBadge status={rec.status} />
-        </CardTitle>
-        <div className="text-xs text-slate-500 mt-1 ml-8">{displaySubtitle}</div>
-      </CardHeader>
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-neutral-50 transition rounded-xl"
+      >
+        {open ? <ChevronDown className="w-4 h-4 text-neutral-500 flex-shrink-0" />
+              : <ChevronRight className="w-4 h-4 text-neutral-500 flex-shrink-0" />}
+        {statusIcon(rec.status)}
+        <span className="flex-1 min-w-0 text-sm font-semibold text-black truncate">{displayTitle}</span>
+        <span className="hidden lg:flex items-center gap-2 text-xs font-mono tabular-nums flex-shrink-0"
+              style={{ fontFeatureSettings: '"tnum"' }}>
+          <span className="text-black" title={rec.ref_label}>{fmt(rec.ref_amount)}</span>
+          <span className="text-neutral-400">vs</span>
+          <span className="text-black" title={rec.counter_label}>{fmt(rec.counter_amount)}</span>
+          <span className={cn(
+            'font-bold min-w-[90px] text-right',
+            rec.diff == null ? 'text-neutral-400'
+            : Math.abs(rec.diff) < 100 ? 'text-emerald-700'
+            : 'text-rose-700',
+          )} title={t('rec.diff')}>
+            {rec.diff == null ? '—' : (rec.is_count ? String(rec.diff) : formatXAF(rec.diff))}
+          </span>
+        </span>
+        <StatusBadge status={rec.status} />
+      </button>
+      {open && (
       <CardContent>
+        <div className="text-xs text-slate-500 mb-3">{displaySubtitle}</div>
         {/* Main row (or single comparison row) */}
         {!rec.sub_items && (
           <RecRow
@@ -527,6 +552,7 @@ function ReconciliationCard({
           </div>
         )}
       </CardContent>
+      )}
     </Card>
   );
 }

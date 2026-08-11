@@ -44,6 +44,9 @@ export default function AuditDataPage() {
   const qc = useQueryClient();
   const t = useT();
   const years = useMemo(() => caseYearRange(currentCase), [currentCase]);
+  // One-screen layout: all boxes visible at once; clicking one opens its
+  // upload area below (per the auditor: no scrolling to find a data type).
+  const [activeKind, setActiveKind] = useState<DatasetKind>('TRIAL_BALANCE');
 
   const { data: datasets = [] } = useQuery({
     queryKey: ['datasets', currentCase?.id],
@@ -114,7 +117,59 @@ export default function AuditDataPage() {
         </p>
       </div>
 
-      {SECTIONS.map((sec) => {
+      {/* ── One-screen selector: every data type as a compact box ────────── */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+        {SECTIONS.map((sec) => {
+          const Icon = sec.Icon;
+          const active = activeKind === sec.kind;
+          const kindDs = datasets.filter((d) => d.kind === sec.kind);
+          return (
+            <button
+              key={sec.kind}
+              type="button"
+              onClick={() => setActiveKind(sec.kind)}
+              className={cn(
+                'rounded-lg border p-2.5 text-left transition',
+                active
+                  ? 'border-black bg-neutral-50 shadow-sm ring-1 ring-black'
+                  : 'border-slate-200 bg-white hover:border-slate-400',
+              )}
+            >
+              <div className="flex items-center gap-1.5">
+                <Icon className="w-4 h-4 text-black flex-shrink-0" />
+                <span className="text-[11px] font-semibold text-slate-800 leading-tight truncate">
+                  {sec.kind === 'MONTHLY_RETURN' ? 'DMM' : t(sec.titleKey)}
+                </span>
+              </div>
+              <div className="mt-1.5 flex items-center gap-1 flex-wrap">
+                {!sec.perBankAccount && sec.kind !== 'MONTHLY_RETURN' && years.map((y) => {
+                  const ds = findDs(sec.kind, y);
+                  return (
+                    <span
+                      key={y}
+                      title={`${y} — ${ds ? ds.status : 'aucun fichier'}`}
+                      className={cn(
+                        'inline-block w-2.5 h-2.5 rounded-full border',
+                        !ds ? 'bg-white border-slate-300'
+                        : ds.status === 'PARSED' ? 'bg-emerald-500 border-emerald-600'
+                        : ds.status === 'PENDING_MAPPING' ? 'bg-indigo-500 border-indigo-600'
+                        : ds.status === 'PARSE_ERROR' ? 'bg-rose-500 border-rose-600'
+                        : 'bg-amber-400 border-amber-500',
+                      )}
+                    />
+                  );
+                })}
+                <span className="text-[10px] text-slate-500 ml-auto font-mono">
+                  {kindDs.length > 0 ? `${kindDs.length} fichier${kindDs.length > 1 ? 's' : ''}` : '—'}
+                </span>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── Active section: upload area for the selected box ─────────────── */}
+      {SECTIONS.filter((sec) => sec.kind === activeKind).map((sec) => {
         const Icon = sec.Icon;
 
         // Special case: bank statements — one row per detected bank account × per year

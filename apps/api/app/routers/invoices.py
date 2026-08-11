@@ -124,7 +124,15 @@ def _process_pdf(db: Session, audit_case_id: UUID, file_data: bytes, filename: s
         inv.description = d.description
         inv.raw_ocr = parsed.raw
 
-        scored = score_invoice(d)
+        # Art. 150 (5): verify the invoice is addressed to the AUDITED company
+        # — its NIU/raison sociale were captured at company creation.
+        _case = db.get(AuditCase, audit_case_id)
+        _tp = _case.taxpayer if _case else None
+        scored = score_invoice(
+            d,
+            auditee_niu=_tp.niu if _tp else None,
+            auditee_name=_tp.raison_sociale if _tp else None,
+        )
         inv.control_results = {"fond": scored["fond"], "forme": scored["forme"]}
         inv.failed_fond_count = scored["failed_fond_count"]
         inv.failed_forme_count = scored["failed_forme_count"]

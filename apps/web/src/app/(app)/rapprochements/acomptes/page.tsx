@@ -68,9 +68,9 @@ export default function AcompteIsPage() {
 
   return (
     <div className="space-y-6">
-      <Link href="/impots-societes" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
+      <Link href="/rapprochements" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-black">
         <ArrowLeft className="w-3.5 h-3.5" />
-        {t('nav.corporateTax')}
+        {t('nav.rapprochements')}
       </Link>
 
       <div>
