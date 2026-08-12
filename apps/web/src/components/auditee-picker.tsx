@@ -67,7 +67,12 @@ const THEMES: Record<Variant, Theme> = {
  *
  * `variant="dark"` is the sidebar look; `variant="light"` is the dashboard card.
  */
-export function AuditeePicker({ variant = 'dark' }: { variant?: Variant } = {}) {
+export function AuditeePicker({ variant = 'dark', showSelector = true }: {
+  variant?: Variant;
+  /** false → the case is selected elsewhere (dossiers list); only show the
+   *  audit-type + scope parameters of the ACTIVE case. */
+  showSelector?: boolean;
+} = {}) {
   const qc = useQueryClient();
   const { currentCase, currentCaseId, setCurrentCase } = useApp();
   const t = useT();
@@ -139,7 +144,16 @@ export function AuditeePicker({ variant = 'dark' }: { variant?: Variant } = {}) 
         {t('auditee.label')}
       </div>
 
+      {/* No case yet + selection happens in the dossiers list → just a hint */}
+      {!showSelector && !currentCase && (
+        <div className="text-xs text-neutral-500 italic">
+          Sélectionnez un dossier dans la liste « Dossiers en cours » — il
+          s&apos;affichera en haut à droite et ses paramètres apparaîtront ici.
+        </div>
+      )}
+
       {/* Auditee selector */}
+      {showSelector && (
       <div className="relative">
         <select
           value={currentCase?.id ?? ''}
@@ -161,6 +175,7 @@ export function AuditeePicker({ variant = 'dark' }: { variant?: Variant } = {}) 
           variant === 'dark' ? 'text-slate-400' : 'text-slate-500',
         )} />
       </div>
+      )}
 
       {currentCase && (
         <>

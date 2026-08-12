@@ -82,6 +82,8 @@ const MESSAGES = {
   'is.assurance.subtitle':      { fr: 'Déductibilité des primes selon nature du risque assuré.', en: 'Deductibility of premiums by nature of insured risk.' },
   'is.financieres.title':       { fr: 'Charges financières',                          en: 'Financial expenses' },
   'is.financieres.subtitle':    { fr: 'Limites de déductibilité des intérêts d\'emprunt (CGI art. 7-A).', en: 'Limits on deductibility of borrowing interest (CGI art. 7-A).' },
+  'is.personnel.title':        { fr: 'Charges de personnel',                          en: 'Personnel costs' },
+  'is.personnel.subtitle':     { fr: 'Art. 7 A 1 — travail effectif, jetons de présence, allocations forfaitaires', en: 'Art. 7 A 1 — effective work, directors fees, lump-sum allowances' },
   'is.petitMateriel.title':     { fr: 'Petit matériel et outillage',                  en: 'Small tools and equipment' },
   'is.petitMateriel.subtitle':  { fr: 'Seuil d\'immobilisation, charges < 500 000 FCFA directement déductibles.', en: 'Capitalization threshold; expenses < 500,000 FCFA directly deductible.' },
   'is.nonDeductible.title':     { fr: 'Charges non déductibles',                      en: 'Non-deductible expenses' },

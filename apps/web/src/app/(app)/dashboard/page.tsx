@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const t = useT();
   const user = useApp((s) => s.user);
   const currentCase = useApp((s) => s.currentCase);
+  const setCurrentCase = useApp((s) => s.setCurrentCase);
   const [newOpen, setNewOpen] = useState(false);
 
   const { data: cases = [] } = useQuery({
@@ -93,8 +94,11 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-neutral-700 mb-4 leading-snug">{t('dashboard.pickerHint')}</p>
-            <AuditeePicker variant="light" />
+            <p className="text-xs text-neutral-700 mb-4 leading-snug">
+              Paramètres du dossier actif — la sélection de l&apos;engagement se fait
+              dans la liste « Dossiers en cours » ci-contre.
+            </p>
+            <AuditeePicker variant="light" showSelector={false} />
           </CardContent>
         </Card>
 
@@ -122,12 +126,13 @@ export default function DashboardPage() {
               {activeCases.map((c) => {
                 const isActive = currentCase?.id === c.id;
                 return (
-                  <Link
+                  <button
                     key={c.id}
-                    href={`/dossiers/${c.id}`}
+                    type="button"
+                    onClick={() => setCurrentCase(c)}
                     className={cn(
-                      'flex items-center gap-3 px-5 py-3 border-t border-neutral-100 first:border-t-0 hover:bg-neutral-50 transition group',
-                      isActive && 'bg-neutral-50',
+                      'w-full text-left flex items-center gap-3 px-5 py-3 border-t border-neutral-100 first:border-t-0 hover:bg-neutral-50 transition group',
+                      isActive && 'bg-neutral-50 ring-1 ring-inset ring-black',
                     )}
                   >
                     <div className={cn(
@@ -161,9 +166,16 @@ export default function DashboardPage() {
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <Badge variant={statusVariant(c.status)}>{t(statusLabelKey(c.status))}</Badge>
                       <Badge variant={riskVariant(c.risk_level)}>{t(riskLabelKey(c.risk_level))}</Badge>
-                      <ArrowRight className="w-4 h-4 text-neutral-500 opacity-0 group-hover:opacity-100 transition" />
+                      <Link
+                        href={`/dossiers/${c.id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-neutral-500 hover:text-black opacity-0 group-hover:opacity-100 transition"
+                        title="Ouvrir le détail du dossier"
+                      >
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
                     </div>
-                  </Link>
+                  </button>
                 );
               })}
             </div>

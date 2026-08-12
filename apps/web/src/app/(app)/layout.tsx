@@ -62,6 +62,7 @@ const NAV: NavSection[] = [
         { href: '/impots-societes/amortissements',           labelKey: 'is.amortissements.title' },
         { href: '/impots-societes/reglements-especes',       labelKey: 'is.cash.title' },
         { href: '/impots-societes/dons',                     labelKey: 'is.dons.title' },
+        { href: '/impots-societes/charges-personnel',        labelKey: 'is.personnel.title' },
         { href: '/impots-societes/primes-assurance',         labelKey: 'is.assurance.title' },
         { href: '/impots-societes/charges-financieres',      labelKey: 'is.financieres.title' },
         { href: '/impots-societes/petit-materiel',           labelKey: 'is.petitMateriel.title' },
@@ -287,22 +288,34 @@ function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
 function ActiveAuditeeBadge() {
   const t = useT();
   const currentCase = useApp((s) => s.currentCase);
-  if (!currentCase) return null;
+  // No engagement yet → a visible call-to-action, not a blank space.
+  if (!currentCase) {
+    return (
+      <Link
+        href="/dashboard"
+        className="hidden md:flex items-center gap-2 px-3 py-2 border border-dashed border-rose-400 text-rose-700 hover:bg-rose-50 transition text-xs font-semibold"
+      >
+        <Building2 className="w-4 h-4 flex-shrink-0" />
+        Sélectionner un dossier →
+      </Link>
+    );
+  }
+  // Engagement selected → highlighted (black) chip, always visible top-right.
   return (
     <Link
       href="/dashboard"
-      className="hidden md:flex items-center gap-2 px-3 py-1.5 border border-neutral-300 hover:border-black transition group"
+      className="hidden md:flex items-center gap-2.5 px-3.5 py-1.5 bg-black text-white hover:bg-neutral-800 transition shadow-sm"
       title={t('header.activeAuditeeTooltip')}
     >
-      <Building2 className="w-4 h-4 text-black flex-shrink-0" />
-      <div className="min-w-0 max-w-[260px]">
-        <div className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold leading-none">
+      <Building2 className="w-4 h-4 flex-shrink-0" />
+      <div className="min-w-0 max-w-[280px]">
+        <div className="text-[9px] uppercase tracking-wider text-neutral-400 font-semibold leading-none">
           {t('header.activeAuditee')}
         </div>
-        <div className="text-xs font-semibold text-black truncate leading-tight mt-0.5">
+        <div className="text-xs font-bold truncate leading-tight mt-0.5">
           {currentCase.taxpayer?.raison_sociale ?? '—'}
         </div>
-        <div className="text-[10px] font-mono text-neutral-500 truncate leading-none mt-0.5">
+        <div className="text-[10px] font-mono text-neutral-300 truncate leading-none mt-0.5">
           {currentCase.reference} · {t('app.year')} {currentCase.fiscal_year}
         </div>
       </div>

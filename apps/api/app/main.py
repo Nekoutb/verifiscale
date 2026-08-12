@@ -10,7 +10,7 @@ from app.routers import (
     charges_financieres, controls, datasets, dons_liberalites, invoices,
     monthly_returns, petit_materiel, primes_assurance, reconciliations,
     taxpayers, users,
-)
+ charges_personnel,)
 from app.storage import ensure_bucket
 
 
@@ -48,6 +48,7 @@ app.include_router(dons_liberalites.router)
 app.include_router(acompte_is.router)
 app.include_router(primes_assurance.router)
 app.include_router(charges_financieres.router)
+app.include_router(charges_personnel.router)
 app.include_router(petit_materiel.router)
 app.include_router(users.router)
 

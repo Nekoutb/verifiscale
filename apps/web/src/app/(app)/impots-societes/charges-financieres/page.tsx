@@ -151,10 +151,22 @@ export default function ChargesFinancieresPage() {
               { label: 'Associés prêteurs', value: data.summary.associe_count },
               { label: 'Non déductibles', value: data.summary.non_eligible_count,
                 tone: data.summary.non_eligible_count > 0 ? 'err' : 'ok' },
-              { label: `IRCM (${data.summary.ircm_rate_pct}%) base`, value: formatXAF(data.summary.ircm_base_xaf),
-                tone: data.summary.ircm_base_xaf > 0 ? 'warn' : 'neutral' },
             ]}
           />
+
+          {/* Contrat de prêt obligatoire — Art. 7 B */}
+          {data.associes.some((a) => a.interet_servi_xaf > 0
+            && (!a.convention_enregistree || !a.has_convention_file)) && (
+            <div className="rounded-lg border border-rose-300 bg-rose-50 px-4 py-3 text-xs text-rose-900 flex items-start gap-2">
+              <Info className="w-4 h-4 mt-0.5 flex-shrink-0" />
+              <span>
+                <b>Chargez la convention de prêt enregistrée</b> pour chaque associé prêteur
+                servi en intérêts. En l&apos;absence de contrat enregistré, ou si le capital
+                social n&apos;est pas entièrement libéré, la charge d&apos;intérêt est
+                <b> non déductible en totalité</b> (Art. 7 B — contrôle T2).
+              </span>
+            </div>
+          )}
 
           <ParamsCard caseId={currentCase.id} data={data} onSaved={() => { void refetch(); }} />
 
@@ -206,7 +218,10 @@ function CcRollforwardCard({ data }: { data: ChgFinResp }) {
         <div className="text-[11px] text-slate-500 mb-3">
           Solde de clôture mois par mois (ouverture {cc.opening_source === 'trial_balance' ? 'depuis la balance' : 'supposée 0 — balance absente'} + mouvements).
           ■ mois <b>débiteur</b> = la société a avancé des fonds à l&apos;associé → intérêt théorique réintégré
-          (taux BEAC+2 prorata temporis). On ne nette jamais entre associés.
+          (taux BEAC+2 prorata temporis). On ne nette jamais entre associés.{' '}
+          <Link href="/ircm" className="underline font-semibold text-black">
+            Implication IRCM → voir la section Impôt sur le revenu des capitaux mobiliers
+          </Link>.
         </div>
         <div className="space-y-4">
           {cc.accounts.map((acc) => (

@@ -231,7 +231,7 @@ def _upsert_finding(db: Session, case_id: UUID, payload: dict[str, Any]) -> None
     description = (
         f"Primes d'assurance (CGI Art. 7 A 4) : "
         f"{summary.get('contract_count', 0)} contrat(s), "
-        f"{non_elig} non éligible(s). "
+        f"{non_elig} non déductible(s). "
         f"Σ GL 625+6685+6686 = {float(summary.get('gl_total_xaf', 0)):,.0f} FCFA, "
         f"Σ contrats (exercice) = {float(summary.get('contracts_total_exercice_xaf', 0)):,.0f} FCFA, "
         f"écart = {float(summary.get('variance_xaf', 0)):,.0f} FCFA "

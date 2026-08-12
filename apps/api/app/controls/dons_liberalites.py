@@ -332,7 +332,7 @@ def _resolve_verdict(
     non_elig, ig_hint = _libelle_signals(libelle)
     if non_elig:
         return (DonationVerdict.NON_ELIGIBLE.value,
-                "Libellé évoque un bénéficiaire non-éligible (parti politique, associé, étranger…).",
+                "Libellé évoque un bénéficiaire n'ouvrant pas droit à déduction (parti politique, associé, étranger…).",
                 "AUTO_GL")
     if not name_guess:
         return (DonationVerdict.A_REINSTRUIRE.value,

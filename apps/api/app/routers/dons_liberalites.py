@@ -134,7 +134,7 @@ def _upsert_finding(db: Session, case_id: UUID, payload: dict[str, Any]) -> None
     description = (
         f"Comptes 658X / 6713 / 838X : "
         f"engagé {float(summary.get('total_engage_xaf') or 0):,.0f} FCFA, "
-        f"non éligible {float(non_eligible):,.0f} FCFA, "
+        f"non déductible {float(non_eligible):,.0f} FCFA, "
         f"à réinstruire {float(to_reinstruct):,.0f} FCFA. "
         f"Plafond légal 5‰ × CA HT ({ca_ht:,.0f}) = {plafond:,.0f} FCFA. "
         f"Réintégration estimée : {float(reintegration):,.0f} FCFA "
