@@ -27,10 +27,12 @@ def _validate_niu(niu: str) -> str:
 @router.get("", response_model=list[TaxpayerOut])
 def list_taxpayers(
     db: Annotated[Session, Depends(get_db)],
-    _: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user)],
     q: str | None = Query(default=None, description="Filter on NIU or raison_sociale"),
 ):
     query = db.query(Taxpayer)
+    if not getattr(user, "is_superadmin", False) and user.organization_id is not None:
+        query = query.filter(Taxpayer.organization_id == user.organization_id)
     if q:
         like = f"%{q}%"
         query = query.filter((Taxpayer.niu.ilike(like)) | (Taxpayer.raison_sociale.ilike(like)))

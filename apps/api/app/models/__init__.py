@@ -1,3 +1,4 @@
+from app.models.organization import Organization, OrgInvitation
 """SQLAlchemy ORM models for FiscAudit Pro."""
 from app.models.user import User, UserRole
 from app.models.brigade import Brigade
@@ -78,4 +79,5 @@ __all__ = [
     "PetitMaterielLine", "PetitMatQualif", "PetitMatBasis",
     "CashPaymentAssessment", "CashCurrentYear", "CashDecisionSrc", "CashExclusionKind",
     "LedgerLineReview", "ReviewModule",
+    "Organization", "OrgInvitation",
 ]

@@ -53,6 +53,9 @@ def list_audit_cases(
     user: Annotated[User, Depends(get_current_user)],
 ):
     q = db.query(AuditCase).options(joinedload(AuditCase.taxpayer))
+    # Multi-tenant : chaque organisation ne voit que ses dossiers
+    if not getattr(user, "is_superadmin", False) and user.organization_id is not None:
+        q = q.filter(AuditCase.organization_id == user.organization_id)
     # Brigade-scoped for non-admin
     if user.role.value != "ADMIN" and user.brigade_id:
         q = q.filter(AuditCase.brigade_id == user.brigade_id)
@@ -79,6 +82,7 @@ def create_audit_case(
     case = AuditCase(
         reference=payload.reference,
         taxpayer_id=payload.taxpayer_id,
+        organization_id=getattr(user, "organization_id", None),
         brigade_id=payload.brigade_id,
         assignee_id=payload.assignee_id or user.id,
         fiscal_year=payload.fiscal_year,
@@ -167,6 +171,7 @@ def quick_create_audit_case(
     case = AuditCase(
         reference=ref,
         taxpayer_id=tp.id,
+        organization_id=getattr(user, "organization_id", None),
         brigade_id=brigade_id,
         assignee_id=user.id,
         fiscal_year=payload.starting_year,

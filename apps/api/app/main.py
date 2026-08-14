@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.routers import (
-    acompte_is, amortissements, auth, audit_cases, brigades, cash_payments,
+    acompte_is, admin_orgs, amortissements, auth, audit_cases, brigades, cash_payments,
     charges_financieres, charges_personnel, comptes_analyses, controls, datasets,
     dons_liberalites, invoices, monthly_returns, petit_materiel, primes_assurance,
     reconciliations, taxpayers, users,
@@ -50,6 +50,7 @@ app.include_router(primes_assurance.router)
 app.include_router(charges_financieres.router)
 app.include_router(charges_personnel.router)
 app.include_router(comptes_analyses.router)
+app.include_router(admin_orgs.router)
 app.include_router(petit_materiel.router)
 app.include_router(users.router)
 

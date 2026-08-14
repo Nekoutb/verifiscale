@@ -90,6 +90,7 @@ const MESSAGES = {
   'is.provisions.subtitle':    { fr: 'Rollforward ouverture + dotations − reprises',      en: 'Rollforward opening + additions − reversals' },
   'data.financialStatements':  { fr: 'États financiers (DSF / liasse)',                   en: 'Financial statements' },
   'data.financialStatementsHint': { fr: 'Excel ou PDF — un jeu par exercice',              en: 'Excel or PDF — one set per fiscal year' },
+  'nav.adminClients':          { fr: 'Clients (plateforme)',                          en: 'Clients (platform)' },
   'is.personnel.title':        { fr: 'Charges de personnel',                          en: 'Personnel costs' },
   'is.personnel.subtitle':     { fr: 'Art. 7 A 1 — travail effectif, jetons de présence, allocations forfaitaires', en: 'Art. 7 A 1 — effective work, directors fees, lump-sum allowances' },
   'is.petitMateriel.title':     { fr: 'Petit matériel et outillage',                  en: 'Small tools and equipment' },

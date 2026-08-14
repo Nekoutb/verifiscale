@@ -36,6 +36,9 @@ class UserOut(BaseModel):
     organization: str | None = None
     last_login_at: datetime | None = None
     created_at: datetime | None = None
+    is_superadmin: bool = False
+    organization_id: UUID | None = None
+
 
 
 # --- Brigades ---

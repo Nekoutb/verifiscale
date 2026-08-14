@@ -94,6 +94,7 @@ const NAV: NavSection[] = [
   ]},
   { sectionKey: 'sidebar.administration', adminOnly: true, items: [
     { href: '/utilisateurs', labelKey: 'nav.utilisateurs', Icon: Users, adminOnly: true, tint: 'bg-slate-100 text-slate-600' },
+    { href: '/admin', labelKey: 'nav.adminClients', Icon: Building2, adminOnly: true, tint: 'bg-slate-100 text-slate-600' },
   ]},
 ];
 

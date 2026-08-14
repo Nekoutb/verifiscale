@@ -16,6 +16,7 @@ import { useApp } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { useT, type MessageKey } from '@/lib/i18n';
 import { AuditeePicker } from '@/components/auditee-picker';
+import { OnboardingWizard } from '@/components/onboarding-wizard';
 import { NewCaseModal } from '@/components/new-case-modal';
 
 export default function DashboardPage() {
@@ -86,6 +87,9 @@ export default function DashboardPage() {
 
       {/* Master filter — drives every other page */}
       <div className="grid lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-3">
+          <OnboardingWizard caseCount={activeCases.length} onNewCase={() => setNewOpen(true)} />
+        </div>
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
