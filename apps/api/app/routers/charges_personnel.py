@@ -32,7 +32,7 @@ def get_charges_personnel(
         .filter(Dataset.audit_case_id == case_id,
                 Dataset.kind == DatasetKind.GENERAL_LEDGER,
                 Dataset.status == DatasetStatus.PARSED)
-        .order_by(Dataset.created_at.desc())
+        .order_by(Dataset.uploaded_at.desc())
         .first()
     )
     if gl is None:

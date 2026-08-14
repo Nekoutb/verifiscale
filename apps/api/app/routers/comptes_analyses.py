@@ -36,7 +36,7 @@ def _latest(db: Session, case_id: UUID, kind: DatasetKind) -> Dataset | None:
         db.query(Dataset)
         .filter(Dataset.audit_case_id == case_id, Dataset.kind == kind,
                 Dataset.status == DatasetStatus.PARSED)
-        .order_by(Dataset.created_at.desc())
+        .order_by(Dataset.uploaded_at.desc())
         .first()
     )
 
