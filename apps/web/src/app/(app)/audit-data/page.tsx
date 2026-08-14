@@ -34,6 +34,7 @@ const SECTIONS: DocSection[] = [
   { kind: 'FIXED_ASSETS_REGISTER',     titleKey: 'data.fixedAssets',      hintKey: 'data.fixedAssetsHint',      Icon: Building2 },
   { kind: 'INVENTORY_LISTING',         titleKey: 'data.inventory',        hintKey: 'data.inventoryHint',        Icon: Boxes },
   { kind: 'BANK_STATEMENT',            titleKey: 'data.bankStatements',   hintKey: 'data.bankStatementsHint',   Icon: Banknote, perBankAccount: true },
+  { kind: 'FINANCIAL_STATEMENTS',      titleKey: 'data.financialStatements', hintKey: 'data.financialStatementsHint', Icon: FileText },
   { kind: 'MONTHLY_RETURN',            titleKey: 'data.monthlyReturns',   hintKey: 'data.monthlyReturnsHint',   Icon: Receipt },
   { kind: 'DIPE',                      titleKey: 'data.dipe',             hintKey: 'data.dipeHint',             Icon: Users },
 ];

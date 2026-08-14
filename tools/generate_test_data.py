@@ -79,6 +79,37 @@ def gen_company(name, niu, k):
     entry("OD", date(YEAR, 12, 31).isoformat(), [
         ("671300", "Intérêts des dettes liées aux participations", "Intérêts CC associé NGUEMA", M(2_400_000), 0),
         ("462100", "Comptes courants associés", "Intérêts CC", 0, M(2_400_000))])
+
+    # ── Comptes 46 : le compte passe DÉBITEUR (avance à l'associé) ──────────
+    entry("OD", date(YEAR, 5, 12).isoformat(), [
+        ("462100", "Comptes courants associés", "Avance de trésorerie à l'associé NGUEMA", M(9_000_000), 0),
+        ("521100", "Banque", "Avance associé", 0, M(9_000_000))])
+    entry("OD", date(YEAR, 8, 22).isoformat(), [
+        ("521100", "Banque", "Remboursement partiel associé", M(6_000_000), 0),
+        ("462100", "Comptes courants associés", "Remboursement associé", 0, M(6_000_000))])
+    # paire qui s'annule (détection contrepassation)
+    entry("OD", date(YEAR, 9, 5).isoformat(), [
+        ("462100", "Comptes courants associés", "Écriture à contrepasser", M(1_750_000), 0),
+        ("521100", "Banque", "Écriture à contrepasser", 0, M(1_750_000))])
+    entry("OD", date(YEAR, 9, 6).isoformat(), [
+        ("521100", "Banque", "Contrepassation", M(1_750_000), 0),
+        ("462100", "Comptes courants associés", "Contrepassation", 0, M(1_750_000))])
+
+    # ── Comptes divers 4711 / 4712 : tiers non identifiés ───────────────────
+    entry("OD", date(YEAR, 3, 18).isoformat(), [
+        ("471100", "Débiteurs divers", "Décaissement tiers non identifié", M(1_500_000), 0),
+        ("571100", "Caisse", "Décaissement divers", 0, M(1_500_000))])
+    entry("OD", date(YEAR, 4, 9).isoformat(), [
+        ("521100", "Banque", "Encaissement d'origine inconnue", M(2_300_000), 0),
+        ("471200", "Créditeurs divers", "Encaissement tiers non identifié", 0, M(2_300_000))])
+
+    # ── Provisions : dotations (69XX) et reprises (79XX) ────────────────────
+    entry("OD", date(YEAR, 12, 31).isoformat(), [
+        ("691000", "Dotations aux provisions d'exploitation", "Dotation dépréciation stocks", M(1_500_000), 0),
+        ("391000", "Provisions dépréciation des stocks", "Dotation dépréciation stocks", 0, M(1_500_000))])
+    entry("OD", date(YEAR, 12, 31).isoformat(), [
+        ("419100", "Provisions créances douteuses", "Reprise provision client soldé", M(1_000_000), 0),
+        ("791000", "Reprises de provisions d'exploitation", "Reprise provision client soldé", 0, M(1_000_000))])
     entry("OD", date(YEAR, 3, 1).isoformat(), [
         ("244100", "Matériel et outillage", "Acquisition machine conditionnement", M(18_000_000), 0),
         ("404100", "Fournisseurs d'immobilisations", "Machine", 0, M(18_000_000))])
@@ -98,7 +129,11 @@ def gen_company(name, niu, k):
     opening = {"101100": (0, M(50_000_000)), "244100": (M(30_000_000), 0),
                "284410": (0, M(12_000_000)), "311100": (M(9_000_000), 0),
                "411100": (M(7_500_000), 0), "401100": (0, M(6_200_000)),
-               "521100": (M(21_700_000), 0)}
+               "521100": (M(21_700_000), 0),
+               # comptes d'associés : créditeur à l'ouverture (position normale)
+               "462100": (0, M(5_000_000)),
+               # provisions à l'ouverture (rollforward)
+               "391000": (0, M(3_000_000)), "419100": (0, M(2_000_000))}
     tb_rows = []
     codes = sorted(set(list(agg.keys()) + list(opening.keys())))
     for c in codes:

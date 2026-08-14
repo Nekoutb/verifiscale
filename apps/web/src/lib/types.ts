@@ -95,7 +95,8 @@ export type DatasetKind =
   | 'PAYMENT_PROOF' | 'DIPE' | 'PATENTE_AVIS' | 'FONCIER_AVIS'
   | 'ACCOUNTS_PAYABLE_AGING' | 'ACCOUNTS_RECEIVABLE_AGING'
   | 'FIXED_ASSETS_REGISTER' | 'BANK_STATEMENT'
-  | 'INVENTORY_LISTING';
+  | 'INVENTORY_LISTING'
+  | 'FINANCIAL_STATEMENTS';
 
 export interface DatasetColumnMapping {
   source?: 'ai' | 'keyword';

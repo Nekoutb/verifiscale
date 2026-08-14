@@ -40,6 +40,7 @@ class DatasetKind(str, enum.Enum):
     FIXED_ASSETS_REGISTER = "FIXED_ASSETS_REGISTER"        # Registre / tableau d'immobilisations
     BANK_STATEMENT = "BANK_STATEMENT"                      # Relevé bancaire (1 par compte 52x par exercice)
     INVENTORY_LISTING = "INVENTORY_LISTING"                # État d'inventaire physique (cl. 3X)
+    FINANCIAL_STATEMENTS = "FINANCIAL_STATEMENTS"          # États financiers (DSF / liasse) — Excel ou PDF
     # LPF — Procédural milestone documents (PDF / scan)
     AVIS_VERIFICATION = "AVIS_VERIFICATION"                # Avis de vérification (LPF art. L 8)
     NOTIFICATION_REDRESSEMENT = "NOTIFICATION_REDRESSEMENT"  # Notification de redressement

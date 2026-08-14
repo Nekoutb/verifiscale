@@ -47,6 +47,7 @@ from app.models.petit_materiel import (
     PetitMatBasis,
 )
 from app.models.cash_assessment import (
+from app.models.ledger_review import LedgerLineReview, ReviewModule
     CashPaymentAssessment,
     CashCurrentYear,
     CashDecisionSrc,
@@ -76,4 +77,5 @@ __all__ = [
     "ChgFinVerdict", "ChgFinVerdictSource",
     "PetitMaterielLine", "PetitMatQualif", "PetitMatBasis",
     "CashPaymentAssessment", "CashCurrentYear", "CashDecisionSrc", "CashExclusionKind",
+    "LedgerLineReview", "ReviewModule",
 ]
