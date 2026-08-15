@@ -23,17 +23,20 @@ def send_email(to_email: str, subject: str, html: str, text: str) -> bool:
         log.info("MailerSend non configuré — email « %s » non envoyé à %s", subject, to_email)
         return False
     try:
+        payload = {
+            "from": {"email": s.mail_from_email, "name": s.mail_from_name},
+            "to": [{"email": to_email}],
+            "subject": subject,
+            "html": html,
+            "text": text,
+        }
+        if s.mail_reply_to:
+            payload["reply_to"] = {"email": s.mail_reply_to, "name": s.mail_from_name}
         r = httpx.post(
             API_URL,
             headers={"Authorization": f"Bearer {s.mailersend_api_key}",
                      "Content-Type": "application/json"},
-            json={
-                "from": {"email": s.mail_from_email, "name": s.mail_from_name},
-                "to": [{"email": to_email}],
-                "subject": subject,
-                "html": html,
-                "text": text,
-            },
+            json=payload,
             timeout=15,
         )
         if r.status_code in (200, 202):

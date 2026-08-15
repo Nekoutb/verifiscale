@@ -35,6 +35,7 @@ class Settings(BaseSettings):
     mailersend_api_key: str = ""
     mail_from_email: str = "no-reply@verifiscale.com"
     mail_from_name: str = "VerifiScale"
+    mail_reply_to: str = ""
     app_base_url: str = "https://verifiscale.com"
 
     @property

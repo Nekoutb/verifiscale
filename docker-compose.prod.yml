@@ -46,6 +46,7 @@ services:
       MAILERSEND_API_KEY: ${MAILERSEND_API_KEY:-}
       MAIL_FROM_EMAIL: ${MAIL_FROM_EMAIL:-no-reply@verifiscale.com}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-VerifiScale}
+      MAIL_REPLY_TO: ${MAIL_REPLY_TO:-}
       APP_BASE_URL: ${APP_BASE_URL:-https://verifiscale.com}
     expose:
       - "8000"
