@@ -38,6 +38,7 @@ class UserOut(BaseModel):
     created_at: datetime | None = None
     is_superadmin: bool = False
     organization_id: UUID | None = None
+    must_change_password: bool = False
 
 
 

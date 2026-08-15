@@ -37,6 +37,8 @@ class User(Base):
         UUID(as_uuid=True), ForeignKey("organizations.id", ondelete="SET NULL"), nullable=True
     )
     is_superadmin: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    #: force le changement du mot de passe provisoire à la première connexion
+    must_change_password: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
 
     # Prospection / contact info — captured at first login or set by admin
     phone_number: Mapped[str | None] = mapped_column(String(32), nullable=True)

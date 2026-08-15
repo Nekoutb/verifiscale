@@ -49,8 +49,9 @@ export default function LoginPage() {
       });
       setToken(res.access_token);
       try {
-        const me = await api<{ is_superadmin?: boolean }>('/auth/me');
-        router.push(me?.is_superadmin ? '/admin' : '/dossiers');
+        const me = await api<{ is_superadmin?: boolean; must_change_password?: boolean }>('/auth/me');
+        if (me?.must_change_password) router.push('/change-password');
+        else router.push(me?.is_superadmin ? '/admin' : '/dossiers');
       } catch {
         router.push('/dossiers');
       }

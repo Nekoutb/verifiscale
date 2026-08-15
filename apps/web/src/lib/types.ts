@@ -15,6 +15,7 @@ export interface User {
   created_at: string | null;
   is_superadmin?: boolean;
   organization_id?: string | null;
+  must_change_password?: boolean;
 }
 
 export interface Brigade {

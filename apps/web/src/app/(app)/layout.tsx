@@ -117,6 +117,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => { if (me) setUser(me); }, [me, setUser]);
 
+  // Mot de passe provisoire : aucune page tant qu'il n'est pas changé.
+  useEffect(() => {
+    if (me?.must_change_password && pathname !== '/change-password') {
+      router.replace('/change-password');
+    }
+  }, [me, pathname, router]);
+
   const logout = () => {
     setToken(null);
     setUser(null);

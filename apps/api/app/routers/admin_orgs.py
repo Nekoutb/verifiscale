@@ -81,6 +81,7 @@ def create_organization(
         full_name=str(payload.get("admin_full_name") or name),
         password_hash=hash_password(admin_password),
         role=UserRole.ADMIN, is_active=True, organization_id=org.id,
+        must_change_password=True,
     )
     db.add(admin); db.commit()
     email_sent = send_org_welcome(admin_email, org.name, admin_email, admin_password)
