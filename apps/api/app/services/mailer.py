@@ -64,23 +64,49 @@ def send_org_welcome(to_email: str, org_name: str, admin_email: str,
     s = get_settings()
     url = f"{s.app_base_url}/login"
     html = _shell(
-        f"Votre espace « {org_name} » est prêt",
+        f"Bienvenue — votre espace « {org_name} » est prêt 🎉",
         f"""<p style="font-size:14px;color:#333">Bonjour,</p>
-<p style="font-size:14px;color:#333">Votre espace de travail VerifiScale a été créé.
-Connectez-vous avec :</p>
-<p style="font-size:14px;color:#111"><b>Adresse :</b> {admin_email}<br>
-<b>Mot de passe provisoire :</b> {temp_password}</p>
-<p><a href="{url}" style="display:inline-block;background:#111;color:#fff;padding:10px 22px;
-border-radius:8px;text-decoration:none;font-size:14px;font-weight:600">Se connecter</a></p>
-<p style="font-size:12px;color:#666">Changez ce mot de passe dès votre première connexion.
-Un assistant de démarrage vous guidera : création du premier dossier, chargement des
-données, invitation de votre équipe.</p>""",
+<p style="font-size:14px;color:#333;line-height:1.6">Je suis <b>Fri</b>, de l'équipe
+VerifiScale. Votre espace de travail sécurisé vient d'être provisionné : vous y menez
+vos vérifications fiscales (balance, grand-livre, contrôles CGI, rapprochements) dans
+un environnement entièrement isolé, réservé à votre cabinet.</p>
+
+<div style="background:#f6f6f6;border:1px solid #e5e5e5;border-radius:10px;padding:16px 18px;margin:18px 0">
+  <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#888;margin-bottom:6px">Vos identifiants de connexion</div>
+  <div style="font-size:14px;color:#111;line-height:1.8">
+    <b>Espace :</b> {org_name}<br>
+    <b>Adresse :</b> {admin_email}<br>
+    <b>Mot de passe provisoire :</b> <code style="background:#fff;border:1px solid #ddd;border-radius:4px;padding:1px 6px">{temp_password}</code>
+  </div>
+</div>
+
+<p style="text-align:center;margin:24px 0">
+  <a href="{url}" style="display:inline-block;background:#111;color:#fff;padding:12px 32px;
+  border-radius:8px;text-decoration:none;font-size:15px;font-weight:700">Accéder à mon espace</a>
+</p>
+
+<p style="font-size:13px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px">
+  🔐 <b>Important :</b> ce mot de passe est provisoire — changez-le dès votre première
+  connexion (menu Utilisateurs &rarr; votre profil).</p>
+
+<p style="font-size:13px;color:#333;line-height:1.7"><b>Vos premières étapes</b> (un
+assistant vous guide à l'écran) :<br>
+&nbsp;&nbsp;1&#65039;&#8419; Créez votre premier dossier de vérification (contribuable, exercices)<br>
+&nbsp;&nbsp;2&#65039;&#8419; Chargez la balance et le grand-livre — le mapping se confirme en un clic<br>
+&nbsp;&nbsp;3&#65039;&#8419; Invitez votre équipe — chaque membre reçoit son lien personnel</p>
+
+<p style="font-size:13px;color:#333">Une question, un blocage ? Répondez simplement à
+cet email — il arrive directement chez nous.</p>
+<p style="font-size:13px;color:#333">Bonne vérification,<br><b>Fri</b> — VerifiScale (CM-EA)</p>""",
     )
-    text = (f"Votre espace VerifiScale « {org_name} » est prêt.\n"
-            f"Connexion : {url}\nAdresse : {admin_email}\n"
-            f"Mot de passe provisoire : {temp_password}\n"
-            f"Changez-le dès la première connexion.")
-    return send_email(to_email, f"Bienvenue sur VerifiScale — {org_name}", html, text)
+    text = (f"Bonjour,\n\nJe suis Fri, de l'équipe VerifiScale. Votre espace « {org_name} » est prêt.\n\n"
+            f"Connexion : {url}\nEspace : {org_name}\nAdresse : {admin_email}\n"
+            f"Mot de passe provisoire : {temp_password}\n\n"
+            f"IMPORTANT : changez ce mot de passe dès votre première connexion.\n\n"
+            f"Premières étapes : 1) créez votre premier dossier 2) chargez balance et grand-livre "
+            f"3) invitez votre équipe.\n\nUne question ? Répondez à cet email.\n\nFri — VerifiScale (CM-EA)")
+    return send_email(to_email, f"Bienvenue sur VerifiScale — votre espace {org_name} est prêt",
+                      html, text)
 
 
 def send_invitation(to_email: str, org_name: str, invite_path: str,
