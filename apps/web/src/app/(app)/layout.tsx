@@ -168,6 +168,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0">
+        <ActingOrgBanner />
         <header className="bg-white border-b border-neutral-200 px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
           <div className="hidden lg:block">
             <div className="text-[11px] text-neutral-500 uppercase tracking-widest">{t('app.platform')}</div>
@@ -324,5 +325,30 @@ function ActiveAuditeeBadge() {
         </div>
       </div>
     </Link>
+  );
+}
+
+
+/** Bandeau d'accès encadré : le superadmin consulte l'espace d'un client. */
+function ActingOrgBanner() {
+  const [acting, setActing] = useState<string | null>(null);
+  useEffect(() => {
+    setActing(window.localStorage.getItem('fa_acting_org'));
+  }, []);
+  if (!acting) return null;
+  const exit = () => {
+    const back = window.localStorage.getItem('fa_token_admin');
+    if (back) setToken(back);
+    window.localStorage.removeItem('fa_token_admin');
+    window.localStorage.removeItem('fa_acting_org');
+    window.location.href = '/admin';
+  };
+  return (
+    <div className="bg-amber-400 text-black px-6 py-2 flex items-center justify-between gap-3 text-xs font-semibold">
+      <span>🛡 Accès encadré — vous consultez l'espace client « {acting} » exactement comme ses membres le voient.</span>
+      <button onClick={exit} className="border border-black px-3 py-1 rounded font-bold hover:bg-black hover:text-white transition">
+        Quitter l'espace client
+      </button>
+    </div>
   );
 }

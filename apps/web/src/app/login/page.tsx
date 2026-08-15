@@ -48,7 +48,12 @@ export default function LoginPage() {
         },
       });
       setToken(res.access_token);
-      router.push('/dossiers');
+      try {
+        const me = await api<{ is_superadmin?: boolean }>('/auth/me');
+        router.push(me?.is_superadmin ? '/admin' : '/dossiers');
+      } catch {
+        router.push('/dossiers');
+      }
     } catch (err) {
       setError((err as Error).message || t('login.errorFallback'));
     } finally {

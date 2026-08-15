@@ -22,7 +22,8 @@ from app.database import get_db
 from app.models import (
     AuditCase, Dataset, Organization, OrgInvitation, User, UserRole,
 )
-from app.security import get_current_user, hash_password
+from app.security import create_access_token, get_current_user, hash_password
+from app.services.mailer import send_invitation, send_org_welcome
 
 router = APIRouter(tags=["admin-organizations"])
 
@@ -82,7 +83,9 @@ def create_organization(
         role=UserRole.ADMIN, is_active=True, organization_id=org.id,
     )
     db.add(admin); db.commit()
-    return {"ok": True, "organization_id": str(org.id), "admin_email": admin_email}
+    email_sent = send_org_welcome(admin_email, org.name, admin_email, admin_password)
+    return {"ok": True, "organization_id": str(org.id), "admin_email": admin_email,
+            "email_sent": email_sent}
 
 
 @router.get("/admin/organizations/{org_id}")
@@ -112,6 +115,23 @@ def organization_detail(
     }
 
 
+@router.post("/admin/organizations/{org_id}/impersonate")
+def impersonate_organization(
+    org_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    user: Annotated[User, Depends(require_superadmin)],
+):
+    """Accès client encadré : émet un token qui agit COMME un membre de cette
+    organisation (même périmètre, mêmes filtres). L'identité reste celle du
+    superadmin ; le bandeau côté client rend l'accès visible et réversible."""
+    org = db.get(Organization, org_id)
+    if not org:
+        raise HTTPException(status_code=404, detail="Client introuvable")
+    token = create_access_token(subject=str(user.id), role=user.role.value,
+                                extra={"act_org": str(org_id)})
+    return {"access_token": token, "token_type": "bearer", "org_name": org.name}
+
+
 # ── Invitations d'équipe (admin de l'organisation) ──────────────────────────
 
 @router.post("/orgs/invitations")
@@ -132,9 +152,12 @@ def create_invitation(
     inv = OrgInvitation(organization_id=user.organization_id, email=email,
                         role=str(payload.get("role") or "AUDITEUR"), invited_by=user.id)
     db.add(inv); db.commit()
+    org = db.get(Organization, user.organization_id)
+    email_sent = send_invitation(email, org.name if org else "VerifiScale",
+                                 f"/invitation/{inv.token}", inv.expires_at.isoformat())
     return {"ok": True, "email": email, "token": inv.token,
             "invite_path": f"/invitation/{inv.token}",
-            "expires_at": inv.expires_at.isoformat()}
+            "expires_at": inv.expires_at.isoformat(), "email_sent": email_sent}
 
 
 @router.get("/orgs/invitations")

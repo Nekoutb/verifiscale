@@ -31,6 +31,12 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     anthropic_model: str = "claude-opus-4-7"
 
+    # MailerSend (emails transactionnels : onboarding client, invitations)
+    mailersend_api_key: str = ""
+    mail_from_email: str = "no-reply@verifiscale.com"
+    mail_from_name: str = "VerifiScale"
+    app_base_url: str = "https://verifiscale.com"
+
     @property
     def cors_origins_list(self) -> list[str]:
         return [o.strip() for o in self.cors_origins.split(",") if o.strip()]

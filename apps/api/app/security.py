@@ -28,9 +28,11 @@ def verify_password(plain: str, hashed: str) -> bool:
     return pwd_context.verify(plain, hashed)
 
 
-def create_access_token(subject: str, role: str) -> str:
+def create_access_token(subject: str, role: str, extra: dict | None = None) -> str:
     expire = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_expire_minutes)
     payload = {"sub": subject, "role": role, "exp": expire}
+    if extra:
+        payload.update(extra)
     return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
 
 
@@ -54,6 +56,21 @@ def get_current_user(
     user = db.get(User, user_id)
     if not user or not user.is_active:
         raise creds_exc
+
+    # Gated client access (support) : un token portant `act_org`, émis pour un
+    # superadmin, agit COMME un membre de cette organisation — même périmètre,
+    # mêmes filtres. On détache l'instance avant de la surcharger pour que la
+    # session ne persiste jamais ces valeurs transitoires.
+    act_org = payload.get("act_org")
+    if act_org and getattr(user, "is_superadmin", False):
+        from uuid import UUID as _UUID
+        db.expunge(user)
+        try:
+            user.organization_id = _UUID(str(act_org))
+        except ValueError:
+            raise creds_exc
+        user.is_superadmin = False
+        user.acting_as_org = True  # transient marker
     return user
 
 

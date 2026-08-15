@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Building2, ChevronDown, ChevronRight, Plus, ShieldCheck } from 'lucide-react';
+import { Building2, ChevronDown, ChevronRight, LogIn, Plus, ShieldCheck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { api } from '@/lib/api';
+import { api, getToken, setToken } from '@/lib/api';
 import { useApp } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
@@ -27,7 +27,7 @@ export default function AdminPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState<string | null>(null);
   const [form, setForm] = useState({ name: '', contact_email: '', admin_full_name: '', admin_email: '', admin_password: '' });
-  const [created, setCreated] = useState<{ email: string; password: string } | null>(null);
+  const [created, setCreated] = useState<{ email: string; password: string; emailSent?: boolean } | null>(null);
 
   const { data: orgs = [] } = useQuery({
     queryKey: ['admin-orgs'],
@@ -41,9 +41,10 @@ export default function AdminPage() {
   });
 
   const create = useMutation({
-    mutationFn: () => api('/admin/organizations', { method: 'POST', body: form }),
-    onSuccess: () => {
-      setCreated({ email: form.admin_email, password: form.admin_password });
+    mutationFn: () => api<{ email_sent?: boolean }>('/admin/organizations', { method: 'POST', body: form }),
+    onSuccess: (r) => {
+      setCreated({ email: form.admin_email, password: form.admin_password,
+                   emailSent: !!(r as { email_sent?: boolean })?.email_sent });
       setForm({ name: '', contact_email: '', admin_full_name: '', admin_email: '', admin_password: '' });
       qc.invalidateQueries({ queryKey: ['admin-orgs'] });
     },
@@ -93,7 +94,8 @@ export default function AdminPage() {
           </div>
           {created && (
             <div className="rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-xs text-emerald-900">
-              Client créé. Transmettez ces identifiants à son administrateur (à changer à la première connexion) :{' '}
+              Client créé{created.emailSent ? ' — email de bienvenue envoyé ✓' : ''}.
+              {!created.emailSent && ' Transmettez ces identifiants à son administrateur (email non configuré) :'}{' '}
               <b className="font-mono">{created.email}</b> / <b className="font-mono">{created.password}</b>
             </div>
           )}
@@ -137,7 +139,29 @@ export default function AdminPage() {
                       <td className="px-2 py-2 text-right font-mono">{o.dataset_count}</td>
                       <td className="px-2 py-2">{dt(o.last_upload_at)}</td>
                       <td className="px-2 py-2">{dt(o.last_login_at)}</td>
-                      <td className="px-2 py-2">{dt(o.created_at)}</td>
+                      <td className="px-2 py-2">
+                        <div className="flex items-center gap-2">
+                          <span>{dt(o.created_at)}</span>
+                          {!o.is_platform && (
+                            <button
+                              type="button"
+                              title="Accéder à l'espace client (accès encadré, visible, réversible)"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                const r = await api<{ access_token: string; org_name: string }>(
+                                  `/admin/organizations/${o.id}/impersonate`, { method: 'POST', body: {} });
+                                window.localStorage.setItem('fa_token_admin', getToken() ?? '');
+                                window.localStorage.setItem('fa_acting_org', r.org_name);
+                                setToken(r.access_token);
+                                window.location.href = '/dashboard';
+                              }}
+                              className="flex items-center gap-1 text-[10px] font-bold border border-black px-1.5 py-0.5 rounded hover:bg-black hover:text-white transition"
+                            >
+                              <LogIn className="w-3 h-3" /> Accéder à l'espace
+                            </button>
+                          )}
+                        </div>
+                      </td>
                     </tr>
                     {open === o.id && detail && (
                       <tr key={`${o.id}-d`}>
