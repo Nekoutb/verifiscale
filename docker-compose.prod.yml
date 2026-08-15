@@ -43,6 +43,10 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS}
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-4-7}
+      MAILERSEND_API_KEY: ${MAILERSEND_API_KEY:-}
+      MAIL_FROM_EMAIL: ${MAIL_FROM_EMAIL:-no-reply@verifiscale.com}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-VerifiScale}
+      APP_BASE_URL: ${APP_BASE_URL:-https://verifiscale.com}
     expose:
       - "8000"
     volumes:
