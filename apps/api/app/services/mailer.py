@@ -29,6 +29,11 @@ def send_email(to_email: str, subject: str, html: str, text: str) -> bool:
             "subject": subject,
             "html": html,
             "text": text,
+            # Aucune image ni réécriture de lien : MailerSend injecte sinon un
+            # pixel de suivi (open tracking) et fait passer les liens par son
+            # domaine de tracking — deux signaux classiques de spam.
+            "settings": {"track_opens": False, "track_clicks": False,
+                         "track_content": False},
         }
         if s.mail_reply_to:
             payload["reply_to"] = {"email": s.mail_reply_to, "name": s.mail_from_name}
@@ -64,7 +69,7 @@ def send_org_welcome(to_email: str, org_name: str, admin_email: str,
     s = get_settings()
     url = f"{s.app_base_url}/login"
     html = _shell(
-        f"Bienvenue — votre espace « {org_name} » est prêt 🎉",
+        f"Bienvenue — votre espace « {org_name} » est prêt",
         f"""<p style="font-size:14px;color:#333">Bonjour,</p>
 <p style="font-size:14px;color:#333;line-height:1.6">Je suis <b>Fri</b>, de l'équipe
 VerifiScale. Votre espace de travail sécurisé vient d'être provisionné : vous y menez
@@ -86,14 +91,14 @@ un environnement entièrement isolé, réservé à votre cabinet.</p>
 </p>
 
 <p style="font-size:13px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px">
-  🔐 <b>Important :</b> ce mot de passe est provisoire — changez-le dès votre première
+  <b>Important :</b> ce mot de passe est provisoire — changez-le dès votre première
   connexion (menu Utilisateurs &rarr; votre profil).</p>
 
 <p style="font-size:13px;color:#333;line-height:1.7"><b>Vos premières étapes</b> (un
 assistant vous guide à l'écran) :<br>
-&nbsp;&nbsp;1&#65039;&#8419; Créez votre premier dossier de vérification (contribuable, exercices)<br>
-&nbsp;&nbsp;2&#65039;&#8419; Chargez la balance et le grand-livre — le mapping se confirme en un clic<br>
-&nbsp;&nbsp;3&#65039;&#8419; Invitez votre équipe — chaque membre reçoit son lien personnel</p>
+&nbsp;&nbsp;1. Créez votre premier dossier de vérification (contribuable, exercices)<br>
+&nbsp;&nbsp;2. Chargez la balance et le grand-livre — le mapping se confirme en un clic<br>
+&nbsp;&nbsp;3. Invitez votre équipe — chaque membre reçoit son lien personnel</p>
 
 <p style="font-size:13px;color:#333">Une question, un blocage ? Répondez simplement à
 cet email — il arrive directement chez nous.</p>

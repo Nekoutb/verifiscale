@@ -68,7 +68,14 @@ def create_audit_case(
     db: Annotated[Session, Depends(get_db)],
     user: Annotated[User, Depends(get_current_user)],
 ):
-    if not db.get(Taxpayer, payload.taxpayer_id):
+    tp = db.get(Taxpayer, payload.taxpayer_id)
+    if not tp:
+        raise HTTPException(status_code=404, detail="Contribuable introuvable")
+    # Jamais de dossier sur le contribuable d'une AUTRE organisation (404, pas
+    # 403 : on ne révèle même pas son existence).
+    if (not getattr(user, "is_superadmin", False)
+            and tp.organization_id is not None
+            and tp.organization_id != user.organization_id):
         raise HTTPException(status_code=404, detail="Contribuable introuvable")
     if not db.get(Brigade, payload.brigade_id):
         raise HTTPException(status_code=404, detail="Brigade introuvable")
@@ -123,8 +130,14 @@ def quick_create_audit_case(
     if payload.number_of_years < 1 or payload.number_of_years > 10:
         raise HTTPException(status_code=400, detail="Nombre d'années doit être entre 1 et 10")
 
-    # Upsert taxpayer
-    tp = db.query(Taxpayer).filter(Taxpayer.niu == niu).first()
+    # Upsert taxpayer — STRICTEMENT dans l'organisation de l'appelant. Le même
+    # NIU peut exister chez un autre client : on ne réutilise (ni ne modifie)
+    # JAMAIS l'enregistrement d'une autre organisation.
+    org_id = getattr(user, "organization_id", None)
+    tp_q = db.query(Taxpayer).filter(Taxpayer.niu == niu)
+    tp_q = (tp_q.filter(Taxpayer.organization_id == org_id) if org_id is not None
+            else tp_q.filter(Taxpayer.organization_id.is_(None)))
+    tp = tp_q.first()
     if tp is None:
         tp = Taxpayer(
             niu=niu, raison_sociale=payload.raison_sociale,
@@ -138,6 +151,7 @@ def quick_create_audit_case(
             contact_name=payload.contact_name,
             contact_phone=payload.contact_phone,
             contact_email=payload.contact_email,
+            organization_id=org_id,
         )
         db.add(tp)
         db.flush()
@@ -161,12 +175,23 @@ def quick_create_audit_case(
             raise HTTPException(400, "Aucune brigade configurée — créer une brigade d'abord")
         brigade_id = first.id
 
-    # Auto-reference: CAS-{year}-{NNNN}
+    # Auto-reference: CAS-{year}-{NNNN} — séquence PROPRE à l'organisation
+    # (le compteur global révélait le volume de la plateforme et faisait
+    # démarrer chaque nouveau client à un numéro arbitraire).
     ref = payload.reference
     if not ref:
         year = payload.starting_year
-        count = db.query(AuditCase).filter(AuditCase.fiscal_year == year).count()
-        ref = f"CAS-{year}-{count + 1:04d}"
+        base_q = db.query(AuditCase).filter(AuditCase.fiscal_year == year)
+        base_q = (base_q.filter(AuditCase.organization_id == org_id) if org_id is not None
+                  else base_q.filter(AuditCase.organization_id.is_(None)))
+        n = base_q.count() + 1
+        ref = f"CAS-{year}-{n:04d}"
+        while (db.query(AuditCase)
+               .filter(AuditCase.reference == ref,
+                       AuditCase.organization_id == org_id)
+               .first() is not None):
+            n += 1
+            ref = f"CAS-{year}-{n:04d}"
 
     case = AuditCase(
         reference=ref,

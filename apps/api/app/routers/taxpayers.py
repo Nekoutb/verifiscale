@@ -43,10 +43,16 @@ def list_taxpayers(
 def create_taxpayer(
     payload: TaxpayerCreate,
     db: Annotated[Session, Depends(get_db)],
-    _: Annotated[User, Depends(get_current_user)],
+    user: Annotated[User, Depends(get_current_user)],
 ):
     niu = _validate_niu(payload.niu)
-    if db.query(Taxpayer).filter(Taxpayer.niu == niu).first():
+    # Unicité du NIU PAR ORGANISATION — un autre cabinet peut auditer le même
+    # contribuable sans que cela bloque (ni ne révèle) quoi que ce soit ici.
+    org_id = getattr(user, "organization_id", None)
+    dup_q = db.query(Taxpayer).filter(Taxpayer.niu == niu)
+    dup_q = (dup_q.filter(Taxpayer.organization_id == org_id) if org_id is not None
+             else dup_q.filter(Taxpayer.organization_id.is_(None)))
+    if dup_q.first():
         raise HTTPException(status_code=409, detail="NIU déjà enregistré")
     try:
         regime = TaxRegime(payload.regime)
@@ -56,6 +62,7 @@ def create_taxpayer(
         niu=niu, raison_sociale=payload.raison_sociale,
         address=payload.address, sector=payload.sector,
         sector_code=payload.sector_code or "DROIT_COMMUN", regime=regime,
+        organization_id=org_id,
     )
     db.add(tp)
     db.commit()

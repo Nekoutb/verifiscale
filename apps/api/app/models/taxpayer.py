@@ -5,7 +5,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, String, DateTime, Date, Enum, Numeric
+from sqlalchemy import ForeignKey, String, DateTime, Date, Enum, Numeric, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
@@ -25,9 +25,12 @@ class TaxRegime(str, enum.Enum):
 
 class Taxpayer(Base):
     __tablename__ = "taxpayers"
+    # NIU unique PAR ORGANISATION : deux cabinets peuvent auditer le même
+    # contribuable — chacun possède SON enregistrement, jamais partagé.
+    __table_args__ = (UniqueConstraint("organization_id", "niu", name="uq_taxpayers_org_niu"),)
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    niu: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
+    niu: Mapped[str] = mapped_column(String(32), nullable=False, index=True)
     raison_sociale: Mapped[str] = mapped_column(String(512), nullable=False)
     address: Mapped[str | None] = mapped_column(String(512), nullable=True)
     sector: Mapped[str | None] = mapped_column(String(128), nullable=True)  # libellé libre (précision)

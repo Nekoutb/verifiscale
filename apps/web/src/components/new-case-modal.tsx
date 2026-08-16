@@ -168,7 +168,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
                   required
                   value={raisonSociale}
                   onChange={(e) => setRaisonSociale(e.target.value)}
-                  placeholder="KISSY WEARS SARL"
+                  placeholder="Raison sociale de l'entreprise vérifiée"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -276,7 +276,7 @@ export function NewCaseModal({ open, onClose }: { open: boolean; onClose: () => 
                   id="contactName"
                   value={contactName}
                   onChange={(e) => setContactName(e.target.value)}
-                  placeholder="M. Mbarga Jean"
+                  placeholder="Nom et prénom du contact"
                 />
               </div>
               <div>
