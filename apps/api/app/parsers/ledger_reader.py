@@ -157,7 +157,18 @@ def detect_header(rows: list[list[Any]], kind: str) -> HeaderInfo | None:
             break
 
     banner = rows[banner_idx] if banner_idx is not None else None
+    # La largeur ne peut PAS être celle de la seule ligne d'en-tête : openpyxl
+    # (read_only) tronque chaque ligne à sa dernière cellule non vide, donc une
+    # colonne de données située à droite du dernier en-tête détecté (ou sous un
+    # bandeau/cellule fusionnée) disparaîtrait des listes de mapping. On prend
+    # la largeur de contenu réelle du fichier : toute colonne portant au moins
+    # une valeur, n'importe où dans la feuille, est exposée à l'auditeur.
     width = len(header)
+    for r in rows:
+        for i in range(len(r) - 1, width - 1, -1):
+            if r[i] not in (None, ""):
+                width = i + 1
+                break
     effective: list[str] = []
     for c in range(width):
         h = str(header[c]).strip() if c < len(header) and header[c] not in (None, "") else ""
