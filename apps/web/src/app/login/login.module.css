@@ -1,0 +1,88 @@
+/* Landing VerifiScale — scène noire + verre. Page-scoped (CSS module). */
+
+.scene {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  background: #050505;
+  color: #fff;
+}
+
+/* nappes lumineuses — le verre a besoin de quelque chose à réfracter */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.glowRed {
+  width: 560px;
+  height: 560px;
+  left: -180px;
+  top: -160px;
+  background: radial-gradient(circle, rgba(215, 34, 43, 0.28), transparent 70%);
+  animation: driftA 22s ease-in-out infinite alternate;
+}
+.glowWhite {
+  width: 480px;
+  height: 480px;
+  right: -160px;
+  bottom: -140px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 70%);
+  animation: driftB 26s ease-in-out infinite alternate;
+}
+@keyframes driftA {
+  to { transform: translate(70px, 50px); }
+}
+@keyframes driftB {
+  to { transform: translate(-60px, -40px); }
+}
+
+.glass {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.field {
+  display: block;
+  width: 100%;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 15px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.15s ease-out, background 0.15s ease-out;
+}
+.field::placeholder {
+  color: #8f8f8f;
+}
+.field:focus {
+  border-color: rgba(215, 34, 43, 0.75);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.rise {
+  animation: rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glowRed,
+  .glowWhite,
+  .rise {
+    animation: none;
+  }
+}

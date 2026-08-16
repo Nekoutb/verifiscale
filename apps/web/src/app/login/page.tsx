@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, setToken } from '@/lib/api';
+import styles from './login.module.css';
 
 type LoginResponse = { access_token: string; token_type: string };
 
@@ -10,10 +11,8 @@ type LoginResponse = { access_token: string; token_type: string };
 function VfMark({ size = 64 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
-      {/* V — deux fûts épais */}
       <polygon points="6,18 26,18 46,74 36,92" fill="#FFFFFF" />
       <polygon points="36,92 46,74 66,18 82,18 50,92" fill="#FFFFFF" opacity="0.92" />
-      {/* F — deux barres rouges inclinées */}
       <polygon points="52,18 96,18 90,30 48,30" fill="#D7222B" />
       <polygon points="46,40 84,40 78,52 42,52" fill="#D7222B" />
     </svg>
@@ -52,12 +51,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="vf-scene min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-6">
-      {/* nappes lumineuses — le verre a besoin de quelque chose à réfracter */}
-      <div aria-hidden className="vf-glow vf-glow-red" />
-      <div aria-hidden className="vf-glow vf-glow-white" />
+    <div className={styles.scene}>
+      <div aria-hidden className={`${styles.glow} ${styles.glowRed}`} />
+      <div aria-hidden className={`${styles.glow} ${styles.glowWhite}`} />
 
-      <main className="relative w-full max-w-sm vf-rise">
+      <main className={`relative w-full max-w-sm ${styles.rise}`}>
         {/* Marque */}
         <div className="flex flex-col items-center mb-10 select-none">
           <VfMark size={72} />
@@ -72,7 +70,7 @@ export default function LoginPage() {
         </div>
 
         {/* Carte verre */}
-        <form onSubmit={submit} className="vf-glass rounded-2xl p-7 space-y-4">
+        <form onSubmit={submit} className={`${styles.glass} rounded-2xl p-7 space-y-4`}>
           <label className="block">
             <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-400">Adresse email</span>
             <input
@@ -82,7 +80,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="vous@cabinet.cm"
-              className="vf-field mt-1.5"
+              className={`${styles.field} mt-1.5`}
             />
           </label>
           <label className="block">
@@ -94,7 +92,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••"
-              className="vf-field mt-1.5"
+              className={`${styles.field} mt-1.5`}
             />
           </label>
 
@@ -119,72 +117,6 @@ export default function LoginPage() {
           © {new Date().getFullYear()} CM-EA · VerifiScale
         </p>
       </main>
-
-      <style jsx global>{`
-        .vf-scene {
-          background: #050505;
-          color: #fff;
-        }
-        .vf-glow {
-          position: absolute;
-          border-radius: 9999px;
-          filter: blur(90px);
-          pointer-events: none;
-        }
-        .vf-glow-red {
-          width: 560px; height: 560px;
-          left: -180px; top: -160px;
-          background: radial-gradient(circle, rgba(215, 34, 43, 0.28), transparent 70%);
-          animation: vf-drift-a 22s ease-in-out infinite alternate;
-        }
-        .vf-glow-white {
-          width: 480px; height: 480px;
-          right: -160px; bottom: -140px;
-          background: radial-gradient(circle, rgba(255, 255, 255, 0.10), transparent 70%);
-          animation: vf-drift-b 26s ease-in-out infinite alternate;
-        }
-        @keyframes vf-drift-a {
-          to { transform: translate(70px, 50px); }
-        }
-        @keyframes vf-drift-b {
-          to { transform: translate(-60px, -40px); }
-        }
-        .vf-glass {
-          background: linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
-          -webkit-backdrop-filter: blur(22px) saturate(140%);
-          backdrop-filter: blur(22px) saturate(140%);
-          border: 1px solid rgba(255, 255, 255, 0.14);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
-        }
-        .vf-field {
-          display: block;
-          width: 100%;
-          border-radius: 12px;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.16);
-          color: #fff;
-          font-size: 15px;
-          padding: 11px 14px;
-          outline: none;
-          transition: border-color 0.15s ease-out, background 0.15s ease-out;
-        }
-        .vf-field::placeholder { color: #8f8f8f; }
-        .vf-field:focus {
-          border-color: rgba(215, 34, 43, 0.75);
-          background: rgba(255, 255, 255, 0.09);
-        }
-        .vf-rise {
-          animation: vf-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-        @keyframes vf-rise {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .vf-glow-red, .vf-glow-white { animation: none; }
-          .vf-rise { animation: none; }
-        }
-      `}</style>
     </div>
   );
 }
