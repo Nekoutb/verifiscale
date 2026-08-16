@@ -3,8 +3,8 @@ import { QueryProvider } from '@/components/providers/query-provider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'FiscAudit Pro — DGI Cameroun',
-  description: "Plateforme d'audit fiscal pour la Direction Générale des Impôts",
+  title: 'VerifiScale — Plateforme d\'audit fiscal',
+  description: 'VerifiScale — audit fiscal assisté : contrôles CGI, rapprochements et pièces justificatives.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
