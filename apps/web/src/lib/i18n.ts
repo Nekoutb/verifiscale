@@ -350,7 +350,6 @@ const MESSAGES = {
   'login.organization':         { fr: 'Organisation',                               en: 'Organization' },
   'login.submit':                { fr: 'Se connecter',                              en: 'Sign in' },
   'login.submitting':           { fr: 'Connexion…',                                  en: 'Signing in…' },
-  'login.demoAccounts':         { fr: 'Comptes de démonstration',                   en: 'Demo accounts' },
   'login.demoPasswordHint':     { fr: 'Mot de passe commun',                         en: 'Shared password' },
   'login.errorFallback':        { fr: 'Échec de connexion',                          en: 'Sign-in failed' },
 

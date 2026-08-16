@@ -1,35 +1,29 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { ShieldCheck, ScaleIcon, FileCheck2, CalendarCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 import { api, setToken } from '@/lib/api';
-import type { User } from '@/lib/types';
-import { useT } from '@/lib/i18n';
 
-interface LoginResponse {
-  access_token: string;
-  token_type: string;
-  user: User;
+type LoginResponse = { access_token: string; token_type: string };
+
+/** Marque VF — recréation vectorielle du logo fourni (V blanc, F rouge). */
+function VfMark({ size = 64 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none" aria-hidden="true">
+      {/* V — deux fûts épais */}
+      <polygon points="6,18 26,18 46,74 36,92" fill="#FFFFFF" />
+      <polygon points="36,92 46,74 66,18 82,18 50,92" fill="#FFFFFF" opacity="0.92" />
+      {/* F — deux barres rouges inclinées */}
+      <polygon points="52,18 96,18 90,30 48,30" fill="#D7222B" />
+      <polygon points="46,40 84,40 78,52 42,52" fill="#D7222B" />
+    </svg>
+  );
 }
 
-const SAMPLE_ACCOUNTS = [
-  { email: 'b.etoundi@dgi.cm',    name: 'Etoundi Bertrand',   role: 'Auditeur principal — DGE' },
-  { email: 's.ngono@dgi.cm',      name: 'Ngono Sylvie',       role: 'Superviseur — DGE' },
-  { email: 'j.mbarga@dgi.cm',     name: 'Mbarga Joseph',      role: 'Auditeur — CIME Yaoundé' },
-  { email: 'admin@dgi.cm',        name: 'Admin DGI',          role: 'Administrateur système' },
-];
-
 export default function LoginPage() {
-  const t = useT();
   const router = useRouter();
-  const [email, setEmail] = useState('b.etoundi@dgi.cm');
-  const [password, setPassword] = useState('Password123!');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [organization, setOrganization] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -40,12 +34,7 @@ export default function LoginPage() {
     try {
       const res = await api<LoginResponse>('/auth/login', {
         method: 'POST',
-        body: {
-          email,
-          password,
-          phone_number: phoneNumber.trim() || undefined,
-          organization: organization.trim() || undefined,
-        },
+        body: { email: email.trim(), password },
       });
       setToken(res.access_token);
       try {
@@ -56,148 +45,146 @@ export default function LoginPage() {
         router.push('/dossiers');
       }
     } catch (err) {
-      setError((err as Error).message || t('login.errorFallback'));
+      setError((err as Error).message || 'Connexion impossible — vérifiez vos identifiants.');
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <div
-      className="min-h-screen relative overflow-hidden"
-      style={{
-        background:
-          'radial-gradient(1200px 600px at 80% -100px, rgba(255,255,255,0.04), transparent),' +
-          'radial-gradient(800px 600px at 10% 110%, rgba(255,255,255,0.06), transparent),' +
-          'linear-gradient(135deg, #000000 0%, #0A0A0A 60%, #171717 100%)',
-      }}
-    >
-      <div className="relative max-w-7xl mx-auto px-6 py-10">
-        <header className="flex items-center justify-between mb-16">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center text-white font-bold text-lg shadow-lg">
-              FA
-            </div>
-            <div>
-              <div className="text-white font-display font-bold text-lg leading-tight">FiscAudit Pro</div>
-              <div className="text-slate-300 text-xs tracking-wider">
-                DIRECTION GÉNÉRALE DES IMPÔTS
-              </div>
-            </div>
+    <div className="vf-scene min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-6">
+      {/* nappes lumineuses — le verre a besoin de quelque chose à réfracter */}
+      <div aria-hidden className="vf-glow vf-glow-red" />
+      <div aria-hidden className="vf-glow vf-glow-white" />
+
+      <main className="relative w-full max-w-sm vf-rise">
+        {/* Marque */}
+        <div className="flex flex-col items-center mb-10 select-none">
+          <VfMark size={72} />
+          <div className="mt-5 text-[26px] tracking-[0.18em] font-medium lowercase">
+            <span className="text-neutral-300">veri</span>
+            <span className="text-[#D7222B] font-bold">fisc</span>
+            <span className="text-neutral-300">ale</span>
           </div>
-          <div className="text-right">
-            <div className="text-xs text-slate-400 uppercase tracking-widest">{t('login.country')}</div>
-            <div className="text-xs text-slate-500">{t('login.countryMotto')}</div>
-          </div>
-        </header>
-
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="text-white">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-xs font-medium mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-white" />
-              {t('login.heroBadge')}
-            </div>
-            <h1 className="font-display text-5xl lg:text-6xl font-extrabold leading-[1.05] mb-6">
-              {t('login.heroTitle1')}<br />
-              <span className="text-white">{t('login.heroTitle2')}</span> {t('login.heroTitleAnd')} <span className="text-white">{t('login.heroTitle3')}</span>
-            </h1>
-            <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-xl">
-              {t('login.heroBlurb')}
-            </p>
-            <div className="grid grid-cols-2 gap-6 max-w-lg">
-              {[
-                { Icon: ScaleIcon,    label: t('login.feature1') },
-                { Icon: ShieldCheck,  label: t('login.feature2') },
-                { Icon: CalendarCheck,label: t('login.feature3') },
-                { Icon: FileCheck2,   label: t('login.feature4') },
-              ].map(({ Icon, label }, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center text-white flex-shrink-0">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <div className="text-sm text-slate-200 leading-snug pt-1">{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <div className="p-8">
-              <h2 className="font-display text-2xl font-bold text-black mb-1">{t('login.cardTitle')}</h2>
-              <p className="text-sm text-slate-500 mb-6">{t('login.cardSubtitle')}</p>
-
-              <form onSubmit={submit} className="space-y-4">
-                <div>
-                  <Label htmlFor="email">{t('login.email')}</Label>
-                  <Input
-                    id="email" type="email" required
-                    value={email} onChange={(e) => setEmail(e.target.value)}
-                    placeholder="prenom.nom@dgi.cm"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="password">{t('login.password')}</Label>
-                  <Input
-                    id="password" type="password" required
-                    value={password} onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="phone">{t('login.phone')}</Label>
-                    <Input
-                      id="phone" type="tel"
-                      value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="+237 6XX XX XX XX"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="organization">{t('login.organization')}</Label>
-                    <Input
-                      id="organization" type="text"
-                      value={organization} onChange={(e) => setOrganization(e.target.value)}
-                      placeholder="DGI / Cabinet / Société"
-                    />
-                  </div>
-                </div>
-                {error && (
-                  <div className="text-sm text-black font-bold bg-white border-2 border-black rounded-lg px-3 py-2">
-                    {error}
-                  </div>
-                )}
-                <Button type="submit" disabled={busy} className="w-full" size="lg">
-                  {busy ? t('login.submitting') : t('login.submit')}
-                </Button>
-              </form>
-
-              <div className="mt-6 pt-5 border-t border-slate-200">
-                <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
-                  {t('login.demoAccounts')}
-                </div>
-                <div className="space-y-1.5">
-                  {SAMPLE_ACCOUNTS.map((a) => (
-                    <button
-                      key={a.email}
-                      type="button"
-                      onClick={() => { setEmail(a.email); setPassword('Password123!'); }}
-                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-50 text-xs flex items-center justify-between"
-                    >
-                      <div>
-                        <div className="font-medium text-slate-800">{a.name}</div>
-                        <div className="text-slate-500">{a.role}</div>
-                      </div>
-                      <code className="text-[10px] text-slate-400">{a.email}</code>
-                    </button>
-                  ))}
-                </div>
-                <div className="mt-3 text-[11px] text-slate-400">
-                  Mot de passe commun : <code className="font-mono">Password123!</code>
-                </div>
-              </div>
-            </div>
+          <div className="mt-1.5 text-[11px] tracking-[0.32em] uppercase text-neutral-500">
+            Plateforme d&apos;audit fiscal
           </div>
         </div>
-      </div>
+
+        {/* Carte verre */}
+        <form onSubmit={submit} className="vf-glass rounded-2xl p-7 space-y-4">
+          <label className="block">
+            <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-400">Adresse email</span>
+            <input
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="vous@cabinet.cm"
+              className="vf-field mt-1.5"
+            />
+          </label>
+          <label className="block">
+            <span className="text-[11px] uppercase tracking-[0.14em] text-neutral-400">Mot de passe</span>
+            <input
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••"
+              className="vf-field mt-1.5"
+            />
+          </label>
+
+          {error && (
+            <p role="alert" className="text-[13px] leading-snug text-[#ff8f95] bg-[#D7222B]/10 border border-[#D7222B]/30 rounded-lg px-3 py-2">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full rounded-xl bg-[#D7222B] hover:bg-[#b91c24] active:bg-[#a01920] transition-colors
+                       text-white font-semibold text-[15px] py-3 disabled:opacity-60 disabled:cursor-wait
+                       focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D7222B] focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          >
+            {busy ? 'Connexion…' : 'Se connecter'}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-[11px] text-neutral-600">
+          © {new Date().getFullYear()} CM-EA · VerifiScale
+        </p>
+      </main>
+
+      <style jsx global>{`
+        .vf-scene {
+          background: #050505;
+          color: #fff;
+        }
+        .vf-glow {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(90px);
+          pointer-events: none;
+        }
+        .vf-glow-red {
+          width: 560px; height: 560px;
+          left: -180px; top: -160px;
+          background: radial-gradient(circle, rgba(215, 34, 43, 0.28), transparent 70%);
+          animation: vf-drift-a 22s ease-in-out infinite alternate;
+        }
+        .vf-glow-white {
+          width: 480px; height: 480px;
+          right: -160px; bottom: -140px;
+          background: radial-gradient(circle, rgba(255, 255, 255, 0.10), transparent 70%);
+          animation: vf-drift-b 26s ease-in-out infinite alternate;
+        }
+        @keyframes vf-drift-a {
+          to { transform: translate(70px, 50px); }
+        }
+        @keyframes vf-drift-b {
+          to { transform: translate(-60px, -40px); }
+        }
+        .vf-glass {
+          background: linear-gradient(160deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.035));
+          -webkit-backdrop-filter: blur(22px) saturate(140%);
+          backdrop-filter: blur(22px) saturate(140%);
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        }
+        .vf-field {
+          display: block;
+          width: 100%;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          color: #fff;
+          font-size: 15px;
+          padding: 11px 14px;
+          outline: none;
+          transition: border-color 0.15s ease-out, background 0.15s ease-out;
+        }
+        .vf-field::placeholder { color: #8f8f8f; }
+        .vf-field:focus {
+          border-color: rgba(215, 34, 43, 0.75);
+          background: rgba(255, 255, 255, 0.09);
+        }
+        .vf-rise {
+          animation: vf-rise 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+        @keyframes vf-rise {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .vf-glow-red, .vf-glow-white { animation: none; }
+          .vf-rise { animation: none; }
+        }
+      `}</style>
     </div>
   );
 }
