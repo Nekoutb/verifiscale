@@ -27,6 +27,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   });
   useEffect(() => { if (me) setUser(me); }, [me, setUser]);
 
+  // Console plateforme = superadmin uniquement. Un compte client (même admin
+  // de son organisation) est renvoyé vers l'application.
+  useEffect(() => {
+    if (me && !me.is_superadmin) router.replace('/dashboard');
+  }, [me, router]);
+
   const logout = () => {
     setToken(null);
     setUser(null);

@@ -29,7 +29,11 @@ interface NavItem {
   Icon: React.ComponentType<{ className?: string }>;
   /** Tailwind classes for the coloured icon tile (Proposal A — Wayfinding). */
   tint?: string;
+  /** Visible pour l'ADMIN d'une organisation (et le superadmin plateforme). */
   adminOnly?: boolean;
+  /** Visible UNIQUEMENT pour le superadmin plateforme (is_superadmin) —
+   *  jamais pour un compte client, même admin de son organisation. */
+  superadminOnly?: boolean;
   /** Optional nested children — when present the item becomes expandable. */
   children?: NavChild[];
 }
@@ -38,6 +42,7 @@ interface NavSection {
   /** Translation key for the section title. */
   sectionKey: MessageKey;
   adminOnly?: boolean;
+  superadminOnly?: boolean;
   items: NavItem[];
 }
 
@@ -92,9 +97,14 @@ const NAV: NavSection[] = [
   { sectionKey: 'sidebar.reference', items: [
     { href: '/referentiel', labelKey: 'nav.referentiel', Icon: BookMarked, tint: 'bg-emerald-50 text-emerald-600' },
   ]},
-  { sectionKey: 'sidebar.administration', adminOnly: true, items: [
+  // « Équipe » : gestion des membres de SA propre organisation — admin d'org.
+  { sectionKey: 'sidebar.team', adminOnly: true, items: [
     { href: '/utilisateurs', labelKey: 'nav.utilisateurs', Icon: Users, adminOnly: true, tint: 'bg-slate-100 text-slate-600' },
-    { href: '/admin', labelKey: 'nav.adminClients', Icon: Building2, adminOnly: true, tint: 'bg-slate-100 text-slate-600' },
+  ]},
+  // « Administration » : console PLATEFORME — réservée au superadmin,
+  // invisible pour tout compte client (même admin de son organisation).
+  { sectionKey: 'sidebar.administration', superadminOnly: true, items: [
+    { href: '/admin', labelKey: 'nav.adminClients', Icon: Building2, superadminOnly: true, tint: 'bg-slate-100 text-slate-600' },
   ]},
 ];
 
@@ -144,18 +154,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         <nav className="flex-1 px-3 py-2 overflow-y-auto">
-          {NAV.filter((sec) => !sec.adminOnly || user?.role === 'ADMIN').map((sec) => (
-            <div key={sec.sectionKey}>
-              <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-4 mt-5 mb-2">
-                {t(sec.sectionKey)}
-              </div>
-              {sec.items
-                .filter((item) => !item.adminOnly || user?.role === 'ADMIN')
-                .map((item) => (
+          {(() => {
+            const isSuper = !!user?.is_superadmin;
+            const isOrgAdmin = user?.role === 'ADMIN';
+            const visible = (f: { adminOnly?: boolean; superadminOnly?: boolean }) =>
+              (!f.superadminOnly || isSuper) && (!f.adminOnly || isOrgAdmin || isSuper);
+            return NAV.filter(visible).map((sec) => (
+              <div key={sec.sectionKey}>
+                <div className="text-[10px] uppercase tracking-widest text-neutral-500 font-semibold px-4 mt-5 mb-2">
+                  {t(sec.sectionKey)}
+                </div>
+                {sec.items.filter(visible).map((item) => (
                   <NavRow key={item.href} item={item} pathname={pathname} />
                 ))}
-            </div>
-          ))}
+              </div>
+            ));
+          })()}
         </nav>
 
         <div className="px-3 py-4 border-t border-neutral-200">

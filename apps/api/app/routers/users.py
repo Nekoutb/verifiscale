@@ -1,6 +1,7 @@
-"""Admin-only user management endpoints.
+"""User management endpoints (admin d'organisation).
 
-GET /users — list all users (with contact info, for prospection follow-up)
+GET /users — membres de MON organisation uniquement (le superadmin plateforme
+voit tout). Un admin client ne doit JAMAIS voir les comptes des autres clients.
 """
 from typing import Annotated
 
@@ -19,11 +20,12 @@ router = APIRouter(prefix="/users", tags=["admin"])
 @router.get("", response_model=list[UserOut])
 def list_users(
     db: Annotated[Session, Depends(get_db)],
-    _admin: Annotated[User, Depends(require_role("ADMIN"))],
+    admin: Annotated[User, Depends(require_role("ADMIN"))],
 ):
-    """Return all users — admin only. Used for prospection / contact follow-up."""
+    q = db.query(User)
+    if not getattr(admin, "is_superadmin", False):
+        q = q.filter(User.organization_id == admin.organization_id)
     return (
-        db.query(User)
-        .order_by(User.last_login_at.desc().nullslast(), User.created_at.desc())
+        q.order_by(User.last_login_at.desc().nullslast(), User.created_at.desc())
         .all()
     )

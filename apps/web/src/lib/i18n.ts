@@ -191,6 +191,7 @@ const MESSAGES = {
   'amort.empty':                { fr: 'Aucune immobilisation trouvée dans le registre.', en: 'No asset found in the register.' },
   'sidebar.restitution':        { fr: 'Restitution',                                en: 'Reporting' },
   'sidebar.reference':          { fr: 'Référence',                                  en: 'Reference' },
+  'sidebar.team':               { fr: 'Équipe',                                     en: 'Team' },
   'sidebar.administration':     { fr: 'Administration',                             en: 'Administration' },
 
   // ── Sidebar items ───────────────────────────────────────────────────────
