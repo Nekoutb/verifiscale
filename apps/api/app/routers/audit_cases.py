@@ -410,3 +410,25 @@ def update_audit_case(
     db.commit()
     db.refresh(case)
     return case
+
+
+@router.delete("/{case_id}")
+def delete_audit_case(
+    case_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    user: Annotated[User, Depends(get_current_user)],
+):
+    """Suppression d'un dossier — réservée à l'administrateur de l'organisation
+    propriétaire (ou plateforme). Les données importées suivent (FK CASCADE)."""
+    case = db.get(AuditCase, case_id)
+    if not case:
+        raise HTTPException(status_code=404, detail="Dossier introuvable")
+    is_super = getattr(user, "is_superadmin", False)
+    same_org = case.organization_id is not None and case.organization_id == user.organization_id
+    if not is_super and not (same_org and user.role.value == "ADMIN"):
+        raise HTTPException(status_code=403,
+                            detail="Seul l'administrateur de l'organisation peut supprimer un dossier.")
+    ref = case.reference
+    db.delete(case)
+    db.commit()
+    return {"ok": True, "reference": ref}

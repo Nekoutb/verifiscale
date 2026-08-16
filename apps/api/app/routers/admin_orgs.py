@@ -116,6 +116,34 @@ def organization_detail(
     }
 
 
+@router.delete("/admin/organizations/{org_id}")
+def delete_organization(
+    org_id: UUID,
+    db: Annotated[Session, Depends(get_db)],
+    _: Annotated[User, Depends(require_superadmin)],
+):
+    """Suppression définitive d'un client : dossiers (cascade datasets/lignes),
+    contribuables, invitations, membres, puis l'organisation. L'organisation
+    plateforme est protégée."""
+    org = db.get(Organization, org_id)
+    if not org:
+        raise HTTPException(status_code=404, detail="Client introuvable")
+    if org.is_platform:
+        raise HTTPException(status_code=400,
+                            detail="L'organisation plateforme ne peut pas être supprimée.")
+    from app.models import Taxpayer
+    cases = db.query(AuditCase).filter(AuditCase.organization_id == org.id).all()
+    for case in cases:
+        db.delete(case)                      # datasets & lignes suivent (FK CASCADE)
+    db.flush()
+    db.query(Taxpayer).filter(Taxpayer.organization_id == org.id).delete()
+    db.query(OrgInvitation).filter(OrgInvitation.organization_id == org.id).delete()
+    db.query(User).filter(User.organization_id == org.id).delete()
+    db.delete(org)
+    db.commit()
+    return {"ok": True, "deleted_cases": len(cases)}
+
+
 @router.post("/admin/organizations/{org_id}/impersonate")
 def impersonate_organization(
     org_id: UUID,

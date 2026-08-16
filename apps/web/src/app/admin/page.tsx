@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Building2, ChevronDown, ChevronRight, LogIn, Plus, ShieldCheck } from 'lucide-react';
+import { Building2, ChevronDown, ChevronRight, LogIn, Plus, ShieldCheck, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { api, getToken, setToken } from '@/lib/api';
@@ -158,6 +158,28 @@ export default function AdminPage() {
                               className="flex items-center gap-1 text-[10px] font-bold border border-black px-1.5 py-0.5 rounded hover:bg-black hover:text-white transition"
                             >
                               <LogIn className="w-3 h-3" /> Accéder à l'espace
+                            </button>
+                          )}
+                          {!o.is_platform && (
+                            <button
+                              type="button"
+                              title="Supprimer définitivement ce client (dossiers, données, membres)"
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                const typed = window.prompt(
+                                  `SUPPRESSION DÉFINITIVE de « ${o.name} »
+` +
+                                  `${o.case_count} dossier(s), ${o.dataset_count} fichier(s), ${o.user_count} membre(s) seront effacés.
+
+` +
+                                  `Tapez le nom exact du client pour confirmer :`);
+                                if (typed !== o.name) return;
+                                await api(`/admin/organizations/${o.id}`, { method: 'DELETE' });
+                                qc.invalidateQueries({ queryKey: ['admin-orgs'] });
+                              }}
+                              className="flex items-center gap-1 text-[10px] font-bold border border-rose-400 text-rose-700 px-1.5 py-0.5 rounded hover:bg-rose-600 hover:text-white hover:border-rose-600 transition"
+                            >
+                              <Trash2 className="w-3 h-3" /> Supprimer
                             </button>
                           )}
                         </div>

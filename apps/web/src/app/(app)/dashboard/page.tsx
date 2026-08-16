@@ -5,12 +5,13 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   ArrowRight, Briefcase, Folder, CheckCircle2, Plus,
-  Layers, Activity, AlertTriangle, Clock,
+  Layers, Activity, AlertTriangle, Clock, Trash2,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/api';
+import { useQueryClient } from '@tanstack/react-query';
 import type { AuditCase } from '@/lib/types';
 import { useApp } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -25,6 +26,7 @@ export default function DashboardPage() {
   const currentCase = useApp((s) => s.currentCase);
   const setCurrentCase = useApp((s) => s.setCurrentCase);
   const [newOpen, setNewOpen] = useState(false);
+  const qc = useQueryClient();
 
   const { data: cases = [] } = useQuery({
     queryKey: ['audit-cases'],
@@ -178,6 +180,22 @@ export default function DashboardPage() {
                       >
                         <ArrowRight className="w-4 h-4" />
                       </Link>
+                      {user?.role === 'ADMIN' && (
+                        <button
+                          type="button"
+                          title="Supprimer ce dossier (données importées comprises)"
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            if (!window.confirm(`Supprimer définitivement le dossier ${c.reference} (${c.taxpayer.raison_sociale}) et toutes ses données ?`)) return;
+                            await api(`/audit-cases/${c.id}`, { method: 'DELETE' });
+                            if (currentCase?.id === c.id) setCurrentCase(null);
+                            qc.invalidateQueries({ queryKey: ['audit-cases'] });
+                          }}
+                          className="text-rose-500 hover:text-rose-700 opacity-0 group-hover:opacity-100 transition"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   </button>
                 );
