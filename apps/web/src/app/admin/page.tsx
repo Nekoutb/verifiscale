@@ -26,7 +26,7 @@ export default function AdminPage() {
   const user = useApp((s) => s.user);
   const qc = useQueryClient();
   const [open, setOpen] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: '', contact_email: '', admin_full_name: '', admin_email: '', admin_password: '' });
+  const [form, setForm] = useState({ name: '', contact_email: '', admin_full_name: '', admin_email: '' });
   const [created, setCreated] = useState<{ email: string; password: string; emailSent?: boolean } | null>(null);
 
   const { data: orgs = [] } = useQuery({
@@ -41,11 +41,11 @@ export default function AdminPage() {
   });
 
   const create = useMutation({
-    mutationFn: () => api<{ email_sent?: boolean }>('/admin/organizations', { method: 'POST', body: form }),
+    mutationFn: () => api<{ email_sent?: boolean; temp_password?: string }>('/admin/organizations', { method: 'POST', body: form }),
     onSuccess: (r) => {
-      setCreated({ email: form.admin_email, password: form.admin_password,
-                   emailSent: !!(r as { email_sent?: boolean })?.email_sent });
-      setForm({ name: '', contact_email: '', admin_full_name: '', admin_email: '', admin_password: '' });
+      setCreated({ email: form.admin_email, password: r?.temp_password ?? '—',
+                   emailSent: !!r?.email_sent });
+      setForm({ name: '', contact_email: '', admin_full_name: '', admin_email: '' });
       qc.invalidateQueries({ queryKey: ['admin-orgs'] });
     },
   });
@@ -76,7 +76,7 @@ export default function AdminPage() {
           <Plus className="w-4 h-4" /> Nouveau client
         </CardTitle></CardHeader>
         <CardContent className="space-y-2">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-2 text-xs">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
             <input className="border border-neutral-300 rounded px-2 py-1.5" placeholder="Raison sociale du cabinet / client *"
                    value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
             <input className="border border-neutral-300 rounded px-2 py-1.5" placeholder="Email de contact"
@@ -85,8 +85,6 @@ export default function AdminPage() {
                    value={form.admin_full_name} onChange={(e) => setForm({ ...form, admin_full_name: e.target.value })} />
             <input className="border border-neutral-300 rounded px-2 py-1.5" placeholder="Email administrateur *"
                    value={form.admin_email} onChange={(e) => setForm({ ...form, admin_email: e.target.value })} />
-            <input className="border border-neutral-300 rounded px-2 py-1.5" placeholder="Mot de passe provisoire * (≥6)"
-                   value={form.admin_password} onChange={(e) => setForm({ ...form, admin_password: e.target.value })} />
           </div>
           <div className="flex items-center gap-3">
             <Button size="sm" disabled={create.isPending} onClick={() => create.mutate()}>Créer le client</Button>

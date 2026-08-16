@@ -27,6 +27,26 @@ from app.services.mailer import send_invitation, send_org_welcome
 
 router = APIRouter(tags=["admin-organizations"])
 
+# Mot de passe provisoire : CSPRNG, 14 caractères, classes garanties
+# (majuscule, minuscule, chiffre, symbole), alphabet sans caractères ambigus
+# (0/O, 1/l/I). Jamais stocké en clair (bcrypt), affiché UNE fois, envoyé par
+# email TLS, et le changement est FORCÉ à la première connexion.
+import secrets as _secrets
+
+_PW_UPPER = "ABCDEFGHJKLMNPQRSTUVWXYZ"
+_PW_LOWER = "abcdefghijkmnpqrstuvwxyz"
+_PW_DIGIT = "23456789"
+_PW_SYMB = "!@#$%*+-?"
+
+
+def _generate_password(length: int = 14) -> str:
+    pools = [_PW_UPPER, _PW_LOWER, _PW_DIGIT, _PW_SYMB]
+    chars = [_secrets.choice(p) for p in pools]
+    alphabet = "".join(pools)
+    chars += [_secrets.choice(alphabet) for _ in range(length - len(chars))]
+    _secrets.SystemRandom().shuffle(chars)
+    return "".join(chars)
+
 
 def require_superadmin(user: Annotated[User, Depends(get_current_user)]) -> User:
     if not getattr(user, "is_superadmin", False):
@@ -66,12 +86,13 @@ def create_organization(
     _: Annotated[User, Depends(require_superadmin)],
     payload: dict,
 ):
-    """Body: {name, contact_email, admin_full_name, admin_email, admin_password}"""
+    """Body: {name, contact_email, admin_full_name, admin_email} — le mot de
+    passe provisoire est généré côté serveur (CSPRNG, politique complète)."""
     name = str(payload.get("name") or "").strip()
     admin_email = str(payload.get("admin_email") or "").strip().lower()
-    admin_password = str(payload.get("admin_password") or "")
-    if not name or not admin_email or len(admin_password) < 6:
-        raise HTTPException(status_code=400, detail="Nom, email admin et mot de passe (≥6) requis.")
+    admin_password = _generate_password()
+    if not name or not admin_email or "@" not in admin_email:
+        raise HTTPException(status_code=400, detail="Nom du client et email administrateur requis.")
     if db.query(User).filter(User.email == admin_email).first():
         raise HTTPException(status_code=400, detail="Un utilisateur avec cet email existe déjà.")
     org = Organization(name=name, contact_email=str(payload.get("contact_email") or admin_email))
@@ -86,7 +107,7 @@ def create_organization(
     db.add(admin); db.commit()
     email_sent = send_org_welcome(admin_email, org.name, admin_email, admin_password)
     return {"ok": True, "organization_id": str(org.id), "admin_email": admin_email,
-            "email_sent": email_sent}
+            "temp_password": admin_password, "email_sent": email_sent}
 
 
 @router.get("/admin/organizations/{org_id}")
