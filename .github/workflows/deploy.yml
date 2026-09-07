@@ -30,8 +30,27 @@ jobs:
 
             DC="docker compose -f docker-compose.prod.yml --env-file .env.prod"
 
-            BEFORE=$(git rev-parse HEAD)
-            echo "==> Before pull: $BEFORE"
+            # Baseline = the commit whose containers are actually RUNNING, not
+            # simply the one checked out. A run that pulls and then fails while
+            # building (transient containerd lock, OOM...) leaves the worktree
+            # ahead of the deployed containers; comparing against the checkout
+            # made the rerun conclude "already up to date" and skip the rebuild,
+            # silently leaving the old image in production. The stamp is written
+            # only after a restart actually succeeds.
+            STAMP=/srv/cmimpot/.deployed_sha
+            BEFORE=$(cat "$STAMP" 2>/dev/null || true)
+            git cat-file -e "${BEFORE:-x}^{commit}" 2>/dev/null || BEFORE=""
+            # No usable stamp = we cannot know which images are actually live
+            # (first run with this scheme, or the stamp was lost). Rebuilding
+            # everything is the only safe answer; it is idempotent and happens
+            # once. Assuming "HEAD is deployed" is what let a stale, vulnerable
+            # web image keep serving traffic after a failed build.
+            UNKNOWN_STATE=0
+            if [ -z "$BEFORE" ]; then
+              UNKNOWN_STATE=1
+              echo "==> No deploy stamp — deployed state unknown."
+            fi
+            echo "==> Deployed commit: ${BEFORE:-<unknown>}"
 
             echo "==> Pulling from GitHub..."
             git pull --ff-only
@@ -66,9 +85,9 @@ jobs:
               if [ "$MIGRATED" = "0" ]; then echo "!! migrations FAILED after 20 attempts"; $DC ps; exit 1; fi
             }
 
-            if [ "$COLD_START" = "1" ]; then
+            if [ "$COLD_START" = "1" ] || [ "$UNKNOWN_STATE" = "1" ]; then
               echo "=================================================================="
-              echo "==> COLD START — stack not fully up: full build + up + migrate"
+              echo "==> FULL DEPLOY — stack not fully up, or deployed state unknown"
               echo "=================================================================="
               sync; echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
               $DC build
@@ -76,12 +95,13 @@ jobs:
               run_migrations
               echo "==> Final container status:"
               $DC ps
+              echo "$AFTER" > "$STAMP"
               echo "==> Cold-start deploy complete."
               exit 0
             fi
 
             if [ "$BEFORE" = "$AFTER" ]; then
-              echo "==> Already up to date and stack healthy — nothing to do."
+              echo "==> Already deployed and stack healthy — nothing to do."
               exit 0
             fi
 
@@ -130,4 +150,7 @@ jobs:
 
             echo "==> Final container status:"
             $DC ps
+            # Reached only if every restart above succeeded (set -e), so this is
+            # the commit now genuinely running in production.
+            echo "$AFTER" > "$STAMP"
             echo "==> Deploy complete."
