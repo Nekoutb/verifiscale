@@ -68,15 +68,23 @@ services:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     expose:
       - "3000"
-    # --- hardening (post-incident 2026-07): a miner previously executed from
-    # /tmp inside this container. Block that class of attack outright. ---
+    # --- hardening (incidents 2026-07 and 2026-08) ---
+    # 2026-07: a miner executed from /tmp        -> /tmp made noexec.
+    # 2026-08: the miner simply moved to /var/tmp and /home/nextjs, and an RCE
+    #          in Next.js 15.1.4 gave it a shell inside the process. Partial
+    #          noexec is not enough: the ENTIRE filesystem is now read-only and
+    #          the few writable paths are noexec tmpfs, so a payload can neither
+    #          be dropped anywhere durable nor executed.
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    read_only: true
     tmpfs:
-      # writable but NON-EXECUTABLE /tmp: a dropped binary cannot be run
-      - /tmp:rw,noexec,nosuid,size=128m
+      - /tmp:rw,noexec,nosuid,size=64m
+      # Next's on-disk cache (ISR + optimised images) is the only path the
+      # server itself writes to.
+      - /app/.next/cache:rw,noexec,nosuid,size=256m
 
   nginx:
     image: nginx:1.27-alpine

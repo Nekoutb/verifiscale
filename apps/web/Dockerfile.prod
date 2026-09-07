@@ -33,4 +33,7 @@ USER nextjs
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0
 
-CMD ["npm", "start"]
+# Start Next directly instead of through npm: npm insists on a writable HOME
+# (~/.npm) and that is exactly where the 2026-08 miner installed itself. Running
+# the binary lets the container run with a read-only root filesystem.
+CMD ["./node_modules/.bin/next", "start"]
