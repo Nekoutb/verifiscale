@@ -1,0 +1,105 @@
+# =============================================================================
+# VerifiScale — DEV / staging stack (dev.verifiscale.com)
+#
+# Fully isolated from production: its own Postgres container + volume, its own
+# storage volume, its own ports, its own container names, its own JWT secret.
+# Nothing here shares state with prod except the Docker engine and the host.
+#
+# Run with the dedicated project name so networks/volumes never collide:
+#   docker compose -p cmimpot-dev -f docker-compose.dev.yml --env-file .env.dev up -d
+#
+# IMAGES: by default this REUSES the images production already built. The host
+# has ~1.5 GB free RAM and a nearly-full swap, and a Next.js build wants 1.5-2 GB
+# — building here is what OOMs the box and takes the other tenants down with it.
+# The deploy script passes explicit tags; bootstrap needs no build at all.
+# =============================================================================
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: fiscaudit-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pg_data_dev:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: ${API_IMAGE:-cmimpot-api:latest}
+    container_name: fiscaudit-api-dev
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      STORAGE_LOCAL_DIR: /storage
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ALGORITHM: HS256
+      JWT_EXPIRE_MINUTES: 240
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-opus-4-7}
+      MAILERSEND_API_KEY: ${MAILERSEND_API_KEY:-}
+      MAIL_FROM_EMAIL: ${MAIL_FROM_EMAIL:-no-reply@dev.verifiscale.com}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-VerifiScale (DEV)}
+      MAIL_REPLY_TO: ${MAIL_REPLY_TO:-}
+      APP_BASE_URL: ${APP_BASE_URL:-https://dev.verifiscale.com}
+    expose:
+      - "8000"
+    volumes:
+      - api_storage_dev:/storage
+
+  web:
+    image: ${WEB_IMAGE:-cmimpot-web:latest}
+    container_name: fiscaudit-web-dev
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    expose:
+      - "3000"
+    # Same hardening as prod (incidents 2026-07 / 2026-08) so dev actually
+    # exercises the production security posture instead of a softer one.
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+      - /app/.next/cache:rw,noexec,nosuid,size=256m
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: fiscaudit-nginx-dev
+    restart: unless-stopped
+    depends_on:
+      - api
+      - web
+    # Host Apache owns 80/443 and proxies dev.verifiscale.com here.
+    # Prod nginx holds 8080/8443; 8090 is another tenant. Dev takes 8081/8444.
+    ports:
+      - "8081:80"
+      - "8444:443"
+    volumes:
+      - ./infra/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infra/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./infra/certbot/conf:/etc/letsencrypt:ro
+      - ./infra/certbot/www:/var/www/certbot:ro
+
+volumes:
+  pg_data_dev:
+  api_storage_dev:

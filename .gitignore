@@ -2,6 +2,9 @@
 .env.*
 !.env.example
 !.env.template
+# ...and every per-environment template (.env.dev.example, .env.staging.example):
+# `.env.*` above swallows them, and `!.env.example` only rescues that exact name.
+!.env.*.example
 *.pem
 *.key
 secrets/

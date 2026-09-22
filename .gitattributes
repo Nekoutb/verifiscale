@@ -1,0 +1,12 @@
+# Line endings. Without this, a contributor with core.autocrlf=false can commit
+# CRLF and every shell script silently breaks on the Linux server with
+#   bash: $'\r': command not found
+# These files are consumed by Linux tooling and must always be LF in the repo.
+* text=auto
+*.sh           text eol=lf
+*.yml          text eol=lf
+*.yaml         text eol=lf
+*.conf         text eol=lf
+Dockerfile*    text eol=lf
+.env.*.example text eol=lf
+*.py           text eol=lf
