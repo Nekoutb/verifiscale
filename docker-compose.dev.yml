@@ -26,6 +26,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pg_data_dev:/var/lib/postgresql/data
+      # Same DB-init script as prod: enables uuid-ossp / pgcrypto / pg_trgm.
+      # Migrations call uuid_generate_v4(), so without this the first migration
+      # fails with « function uuid_generate_v4() does not exist ». Runs only on a
+      # fresh data volume (empty pg_data_dev).
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     expose:
       - "5432"
     healthcheck:
