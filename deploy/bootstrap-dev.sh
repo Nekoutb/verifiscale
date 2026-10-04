@@ -20,16 +20,24 @@ set -euo pipefail
 PROD_REPO=/srv/cmimpot
 DEV_REPO=/srv/cmimpot-dev
 PROJECT=cmimpot-dev
-ORIGIN=https://github.com/Nekoutb/verifiscale.git
+# Use the SAME remote the production checkout uses — it already authenticates to
+# GitHub (that is how deploys pull). A bare public HTTPS URL fails on a private
+# repo with "repository not found". Fall back to the public URL only if prod has
+# no origin for some reason.
+ORIGIN="$(git -C /srv/cmimpot remote get-url origin 2>/dev/null \
+          || echo https://github.com/Nekoutb/verifiscale.git)"
 
 say() { printf '\n== %s\n' "$*"; }
 die() { printf '\n!! %s\n' "$*" >&2; exit 1; }
 
 # --- 0. Dev checkout ---------------------------------------------------------
 say "Checkout dev (branche dev) dans $DEV_REPO"
+echo "   origin: $ORIGIN"
 if [ ! -d "$DEV_REPO/.git" ]; then
-  git clone --branch dev "$ORIGIN" "$DEV_REPO" 2>/dev/null \
-    || die "Clone impossible. La branche 'dev' existe-t-elle sur origin ? (git push origin dev)"
+  # Surface the real git error (do NOT swallow stderr — that hid an auth failure).
+  git clone --branch dev "$ORIGIN" "$DEV_REPO" \
+    || die "Clone impossible depuis $ORIGIN. Vérifiez que la prod accède bien à
+    GitHub (git -C /srv/cmimpot fetch) et que la branche 'dev' est poussée."
 else
   git -C "$DEV_REPO" fetch origin --prune
   git -C "$DEV_REPO" checkout dev
