@@ -118,6 +118,19 @@ export default function AuditDataPage() {
         </p>
       </div>
 
+      {/* Upload failures used to be silent (no onError on the mutation): a
+          rejected POST showed nothing and the user was left guessing. Surface
+          the server's reason verbatim — it is now a clear, actionable message. */}
+      {upload.isError && (
+        <div className="rounded-lg border border-rose-300 bg-rose-50 px-4 py-3 flex items-start gap-2">
+          <AlertCircle className="w-4 h-4 text-rose-600 mt-0.5 shrink-0" />
+          <div className="text-sm text-rose-800">
+            <span className="font-semibold">Échec du téléversement.</span>{' '}
+            {(upload.error as Error)?.message || 'Erreur inconnue.'}
+          </div>
+        </div>
+      )}
+
       {/* ── One-screen selector: every data type as a compact box ────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
         {SECTIONS.map((sec) => {

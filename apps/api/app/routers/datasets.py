@@ -64,6 +64,12 @@ async def upload_dataset(
         raise HTTPException(status_code=400, detail="Type de jeu de données invalide")
 
     data = await file.read()
+    if not data:
+        raise HTTPException(
+            status_code=400,
+            detail="Fichier vide — le téléversement n'a transmis aucune donnée. "
+                   "Vérifiez le fichier et réessayez.",
+        )
     if len(data) > 200 * 1024 * 1024:
         raise HTTPException(status_code=413, detail="Fichier trop volumineux (>200 Mo)")
 
@@ -245,9 +251,11 @@ def mapping_preview(
         raise HTTPException(status_code=500, detail=f"Fichier illisible : {e}")
 
     override = (payload or {}).get("mapping") or None
+    sheet = (payload or {}).get("sheet") or None
     try:
         return ingest_preview.build_preview(
             data, ds.original_filename, ds.kind.value, override_mapping=override,
+            sheet=sheet,
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -298,6 +306,7 @@ def confirm_mapping(
         ingest_preview.ingest_confirmed(
             db, ds, data, mapping,
             acknowledge_unbalanced=bool(body.get("acknowledge_unbalanced")),
+            sheet=body.get("sheet") or None,
         )
     except ValueError as e:
         db.rollback()

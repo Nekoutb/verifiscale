@@ -29,7 +29,7 @@ def load_far_assets(ds, data: bytes) -> list[dict[str, Any]]:
             from app.parsers.ledger_reader import detect_header
             from app.services.ingest_preview import load_rows
 
-            rows = load_rows(data, ds.original_filename)
+            rows = load_rows(data, ds.original_filename, cm.get("sheet"))
             hdr = detect_header(rows, "FAR")
             if hdr is not None:
                 mapping = {k: v for k, v in cm["mapping"].items()

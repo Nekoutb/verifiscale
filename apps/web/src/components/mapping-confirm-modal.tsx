@@ -47,6 +47,8 @@ type BalanceGroup = { key: string; label: string; debit: number; credit: number;
 type Preview = {
   kind: 'GL' | 'TB' | 'FAR';
   detected: boolean;
+  sheets?: { name: string }[];
+  selected_sheet?: string | null;
   error?: string;
   raw_preview?: (string | null)[][];
   header_row: number;
@@ -104,34 +106,59 @@ export function MappingConfirmModal({
   const qc = useQueryClient();
   const [draft, setDraft] = useState<Record<string, number> | null>(null);
   const [ack, setAck] = useState(false);
+  // Which workbook tab to read. null = let the server auto-pick the first tab
+  // whose header is recognisable; once the auditor picks one it is explicit.
+  const [sheet, setSheet] = useState<string | null>(null);
 
-  // Initial proposal (server-side heuristics + pattern detection).
+  // Initial proposal (server-side heuristics + pattern detection). Keyed on the
+  // chosen sheet so switching tabs refetches a fresh proposal for that tab.
   const proposal = useQuery({
-    queryKey: ['mapping-preview', datasetId],
-    queryFn: () => api<Preview>(`/datasets/${datasetId}/mapping-preview`, { method: 'POST', body: {} }),
+    queryKey: ['mapping-preview', datasetId, sheet],
+    queryFn: () => api<Preview>(`/datasets/${datasetId}/mapping-preview`, {
+      method: 'POST', body: sheet ? { sheet } : {},
+    }),
     enabled: open,
     refetchOnWindowFocus: false,
   });
 
-  // Live re-preview whenever the auditor remaps something.
+  // Live re-preview whenever the auditor remaps something — on the current tab.
   const repreview = useMutation({
     mutationFn: (mapping: Record<string, number>) =>
-      api<Preview>(`/datasets/${datasetId}/mapping-preview`, { method: 'POST', body: { mapping } }),
+      api<Preview>(`/datasets/${datasetId}/mapping-preview`, {
+        method: 'POST', body: { mapping, ...(sheet ? { sheet } : {}) },
+      }),
   });
 
   const view: Preview | undefined = repreview.data ?? proposal.data;
+  // The tab actually read: the auditor's explicit pick, else the server's choice.
+  const activeSheet = sheet ?? view?.selected_sheet ?? null;
+  const tabs = (view?.sheets ?? []).map((s) => s.name).filter((n) => n !== '(fichier CSV)');
 
   useEffect(() => {
     if (proposal.data?.mapping && draft === null) setDraft(proposal.data.mapping);
   }, [proposal.data, draft]);
 
-  useEffect(() => { if (!open) { setDraft(null); setAck(false); repreview.reset(); } }, [open]); // eslint-disable-line
+  useEffect(() => { if (!open) { setDraft(null); setAck(false); setSheet(null); repreview.reset(); } }, [open]); // eslint-disable-line
+
+  // Switching tabs: adopt the new tab's proposed mapping (draft back to null so
+  // the effect above picks it up) and drop the previous tab's live preview.
+  const changeSheet = (name: string) => {
+    if (name === activeSheet) return;
+    setSheet(name);
+    setDraft(null);
+    setAck(false);
+    repreview.reset();
+  };
 
   const confirm = useMutation({
     mutationFn: () =>
       api(`/datasets/${datasetId}/confirm-mapping`, {
         method: 'POST',
-        body: { mapping: { ...(draft ?? {}), ...extractionKeys(view) }, acknowledge_unbalanced: ack },
+        body: {
+          mapping: { ...(draft ?? {}), ...extractionKeys(view) },
+          acknowledge_unbalanced: ack,
+          sheet: view?.selected_sheet ?? sheet ?? undefined,
+        },
       }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['datasets'] });
@@ -186,6 +213,41 @@ export function MappingConfirmModal({
           </div>
           <Button variant="ghost" size="sm" onClick={onClose}>Fermer</Button>
         </div>
+
+        {/* ── sheet / tab selector — only for multi-tab workbooks ───── */}
+        {tabs.length > 1 && (
+          <div className="border-b border-neutral-200 bg-neutral-50 px-6 py-2.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[11px] font-semibold text-neutral-600 mr-1">
+                Onglet du fichier :
+              </span>
+              {tabs.map((name) => {
+                const active = name === activeSheet;
+                return (
+                  <button
+                    key={name}
+                    type="button"
+                    onClick={() => changeSheet(name)}
+                    disabled={proposal.isFetching || repreview.isPending}
+                    className={cn(
+                      'px-3 py-1 rounded-md text-xs font-medium border transition',
+                      active
+                        ? 'bg-indigo-600 text-white border-indigo-600'
+                        : 'bg-white text-neutral-700 border-neutral-300 hover:border-indigo-400',
+                      (proposal.isFetching || repreview.isPending) && !active && 'opacity-50',
+                    )}
+                  >
+                    {name}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[10px] text-neutral-500 mt-1.5">
+              Ce fichier contient plusieurs onglets. Sélectionnez celui à importer —
+              les colonnes et le mapping sont recalculés pour l&apos;onglet choisi.
+            </p>
+          </div>
+        )}
 
         {(proposal.isLoading || (repreview.isPending && !view)) && (
           <div className="px-6 py-16 text-center text-sm text-neutral-500">

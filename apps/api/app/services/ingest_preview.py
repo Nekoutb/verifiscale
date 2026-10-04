@@ -36,14 +36,74 @@ MAX_COL_SAMPLES = 5
 
 # ── workbook loading ────────────────────────────────────────────────────────
 
-def load_rows(data: bytes, filename: str) -> list[list[Any]]:
-    """Read the first sheet into a raw row matrix (no header assumptions)."""
+CSV_SHEET_NAME = "(fichier CSV)"
+
+
+def _workbook_error(exc: Exception) -> str:
+    """Turn an openpyxl/zipfile failure into a reason the auditor can act on."""
+    msg = str(exc).lower()
+    if "encrypt" in msg or "password" in msg or "protected" in msg:
+        return ("Classeur protégé par mot de passe. Retirez la protection dans "
+                "Excel (Fichier → Informations → Protéger) puis réimportez-le.")
+    if "not a zip" in msg or "bad zip" in msg or "zipfile" in msg:
+        return ("Fichier illisible ou corrompu : ce n'est pas un .xlsx valide. "
+                "Rouvrez-le dans Excel et réenregistrez-le en « Classeur Excel "
+                "(.xlsx) », ou exportez en .csv.")
+    return f"Classeur illisible : {exc}"
+
+
+def sheet_names(data: bytes, filename: str) -> list[str]:
+    """The selectable tabs of an upload.
+
+    A workbook returns its worksheet names in tab order; CSV/TXT are a single
+    grid reported as one synthetic sheet so the UI treats every upload the same
+    way. Unsupported formats return []. Raises ValueError (via _workbook_error)
+    when the file cannot be opened at all, so the caller can report why.
+    """
     name = (filename or "").lower()
     if name.endswith((".xlsx", ".xlsm", ".xls")):
         import openpyxl
-        wb = openpyxl.load_workbook(io.BytesIO(data), data_only=True, read_only=True)
         try:
-            ws = wb[wb.sheetnames[0]]
+            wb = openpyxl.load_workbook(io.BytesIO(data), read_only=True)
+        except Exception as e:  # noqa: BLE001
+            raise ValueError(_workbook_error(e))
+        try:
+            return list(wb.sheetnames)
+        finally:
+            wb.close()
+    if name.endswith((".csv", ".txt")):
+        return [CSV_SHEET_NAME]
+    return []
+
+
+def load_rows(data: bytes, filename: str, sheet: str | None = None) -> list[list[Any]]:
+    """Read one sheet into a raw row matrix (no header assumptions).
+
+    `sheet` names the worksheet to read; None keeps the historical behaviour of
+    the first tab. An unknown name is a clear error that lists what IS available,
+    rather than a silent fall back to the wrong tab.
+    """
+    name = (filename or "").lower()
+    if name.endswith((".xlsx", ".xlsm", ".xls")):
+        import openpyxl
+        try:
+            wb = openpyxl.load_workbook(io.BytesIO(data), data_only=True, read_only=True)
+        except Exception as e:  # noqa: BLE001
+            raise ValueError(_workbook_error(e))
+        try:
+            names = wb.sheetnames
+            if not names:
+                raise ValueError("Le classeur ne contient aucune feuille.")
+            if sheet is None:
+                target = names[0]
+            elif sheet in names:
+                target = sheet
+            else:
+                raise ValueError(
+                    f"Onglet « {sheet} » introuvable dans ce fichier. "
+                    f"Onglets disponibles : {', '.join(names)}."
+                )
+            ws = wb[target]
             return [list(r) for r in ws.iter_rows(values_only=True)]
         finally:
             wb.close()
@@ -57,6 +117,31 @@ def load_rows(data: bytes, filename: str) -> list[list[Any]]:
             dialect = csv.excel
         return [list(r) for r in csv.reader(io.StringIO(text), dialect)]
     raise ValueError("Format non pris en charge — fournissez un .xlsx ou un .csv")
+
+
+# Mandatory-column labels per kind, used to explain a failed header detection.
+def _expected_columns_hint(kind: str) -> str:
+    fields = GL_FIELDS if kind == "GL" else TB_FIELDS if kind == "TB" else FAR_FIELDS
+    labels = [f.label_fr for f in fields if f.mandatory]
+    return ", ".join(labels) if labels else "—"
+
+
+def _pick_default_sheet(data: bytes, filename: str, kind: str,
+                        names: list[str]) -> str | None:
+    """Best tab to show first: the first one whose header is recognisable for
+    this kind. A workbook often leads with a cover/summary tab, so blindly
+    taking tab 0 is the behaviour we are fixing. Falls back to tab 0."""
+    if not names:
+        return None
+    if len(names) == 1:
+        return names[0]
+    for sn in names:
+        try:
+            if detect_header(load_rows(data, filename, sn), kind) is not None:
+                return sn
+        except Exception:  # noqa: BLE001 — a bad tab must not block the others
+            continue
+    return names[0]
 
 
 def _kind_of(dataset_kind: str) -> str:
@@ -79,19 +164,33 @@ def _jsonable(v: Any) -> Any:
 # ── preview ─────────────────────────────────────────────────────────────────
 
 def build_preview(data: bytes, filename: str, dataset_kind: str,
-                  override_mapping: dict | None = None) -> dict:
+                  override_mapping: dict | None = None,
+                  sheet: str | None = None) -> dict:
     """Everything the auditor needs to confirm or correct the mapping.
 
     `override_mapping` lets the UI re-preview live as the auditor remaps a
-    column, without touching the stored dataset.
+    column, without touching the stored dataset. `sheet` selects which tab of a
+    multi-sheet workbook to read; when omitted we auto-pick the first tab whose
+    header is recognisable for this kind.
     """
     kind = _kind_of(dataset_kind)
-    rows = load_rows(data, filename)
+    names = sheet_names(data, filename)
+    selected = sheet if (sheet and sheet in names) else _pick_default_sheet(
+        data, filename, kind, names)
+    sheets_info = [{"name": n} for n in names]
+
+    rows = load_rows(data, filename, selected)
     hdr = detect_header(rows, kind)
     if hdr is None:
+        hint = f" Colonnes attendues : {_expected_columns_hint(kind)}."
+        if len([n for n in names if n != CSV_SHEET_NAME]) > 1:
+            hint += (" Si vos données sont sur un autre onglet, sélectionnez-le "
+                     "ci-dessus.")
         return {
             "kind": kind, "detected": False,
-            "error": "En-tête introuvable — vérifiez que le fichier contient une ligne d'en-tête.",
+            "sheets": sheets_info, "selected_sheet": selected,
+            "error": ("En-tête introuvable sur cet onglet — vérifiez qu'il "
+                      "contient une ligne d'en-tête." + hint),
             "raw_preview": [[_jsonable(c) for c in r[:12]] for r in rows[:8]],
         }
 
@@ -141,6 +240,8 @@ def build_preview(data: bytes, filename: str, dataset_kind: str,
     return {
         "kind": kind,
         "detected": True,
+        "sheets": sheets_info,
+        "selected_sheet": selected,
         "header_row": hdr.header_row + 1,        # 1-based for humans
         "banner_row": None if hdr.banner_row is None else hdr.banner_row + 1,
         "columns": columns,
@@ -273,19 +374,27 @@ def _balance_verdict(kind: str, totals: dict[str, Decimal]) -> dict:
 # ── confirmed ingestion ─────────────────────────────────────────────────────
 
 def ingest_confirmed(db, ds, data: bytes, mapping: dict,
-                     acknowledge_unbalanced: bool = False) -> dict:
+                     acknowledge_unbalanced: bool = False,
+                     sheet: str | None = None) -> dict:
     """Ingest using the auditor-approved mapping. Raises ValueError on a
     mandatory gap, or on an unbalanced import that was not acknowledged.
+
+    `sheet` is the tab the auditor previewed and approved; it is persisted on the
+    dataset so later re-reads (e.g. the FAR analyses) use the SAME tab.
     """
     from app.models import (
         DatasetKind, DatasetStatus, JournalEntry, JournalEntryLine, TrialBalanceLine,
     )
 
     kind = _kind_of(ds.kind)
-    rows = load_rows(data, ds.original_filename)
+    rows = load_rows(data, ds.original_filename, sheet)
     hdr = detect_header(rows, kind)
     if hdr is None:
-        raise ValueError("En-tête introuvable")
+        raise ValueError(
+            "En-tête introuvable sur l'onglet sélectionné"
+            + (f" « {sheet} »" if sheet else "")
+            + " — revérifiez le mapping ou changez d'onglet."
+        )
 
     clean = {k: v for k, v in mapping.items() if isinstance(v, int)}
     _, errors = evaluate(mapping, kind)
@@ -342,6 +451,7 @@ def ingest_confirmed(db, ds, data: bytes, mapping: dict,
     ds.column_mapping = {
         "source": "INGEST_V2_CONFIRMED",
         "kind": kind,
+        "sheet": sheet,
         "header_row": hdr.header_row + 1,
         "banner_row": None if hdr.banner_row is None else hdr.banner_row + 1,
         "mapping": clean,
@@ -369,6 +479,7 @@ def ingest_confirmed(db, ds, data: bytes, mapping: dict,
         "file_rows": raw_data_rows,
         "file_cols": file_cols,
         "sheets": None,
+        "sheet_name": sheet,
         "read_rows": len(res.rows),
         "read_cols": len(set(clean.values())),
         "excluded_rows": len(res.excluded),
