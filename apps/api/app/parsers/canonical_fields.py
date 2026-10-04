@@ -114,10 +114,25 @@ GL_FIELDS: tuple[CanonicalField, ...] = (
                "nomcompte", "designation"),
     ),
     CanonicalField(
-        "entry_id", "N° écriture / pièce", "Journal entry identifier", True, Shape.SINGLE,
+        "entry_id", "N° écriture / pièce (identifiant unique)", "Journal entry identifier",
+        True, Shape.SINGLE,
         hints=("piece", "npiece", "numeropiece", "ecriture", "necriture", "journalentry",
                "entryid", "entryno", "move", "movename", "reference", "ref"),
         allow_pattern_extraction=True,
+    ),
+    # Composite entry key: some ledgers identify an entry by SEVERAL columns
+    # together (e.g. journal code + piece number, or date + journal + sequence).
+    # These two are optional extra components; when mapped, the reader joins them
+    # with the primary identifier above to form the unique key. No hints, so they
+    # are never auto-assigned — the auditor adds them deliberately only when one
+    # column alone does not identify an entry.
+    CanonicalField(
+        "entry_id_2", "Identifiant d'écriture — 2ᵉ colonne (clé composite)",
+        "Entry identifier — 2nd column (composite key)", False, Shape.SINGLE,
+    ),
+    CanonicalField(
+        "entry_id_3", "Identifiant d'écriture — 3ᵉ colonne (clé composite)",
+        "Entry identifier — 3rd column (composite key)", False, Shape.SINGLE,
     ),
     CanonicalField(
         "amount", "Montant", "Journal entry amount", True, Shape.PAIR,

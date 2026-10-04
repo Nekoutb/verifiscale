@@ -420,6 +420,13 @@ export function MappingConfirmModal({
               <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-500 mb-2">
                 Mapping des colonnes — corrigez si nécessaire
               </div>
+              {view.kind === 'GL' && (
+                <p className="text-[11px] text-neutral-500 mb-2 -mt-1">
+                  Identifiant unique d&apos;écriture : si une seule colonne ne suffit pas à
+                  distinguer une écriture, renseignez aussi la 2ᵉ (et la 3ᵉ) colonne de la
+                  clé — elles sont combinées pour former la référence unique.
+                </p>
+              )}
               <div className="overflow-x-auto border border-neutral-200 rounded-lg">
                 <table className="w-full text-xs">
                   <thead className="bg-neutral-50 text-neutral-600">

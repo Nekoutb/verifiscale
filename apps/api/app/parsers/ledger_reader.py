@@ -443,6 +443,7 @@ def read(rows: list[list[Any]], kind: str, mapping: dict[str, int],
                 for k, i in mapping.items():
                     if isinstance(i, int) and i < len(row) and k not in (
                         "account_number", "account_description", "entry_id",
+                        "entry_id_2", "entry_id_3",
                         "transaction_description", "entry_date",
                     ):
                         stated[k] = to_decimal(row[i])
@@ -467,9 +468,15 @@ def read(rows: list[list[Any]], kind: str, mapping: dict[str, int],
                 excluded.append(ExcludedRow(n, "Ligne sans date d'effet — non transactionnelle", label_txt[:80]))
                 continue
 
-            # entry_id: dedicated column, else confirmed pattern extraction.
-            eid = _get(row, mapping, "entry_id")
-            eid = str(eid).strip() if eid not in (None, "") else None
+            # entry_id: one, two or three columns that TOGETHER identify the
+            # entry (composite key), joined in order. Falls back to confirmed
+            # pattern extraction when no dedicated column is mapped.
+            parts = []
+            for comp in ("entry_id", "entry_id_2", "entry_id_3"):
+                v = _get(row, mapping, comp)
+                if v not in (None, ""):
+                    parts.append(str(v).strip())
+            eid = " | ".join(p for p in parts if p) if parts else None
             if not eid and "entry_id__extract_from" in mapping:
                 src = row[mapping["entry_id__extract_from"]] if mapping["entry_id__extract_from"] < len(row) else None
                 eid = extract_entry_id(None if src is None else str(src))
