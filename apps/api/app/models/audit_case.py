@@ -57,10 +57,13 @@ class AuditCase(Base):
     )
     taxpayer: Mapped["Taxpayer"] = relationship(back_populates="audit_cases")
 
-    brigade_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), ForeignKey("brigades.id", ondelete="RESTRICT"), nullable=False
+    # Brigade (DGI audit team) is OPTIONAL — a legacy org structure. Multi-tenant
+    # cases are scoped by organization_id; requiring a brigade blocked every new
+    # client (fresh orgs have none). nullable so case creation never depends on it.
+    brigade_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("brigades.id", ondelete="SET NULL"), nullable=True
     )
-    brigade: Mapped["Brigade"] = relationship(back_populates="audit_cases")
+    brigade: Mapped["Brigade | None"] = relationship(back_populates="audit_cases")
 
     assignee_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True

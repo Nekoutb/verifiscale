@@ -83,7 +83,7 @@ class TaxpayerOut(TaxpayerCreate):
 class AuditCaseCreate(BaseModel):
     reference: str
     taxpayer_id: UUID
-    brigade_id: UUID
+    brigade_id: UUID | None = None
     assignee_id: UUID | None = None
     fiscal_year: int
     period_start: date
@@ -126,7 +126,7 @@ class AuditCaseOut(BaseModel):
     id: UUID
     reference: str
     taxpayer: TaxpayerOut
-    brigade_id: UUID
+    brigade_id: UUID | None
     assignee_id: UUID | None
     fiscal_year: int
     period_start: date

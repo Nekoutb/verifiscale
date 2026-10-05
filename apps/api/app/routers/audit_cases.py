@@ -77,7 +77,8 @@ def create_audit_case(
             and tp.organization_id is not None
             and tp.organization_id != user.organization_id):
         raise HTTPException(status_code=404, detail="Contribuable introuvable")
-    if not db.get(Brigade, payload.brigade_id):
+    # Brigade is optional; validate only if one was supplied.
+    if payload.brigade_id and not db.get(Brigade, payload.brigade_id):
         raise HTTPException(status_code=404, detail="Brigade introuvable")
     if payload.assignee_id and not db.get(User, payload.assignee_id):
         raise HTTPException(status_code=404, detail="Auditeur introuvable")
@@ -167,13 +168,9 @@ def quick_create_audit_case(
             if val and not getattr(tp, attr):
                 setattr(tp, attr, val)
 
-    # Pick brigade: user's own, else the first brigade in the system (admin path)
+    # Brigade is optional and never blocks creation. If the user belongs to one,
+    # the case inherits it; otherwise it stays null (cases are scoped by org).
     brigade_id = user.brigade_id
-    if brigade_id is None:
-        first = db.query(Brigade).order_by(Brigade.code).first()
-        if first is None:
-            raise HTTPException(400, "Aucune brigade configurée — créer une brigade d'abord")
-        brigade_id = first.id
 
     # Auto-reference: CAS-{year}-{NNNN} — séquence PROPRE à l'organisation
     # (le compteur global révélait le volume de la plateforme et faisait
