@@ -40,7 +40,12 @@ services:
       retries: 10
 
   api:
-    image: ${API_IMAGE:-cmimpot-api:latest}
+    # Build the DEV-branch code into a DEV-tagged image. The tag MUST differ from
+    # prod's cmimpot-api:latest, otherwise a prod restart would pick up dev code.
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.prod
+    image: cmimpot-dev-api:latest
     container_name: fiscaudit-api-dev
     restart: unless-stopped
     depends_on:
@@ -66,7 +71,12 @@ services:
       - api_storage_dev:/storage
 
   web:
-    image: ${WEB_IMAGE:-cmimpot-web:latest}
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.prod
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    image: cmimpot-dev-web:latest
     container_name: fiscaudit-web-dev
     restart: unless-stopped
     depends_on:

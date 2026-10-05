@@ -74,10 +74,17 @@ for k in MAILERSEND_API_KEY ANTHROPIC_API_KEY; do
   [ -z "$v" ] || printf '   ATTENTION: %s est renseigne — dev enverra/facturera POUR DE VRAI.\n' "$k"
 done
 
-for img in cmimpot-api:latest cmimpot-web:latest; do
-  docker image inspect "$img" >/dev/null 2>&1 \
-    || die "Image $img absente. Le bootstrap ne construit pas (risque OOM)."
-done
+# Memory guard before the (web) build — a Next.js build wants ~1.5-2 GB. Free RAM
+# is the binding constraint on this shared box; refuse below 1200 MB rather than
+# risk the fork-exhaustion outage that takes every tenant down.
+RAM_FREE=$(free -m | awk '/^Mem:/{print $7}')
+echo "   RAM libre: ${RAM_FREE} MB"
+if [ "${RAM_FREE:-0}" -lt 1200 ]; then
+  sync; echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+  RAM_FREE=$(free -m | awk '/^Mem:/{print $7}')
+  echo "   apres purge du cache: ${RAM_FREE} MB"
+  [ "${RAM_FREE:-0}" -ge 1200 ] || die "Memoire insuffisante (${RAM_FREE} MB < 1200) pour builder sans risquer les autres sites. Reessayez a un moment plus calme."
+fi
 
 for port in 8081 8444; do
   if ss -tln 2>/dev/null | grep -qE "[:.]${port}[[:space:]]"; then
@@ -99,8 +106,8 @@ systemctl reload apache2
 echo "   vhost actif, Apache recharge"
 
 # --- 3. Dev stack -----------------------------------------------------------
-say "Demarrage du stack dev (images existantes, aucun build)"
-$COMPOSE up -d --no-build
+say "Construction des images dev + demarrage (dev-tagged, aucune collision prod)"
+$COMPOSE up -d --build
 
 say "Attente de Postgres dev"
 for i in $(seq 1 40); do
